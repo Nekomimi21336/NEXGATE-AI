@@ -29,6 +29,9 @@ def main() -> int:
     from ocr_dependencies import ensure_ocr_dependencies_on_startup
 
     ensure_ocr_dependencies_on_startup()
+    from data_cleanup import run_cleanup_on_startup
+
+    run_cleanup_on_startup()
     # リアルタイム要約をバックグラウンドで開始
     try:
         from realtime_summary import start_realtime_summary

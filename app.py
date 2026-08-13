@@ -3499,9 +3499,20 @@ def get_static_asset_version():
 
 
 def vite_js_available():
-    """Check if Vite-built TypeScript bundles exist."""
+    """Check if Vite-built TypeScript bundles exist and are explicitly enabled.
+
+    The TypeScript migration is still incomplete (auth/router are placeholders),
+    so the legacy JS bundle must keep serving until the migration is finished.
+    Set NEXGATE_VITE_ENABLED=1 to opt in to the Vite bundle.
+    """
     root = Path(__file__).resolve().parent
-    return (root / "static" / "dist" / "js" / "app.js").is_file()
+    if not (root / "static" / "dist" / "js" / "app.js").is_file():
+        return False
+    return os.getenv("NEXGATE_VITE_ENABLED", "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )
 
 
 def render_app(user, initial_view="chat", session_id=None, shared_chat=None):
