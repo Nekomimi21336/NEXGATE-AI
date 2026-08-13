@@ -2985,8 +2985,7 @@ function startPassiveStreamWatch(sessionId, requestId) {
     },
     onSearch: (searchEvent) => {
       if (searchEvent.type === "intent" || searchEvent.type === "start") {
-        if (searchMessageEl) return;
-        ensurePassiveSearchSlot();
+        if (!searchMessageEl) ensurePassiveSearchSlot();
       }
       if (!searchMessageEl) return;
       handleSearchStreamEvent(searchMessageEl, searchEvent);
@@ -4828,6 +4827,10 @@ function handleSearchStreamEvent(messageEl, event) {
 
   if (event.type === "start") {
     cover.classList.add("is-active");
+    const title = cover.querySelector(".search-process-title");
+    if (title && title.textContent === "Web検索を準備しています") {
+      title.textContent = "Webを検索中";
+    }
     renderSearchCoverLists(messageEl);
     return;
   }

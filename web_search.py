@@ -12,6 +12,23 @@ from urllib.parse import urlparse
 from search_settings import get_resolved_api_keys
 
 SEARCH_DG_PROVIDER = "search-dg"
+
+SEARCH_PROVIDER_DISPLAY = {
+    "tavily": "Tavily",
+    "serper": "Google",
+    "serper_news": "Google News",
+    "search-dg": "DuckDuckGo",
+}
+SEARCH_DG_LABEL = SEARCH_PROVIDER_DISPLAY[SEARCH_DG_PROVIDER]
+
+
+def display_provider_label(label):
+    """内部プロバイダID（search-dg 等）を UI 表示用ラベルへ変換する。"""
+    parts = [
+        SEARCH_PROVIDER_DISPLAY.get(part.strip(), part.strip())
+        for part in str(label or "").split("+")
+    ]
+    return " + ".join(parts)
 DDGS_BACKEND = os.getenv("DDGS_BACKEND", "auto,bing")
 
 SEARCH_HTTP_TIMEOUT = float(os.getenv("SEARCH_HTTP_TIMEOUT", "10"))
@@ -1445,10 +1462,10 @@ def _collect_query_parallel(search_query, per_query, user_text, engines=None):
         ddg_batch = _run_provider("ddg", search_dg, search_query, per_query)
         if ddg_batch:
             if SEARCH_DG_PROVIDER not in providers_used:
-                providers_used.append(SEARCH_DG_PROVIDER)
+                providers_used.append(SEARCH_DG_LABEL)
             merged.extend(ddg_batch)
 
-    provider_label = " + ".join(dict.fromkeys(providers_used)) or SEARCH_DG_PROVIDER
+    provider_label = " + ".join(dict.fromkeys(providers_used)) or SEARCH_DG_LABEL
     query_blob = search_query
     ranked = sorted(
         merged,
@@ -1543,12 +1560,16 @@ def stream_web_search_for_queries(
         yield {
             "type": "query",
             "query": search_query,
-            "provider": provider_label,
+            "provider": display_provider_label(provider_label),
         }
         for item in items:
             if len(all_results) >= max_total:
                 break
-            hit = try_add(item, item.get("provider") or provider_label, search_query)
+            hit = try_add(
+                item,
+                display_provider_label(item.get("provider") or provider_label),
+                search_query,
+            )
             if hit:
                 yield hit
 
