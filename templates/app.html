@@ -101,9 +101,7 @@
   <script defer src="{{ url_for('static', filename='js/user_question_modal.js') }}"></script>
   <script defer src="{{ url_for('static', filename='js/lazy-scripts.js') }}"></script>
   <script defer src="{{ url_for('static', filename='js/chat_socket.js') }}"></script>
-  {% if not vite_enabled %}
   <script defer src="{{ url_for('static', filename='js/app.js') }}?v={{ asset_version }}"></script>
   <script defer src="{{ url_for('static', filename='js/router.js') }}"></script>
-  {% endif %}
 </body>
 </html>
