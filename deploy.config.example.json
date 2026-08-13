@@ -1,0 +1,10 @@
+{
+  "host": "210.131.212.59",
+  "user": "root",
+  "password": "CHANGE_ME",
+  "remote_dir": "/root/NEXGATE",
+  "screen_session": "nexgate",
+  "start_script": "run_servers.py",
+  "python": "python3",
+  "port": 22
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="NEXGATE AI">
+  <rect width="1200" height="630" fill="#000000"/>
+  <rect x="1" y="1" width="1198" height="628" fill="none" stroke="rgba(255,255,255,0.08)"/>
+  <text x="600" y="300" fill="#ffffff" font-family="Segoe UI, system-ui, sans-serif" font-size="52" font-weight="600" letter-spacing="18" text-anchor="middle">NEXGATE AI</text>
+  <text x="600" y="360" fill="rgba(255,255,255,0.45)" font-family="Segoe UI, system-ui, sans-serif" font-size="18" letter-spacing="6" text-anchor="middle">AI ASSISTANT</text>
+</svg>

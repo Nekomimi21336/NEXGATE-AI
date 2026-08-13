@@ -1,0 +1,42 @@
+<main class="main ask-expert-main page-load-animate" id="askExpertMain">
+  <div class="model-select-wrap ask-expert-header-bar">
+    <div class="model-select-column">
+      <div class="model-select-left">
+        <button type="button" class="mobile-menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebarRegion">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+        </button>
+        <div class="ask-expert-header-text">
+          <h1 class="settings-header-title ask-expert-page-title" id="askExpertPageTitle" data-i18n="askExpertTitle">AskExpert</h1>
+          <p class="settings-header-sub ask-expert-page-desc hidden" id="askExpertPageDesc"></p>
+        </div>
+      </div>
+    </div>
+    <div class="chat-header-actions ask-expert-header-actions hidden" id="askExpertHeaderActions">
+      <button type="button" class="settings-btn settings-btn--secondary" id="askExpertDeleteBtn" data-i18n="askExpertDelete">削除</button>
+    </div>
+  </div>
+
+  <div class="chat-conversation ask-expert-conversation" id="askExpertConversation">
+    <div class="chat-area" id="askExpertChatArea">
+      <div class="ask-expert-compose-hint page-load-stagger" id="askExpertComposeHint">
+        <h2 data-i18n="askExpertComposeTitle">専門家を作成</h2>
+        <p data-i18n="askExpertComposeDesc">下の入力欄から、チャットまたは URL で専門家づくりを始められます。</p>
+      </div>
+      <div class="messages hidden" id="askExpertMessages"></div>
+    </div>
+    <div class="input-area page-load-animate hidden" id="askExpertInputArea">
+      <div class="input-wrapper">
+        <p class="ai-disclaimer" data-i18n="aiDisclaimer">AIが生成する内容は正確でない場合があります。</p>
+        <p class="ask-expert-tools-note" data-i18n="askExpertToolsNote">Web検索とExpert専用ツールが利用できます（切替不可）。</p>
+        <div class="input-row">
+          <textarea id="askExpertMessageInput" class="chat-message-input" rows="1" data-i18n-placeholder="askExpertComposePlaceholder" placeholder="チャットまたはURLでセッションを開始"></textarea>
+          <button type="button" class="send-btn" id="askExpertSendBtn" aria-label="送信">
+            <svg class="send-btn-icon send-btn-icon--send" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <svg class="send-btn-icon send-btn-icon--stop hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <p class="settings-msg hidden" id="askExpertMsg"></p>
+  </div>
+</main>

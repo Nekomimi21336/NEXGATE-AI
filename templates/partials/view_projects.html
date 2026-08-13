@@ -1,0 +1,134 @@
+<main class="main page-load-animate" id="projectsMain">
+  <div class="projects-list-view" id="projectsListView">
+    <header class="settings-header projects-page-header">
+      <div class="settings-header-inner projects-list-header-inner">
+        <button type="button" class="mobile-menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebarRegion">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+        </button>
+        <h1 class="settings-header-title" id="projectsListTitle" data-i18n="projectsTitle">Projects [BETA]</h1>
+        <div class="projects-list-header-actions">
+          <button type="button" class="projects-header-btn" id="projectsListNewBtn" data-i18n="projectsAdd">プロジェクトを追加</button>
+        </div>
+      </div>
+    </header>
+    <div class="projects-list-wrap">
+      <div class="projects-invites-banner hidden" id="projectsInvitesBanner">
+        <div class="projects-invites-banner-copy">
+          <p class="projects-invites-banner-title" id="projectsInvitesBannerTitle"></p>
+          <ul class="projects-invites-list" id="projectsInvitesList"></ul>
+        </div>
+      </div>
+      <ul class="projects-list" id="projectsList" aria-live="polite"></ul>
+      <p class="projects-list-empty hidden" id="projectsListEmpty" data-i18n="projectsEmpty">プロジェクトがありません。追加してください。</p>
+    </div>
+  </div>
+
+  <div class="projects-workspace hidden" id="projectsWorkspace">
+    <div class="model-select-wrap projects-header-wrap">
+      <div class="model-select-column">
+        <div class="model-select-left">
+          <button type="button" class="mobile-menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebarRegion">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+          </button>
+          <button type="button" class="projects-back-btn" id="projectsBackBtn" data-i18n="projectsBackToList">プロジェクト一覧</button>
+          <button type="button" class="model-select-btn" id="projectsSelectBtn" aria-expanded="false" aria-haspopup="listbox" aria-label="プロジェクトを選択">
+            <span class="model-select-trigger-wrap">
+              <span class="model-select-trigger" id="projectsSelectTrigger" data-i18n="projectsSelectPlaceholder">プロジェクトを選択</span>
+              <span class="model-select-trigger-desc hidden" id="projectsSelectDesc"></span>
+            </span>
+            <svg class="model-select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <div class="model-select-menu hidden" id="projectsSelectMenu" role="listbox"></div>
+        </div>
+      </div>
+      <div class="chat-header-actions">
+        <button type="button" class="projects-header-btn" id="projectsNewBtn" data-i18n="projectsAdd">プロジェクトを追加</button>
+      </div>
+    </div>
+    <div class="chat-header-fade" aria-hidden="true"></div>
+    <div class="chat-conversation" id="projectsConversation">
+      <div class="chat-area" id="projectsChatArea" data-project-pane="chat">
+        <div class="welcome page-load-stagger hidden" id="projectsWelcome">
+          <h1 id="projectsWelcomeHeading" data-i18n="projectsWelcomeTitle">プロジェクトスペース</h1>
+          <p class="projects-welcome-desc" id="projectsWelcomeDesc" data-i18n="projectsWelcomeDesc">メッセージを入力して会話を始めましょう。</p>
+          <div class="suggestions" id="projectsSuggestions">
+            <button type="button" class="suggestion" data-prompt="" id="projectsSuggestion1"></button>
+            <button type="button" class="suggestion" data-prompt="" id="projectsSuggestion2"></button>
+            <button type="button" class="suggestion" data-prompt="" id="projectsSuggestion3"></button>
+          </div>
+        </div>
+        <div class="messages hidden" id="projectsMessages"></div>
+      </div>
+      <div class="chat-area hidden project-stats-area" id="projectsStatsArea" data-project-pane="stats">
+        <div class="project-stats-shell" id="projectsStatsShell">
+          <nav class="project-stats-nav" id="projectsStatsNav" aria-label="Project overview navigation"></nav>
+          <div class="project-stats-main">
+            <div class="project-pane-header project-pane-header--with-actions">
+              <h2 class="project-pane-title" data-i18n="projectsSidebarStats">プロジェクト統計</h2>
+              <div class="project-pane-header-actions">
+                <button type="submit" form="projectsStatsForm" class="projects-header-btn hidden" id="projectsStatsSaveBtn" data-i18n="projectsStatsSaveAll">設定を保存</button>
+                <button type="button" class="projects-header-btn projects-header-btn--danger hidden" id="projectsStatsDeleteBtn" data-i18n="projectsDelete">削除</button>
+              </div>
+            </div>
+            <div class="project-stats-panel" id="projectsStatsPanel"></div>
+            <p class="project-pane-empty hidden" id="projectsStatsEmpty" data-i18n="projectsStatsEmpty">統計項目はありません。</p>
+          </div>
+        </div>
+      </div>
+      <div class="chat-area hidden" id="projectsWorkerArea" data-project-pane="worker">
+        <div class="project-pane-header">
+          <h2 class="project-pane-title" id="projectsWorkerTitle">Worker</h2>
+        </div>
+        <div class="project-pane-body" id="projectsWorkerBody"></div>
+        <p class="project-pane-empty hidden" id="projectsWorkerEmpty" data-i18n="projectsWorkerEmpty">Worker はありません。</p>
+      </div>
+      <div class="chat-area hidden" id="projectsArchiveArea" data-project-pane="archive">
+        <div class="project-pane-header">
+          <h2 class="project-pane-title" id="projectsArchiveTitle">Archive</h2>
+        </div>
+        <div class="project-pane-body" id="projectsArchiveBody"></div>
+        <p class="project-pane-empty hidden" id="projectsArchiveEmpty" data-i18n="projectsArchiveEmpty">Archive は空です。</p>
+      </div>
+      <div class="input-area page-load-animate" id="projectsInputArea">
+        <div class="input-wrapper">
+          <p class="ai-disclaimer" data-i18n="aiDisclaimer">AIが生成する内容は正確でない場合があります。</p>
+          <div class="input-row">
+            <div class="project-mode-select-wrap" id="projectsModeWrap">
+              <button type="button" class="project-mode-select-btn" id="projectsModeBtn" aria-expanded="false" aria-haspopup="listbox" aria-label="モードを選択" disabled>
+                <span class="project-mode-select-content">
+                  <span class="project-mode-select-icon" id="projectsModeIcon" aria-hidden="true"></span>
+                  <span class="project-mode-select-label" id="projectsModeLabel">Chat</span>
+                </span>
+                <svg class="project-mode-select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+              </button>
+              <div class="project-mode-select-menu hidden" id="projectsModeMenu" role="listbox" aria-label="チャットモード"></div>
+            </div>
+            <textarea id="projectsMessageInput" class="chat-message-input" rows="1" placeholder="メッセージを入力..." data-i18n-placeholder="messagePlaceholder" disabled></textarea>
+            <button type="button" class="send-btn" id="projectsSendBtn" aria-label="送信" disabled>
+              <svg class="send-btn-icon send-btn-icon--send" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              <svg class="send-btn-icon send-btn-icon--stop hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <dialog class="projects-dialog" id="projectsDialog">
+    <form id="projectsForm" class="settings-form projects-form" method="dialog">
+      <h3 class="projects-dialog-title" id="projectsDialogTitle" data-i18n="projectsAdd">プロジェクトを追加</h3>
+      <div class="settings-field">
+        <label for="projectsName" data-i18n="projectsFieldName">名前</label>
+        <input type="text" id="projectsName" required autocomplete="off">
+      </div>
+      <div class="settings-field">
+        <label for="projectsDescription" data-i18n="projectsFieldDescription">説明</label>
+        <textarea id="projectsDescription" rows="4"></textarea>
+      </div>
+      <div class="projects-dialog-actions">
+        <button type="button" class="settings-btn settings-btn--secondary" id="projectsCancel" data-i18n="projectsCancel">キャンセル</button>
+        <button type="submit" class="settings-btn" id="projectsSave" data-i18n="save">保存</button>
+      </div>
+    </form>
+  </dialog>
+</main>

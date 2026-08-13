@@ -1,0 +1,72 @@
+<main class="main tasks-main page-load-animate" id="tasksMain">
+
+  <header class="settings-header tasks-page-header">
+
+    <div class="settings-header-inner tasks-header-inner">
+
+      <a href="/chat" class="settings-back" data-i18n="backToChat">チャットに戻る</a>
+
+      <h1 class="settings-header-title" data-i18n="tasksTitle">TASKS</h1>
+
+      <div class="tasks-header-actions">
+
+        <button type="button" class="tasks-toolbar-btn" id="tasksArrangeBtn" data-i18n="tasksArrange">整列</button>
+
+        <div class="tasks-add-wrap">
+
+          <button
+
+            type="button"
+
+            class="tasks-add-btn"
+
+            id="tasksAddBtn"
+
+            aria-haspopup="menu"
+
+            aria-expanded="false"
+
+            aria-controls="tasksTypeMenu"
+
+            data-i18n-aria="tasksAddCard"
+
+            aria-label="カードを追加"
+
+          >+</button>
+
+          <div class="tasks-type-menu hidden" id="tasksTypeMenu" role="menu">
+
+            <button type="button" class="tasks-type-option" role="menuitem" data-type="todo" data-i18n="tasksCardTypeTodo">TODO</button>
+
+            <button type="button" class="tasks-type-option" role="menuitem" data-type="task" data-i18n="tasksCardTypeTask">タスク</button>
+
+            <button type="button" class="tasks-type-option" role="menuitem" data-type="list" data-i18n="tasksCardTypeList">リスト</button>
+
+            <button type="button" class="tasks-type-option" role="menuitem" data-type="memo" data-i18n="tasksCardTypeMemo">メモ</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <div class="tasks-body">
+
+    <div class="tasks-whiteboard" id="tasksWhiteboard">
+
+      <div class="tasks-board-inner" id="tasksBoardInner">
+
+        <p class="tasks-empty hidden" id="tasksEmpty" data-i18n="tasksEmpty">カードがありません。＋から追加してください。</p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+

@@ -1,0 +1,22 @@
+<script>
+(function () {
+  if (typeof CSS === "undefined" || typeof CSS.registerProperty !== "function") {
+    document.documentElement.classList.add("no-property-animation");
+  }
+  var theme = {{ (user.theme if user is defined and user else none) | tojson }};
+  if (!theme) {
+    try { theme = localStorage.getItem("nexgate_theme"); } catch (e) {}
+  }
+  if (!theme) theme = "dark";
+  if (["dark", "light", "system", "midnight"].indexOf(theme) === -1) theme = "dark";
+  document.documentElement.setAttribute("data-theme", theme);
+
+  var chatBg = {{ (user.chat_background_pattern if user is defined and user else none) | tojson }};
+  if (!chatBg) {
+    try { chatBg = localStorage.getItem("nexgate_chat_background"); } catch (e) {}
+  }
+  if (!chatBg) chatBg = "simple";
+  if (["simple", "grid"].indexOf(chatBg) === -1) chatBg = "simple";
+  document.documentElement.setAttribute("data-chat-background", chatBg);
+})();
+</script>

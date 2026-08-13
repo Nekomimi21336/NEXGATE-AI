@@ -1,0 +1,98 @@
+<script>
+(function () {
+  var id = (location.hash || "#general").slice(1).split("?")[0];
+  var integrationsTab = "overview";
+  if (id === "profile" || id === "account") id = "general";
+  if (id === "integrations/google") {
+    id = "integrations";
+    integrationsTab = "google";
+  } else if (id === "integrations/discord") {
+    id = "integrations";
+    integrationsTab = "discord";
+  } else if (id === "integrations/computelab") {
+    id = "integrations";
+    integrationsTab = "computelab";
+  } else if (id.indexOf("integrations/") === 0) {
+    id = "integrations";
+  }
+  var agentScreen = "list";
+  var agentEditMatch = id.match(/^agent\/edit\/(.+)$/);
+  if (agentEditMatch) {
+    id = "agent";
+    agentScreen = "editor";
+  } else if (id.indexOf("agent/") === 0) {
+    id = "agent";
+  }
+  if (["general", "security", "embed", "theme", "display", "performance", "extensions", "memory-settings", "integrations", "agent"].indexOf(id) === -1) id = "general";
+  document.documentElement.setAttribute("data-settings-panel", id);
+  if (id === "integrations") {
+    document.documentElement.setAttribute("data-settings-integrations-tab", integrationsTab);
+  }
+  if (id === "agent") {
+    document.documentElement.setAttribute("data-custom-agents-screen", agentScreen);
+  }
+})();
+</script>
+<style>
+  .settings-panel {
+    display: none !important;
+  }
+  html[data-settings-panel="general"] #panel-general,
+  html[data-settings-panel="security"] #panel-security,
+  html[data-settings-panel="embed"] #panel-embed,
+  html[data-settings-panel="theme"] #panel-theme,
+  html[data-settings-panel="display"] #panel-display,
+  html[data-settings-panel="performance"] #panel-performance,
+  html[data-settings-panel="extensions"] #panel-extensions,
+  html[data-settings-panel="memory-settings"] #panel-memory-settings,
+  html[data-settings-panel="integrations"] #panel-integrations,
+  html[data-settings-panel="agent"] #panel-agent {
+    display: block !important;
+  }
+  html[data-settings-panel="agent"] #customAgentsListScreen {
+    display: block !important;
+  }
+  html[data-settings-panel="agent"] #customAgentsEditorScreen {
+    display: none !important;
+  }
+  html[data-settings-panel="agent"][data-custom-agents-screen="editor"] #customAgentsListScreen {
+    display: none !important;
+  }
+  html[data-settings-panel="agent"][data-custom-agents-screen="editor"] #customAgentsEditorScreen {
+    display: block !important;
+  }
+  html[data-settings-panel="general"] .settings-nav-item[data-panel="general"],
+  html[data-settings-panel="security"] .settings-nav-item[data-panel="security"],
+  html[data-settings-panel="embed"] .settings-nav-item[data-panel="embed"],
+  html[data-settings-panel="theme"] .settings-nav-item[data-panel="theme"],
+  html[data-settings-panel="display"] .settings-nav-item[data-panel="display"],
+  html[data-settings-panel="performance"] .settings-nav-item[data-panel="performance"],
+  html[data-settings-panel="extensions"] .settings-nav-item[data-panel="extensions"],
+  html[data-settings-panel="memory-settings"] .settings-nav-item[data-panel="memory-settings"],
+  html[data-settings-panel="integrations"] .settings-nav-item[data-panel="integrations"],
+  html[data-settings-panel="agent"] .settings-nav-item[data-panel="agent"] {
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .settings-integrations-panel {
+    display: none !important;
+  }
+  html[data-custom-agents-screen="editor"] .custom-agents-tab-panel.active {
+    display: block !important;
+  }
+  html[data-settings-integrations-tab="overview"] #integrations-panel-overview,
+  html[data-settings-integrations-tab="google"] #integrations-panel-google,
+  html[data-settings-integrations-tab="discord"] #integrations-panel-discord,
+  html[data-settings-integrations-tab="computelab"] #integrations-panel-computelab {
+    display: block !important;
+  }
+  html[data-settings-integrations-tab="overview"] #integrations-tab-overview,
+  html[data-settings-integrations-tab="google"] #integrations-tab-google,
+  html[data-settings-integrations-tab="discord"] #integrations-tab-discord,
+  html[data-settings-integrations-tab="computelab"] #integrations-tab-computelab {
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+</style>

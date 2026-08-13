@@ -1,0 +1,221 @@
+<main class="main billing-main page-load-animate" id="billingMain">
+  <header class="settings-header billing-page-header">
+    
+    <div class="settings-header-inner">
+      <a href="/chat" class="settings-back" data-i18n="backToChat">チャットに戻る</a>
+      <div class="billing-page-title-wrap">
+        <h1 class="settings-header-title" data-i18n="billingTitle">プラン / 課金</h1>
+        <p class="billing-page-subtitle" data-i18n="billingSubtitle">プラン・利用量・プリペイド残高の確認とチャージ</p>
+      </div>
+    </div>
+  </header>
+  
+  <div class="billing-body" id="billingBody">
+    <div class="billing-loading-wrap" id="billingLoading">
+      <div class="billing-skeleton billing-skeleton--section"></div>
+      <div class="billing-skeleton billing-skeleton--section"></div>
+      <div class="billing-skeleton billing-skeleton--section"></div>
+      <p class="billing-loading-text" data-i18n="billingLoading">読み込み中...</p>
+    </div>
+    <div class="billing-view-stage hidden" id="billingViewStage" data-billing-view="main">
+    <div class="billing-content billing-view" id="billingContent">
+      <section class="billing-section" aria-labelledby="billing-current-plan-heading">
+        <header class="billing-section-header">
+          <h2 id="billing-current-plan-heading" class="billing-section-title" data-i18n="billingCurrentPlanTitle">現在のご利用プラン</h2>
+        </header>
+        <div class="settings-card billing-plan-current-card" id="billingCurrentPlan" data-plan="">
+          <div class="billing-plan-card-head">
+            <span class="billing-plan-badge" id="billingPlanBadge">PASS+</span>
+            <span class="billing-plan-price" id="billingPlanPrice">$10/月</span>
+          </div>
+          <p class="billing-plan-desc hidden" id="billingPlanDescription"></p>
+          <p class="billing-plan-period" id="billingPeriodLabel">—</p>
+          <p class="billing-expires-line">
+            <span class="billing-expires-label" data-i18n="billingPlanExpiresLabel">プラン期限</span>
+            <strong id="billingPlanExpiresValue">—</strong>
+          </p>
+          <p class="billing-plan-note" data-i18n="billingPlanNote">月額料金は残高とは別に管理されます</p>
+          <div class="billing-plan-actions">
+            <button type="button" class="settings-btn" id="billingUpgradePlanBtn" data-i18n="billingUpgradePlan">プランのアップグレード</button>
+            <button type="button" class="settings-btn settings-btn--secondary" id="billingViewPlansBtn" data-i18n="billingViewPlans">プラン一覧を見る</button>
+          </div>
+        </div>
+        <div class="billing-plans-panel hidden" id="billingPlansPanel" aria-labelledby="billing-plans-heading">
+          <header class="billing-section-header billing-section-header--nested">
+            <h3 id="billing-plans-heading" class="billing-section-title billing-section-title--sub" data-i18n="billingPlansTitle">プラン一覧</h3>
+            <p class="billing-section-desc" data-i18n="billingPlansDesc">各プランの料金と内容を比較できます</p>
+          </header>
+          <div class="billing-plans-grid" id="billingPlansGrid"></div>
+        </div>
+      </section>
+
+      <section class="billing-section" aria-labelledby="billing-usage-heading">
+        <header class="billing-section-header">
+          <h2 id="billing-usage-heading" class="billing-section-title" data-i18n="billingUsageTitle">利用状況</h2>
+          <p class="billing-section-desc" id="billingUsageDescText">有効なプラン枠の合計に対する AI 利用状況です</p>
+        </header>
+        <div class="settings-card">
+          <article class="billing-usage-stat billing-usage-stat--single">
+            <div class="billing-usage-stat-head">
+              <span class="billing-usage-stat-name" data-i18n="billingUsageStatus">利用状況</span>
+              <span class="billing-usage-value" id="billingUsageLabel">通常利用</span>
+            </div>
+            <div class="billing-progress">
+              <div class="billing-progress-bar is-normal" id="billingUsageBar" style="width: 0%"></div>
+            </div>
+            <div class="billing-usage-progress-foot">
+              <span class="billing-usage-percent" id="billingUsagePercent">0%</span>
+              <span class="billing-usage-reset-note hidden" id="billingUsageResetNote"></span>
+            </div>
+            <p class="billing-usage-over-note hidden" id="billingUsageOverNote" data-i18n="billingUsageOverNote">超過利用中</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="billing-section" aria-labelledby="billing-request-logs-heading">
+        <header class="billing-section-header">
+          <h2 id="billing-request-logs-heading" class="billing-section-title">リクエスト利用ログ</h2>
+          <p class="billing-section-desc" id="billingModelNote">—</p>
+        </header>
+        <div class="settings-card">
+          <div class="admin-table-wrap billing-request-logs-wrap">
+            <table class="admin-table billing-request-logs-table">
+              <thead>
+                <tr>
+                  <th>リクエストID</th>
+                  <th>状態</th>
+                  <th>時刻</th>
+                  <th>セッション</th>
+                  <th>ツール</th>
+                  <th>課金</th>
+                  <th>処理プラン</th>
+                  <th>コスト</th>
+                </tr>
+              </thead>
+              <tbody id="billingRequestLogsBody">
+                <tr><td colspan="8" class="billing-request-logs-empty">読み込み中…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="billing-section" aria-labelledby="billing-prepaid-heading">
+        <header class="billing-section-header">
+          <h2 id="billing-prepaid-heading" class="billing-section-title" data-i18n="billingPrepaidTitle">プリペイド残高</h2>
+        </header>
+        <div class="settings-card billing-prepaid-balance-card">
+          <p class="billing-prepaid-balance-amount" id="billingBalanceValue">—</p>
+        </div>
+
+        <div class="settings-card billing-prepaid-action-card" id="billingTopupSection">
+          <header class="billing-prepaid-action-header">
+            <h3 class="billing-prepaid-action-title" data-i18n="billingChargeBalance">残高チャージ</h3>
+            <p class="billing-prepaid-action-desc" id="billingChargeDesc">PayPal でチャージ（500円以上）</p>
+          </header>
+          <p class="settings-msg hidden error billing-disabled-notice" id="billingTopupDisabledNotice" data-i18n="billingTopupDisabled">
+            現在、課金・残高チャージは管理者により停止されています。
+          </p>
+          <div id="billingTopupCard">
+            <p class="settings-msg hidden error" id="billingPaypalConfigMsg"></p>
+            <form id="balanceTopupForm" class="settings-form billing-topup-form">
+              <div class="billing-topup-presets" id="billingTopupPresets" role="group" data-i18n-aria="billingTopupPresetsAria">
+                <button type="button" class="billing-preset-btn is-active" data-amount="500">¥500</button>
+                <button type="button" class="billing-preset-btn" data-amount="1000">¥1,000</button>
+                <button type="button" class="billing-preset-btn" data-amount="3000">¥3,000</button>
+                <button type="button" class="billing-preset-btn" data-amount="5000">¥5,000</button>
+              </div>
+              <div class="settings-field billing-amount-field">
+                <label for="balanceTopupAmount" data-i18n="billingTopupAmountLabel">チャージ金額（円）</label>
+                <div class="billing-amount-input-wrap">
+                  <span class="billing-amount-prefix" aria-hidden="true">¥</span>
+                  <input type="number" id="balanceTopupAmount" min="500" step="1" value="500" inputmode="numeric">
+                </div>
+                <span class="settings-hint" id="billingTopupHint">500円以上を指定してください</span>
+              </div>
+              <div id="paypalButtonContainer" class="paypal-button-container"></div>
+              <p class="billing-paypal-note hidden" id="billingPaypalDisabled" data-i18n="billingPaypalDisabled">
+                PayPal決済は現在利用できません。管理者が PayPal API キーを設定すると有効になります。
+              </p>
+              <p class="settings-msg hidden" id="balanceTopupMsg"></p>
+            </form>
+          </div>
+        </div>
+
+        
+        <div class="settings-card billing-prepaid-action-card" id="billingCouponSection">
+          <header class="billing-prepaid-action-header">
+            <h3 class="billing-prepaid-action-title" data-i18n="billingCouponTitle">クーポンコード</h3>
+            <p class="billing-prepaid-action-desc" data-i18n="billingCouponDesc">1コード1回まで利用できます</p>
+          </header>
+          <p class="settings-msg hidden error billing-disabled-notice" id="billingCouponDisabledNotice" data-i18n="billingCouponDisabled">
+            現在、クーポンコードの利用は管理者により停止されています。
+          </p>
+          <div id="billingCouponCard">
+            <form id="couponRedeemForm" class="settings-form billing-coupon-form">
+              <div class="settings-field">
+                <label for="couponRedeemCode" data-i18n="billingCouponCodeLabel">クーポンコード</label>
+                <div class="billing-coupon-input-row">
+                  <input type="text" id="couponRedeemCode" autocomplete="off" data-i18n-placeholder="billingCouponPlaceholder" placeholder="例: WELCOME2026" required>
+                  <button type="submit" class="settings-btn billing-coupon-submit" data-i18n="billingCouponSubmit">利用する</button>
+                </div>
+              </div>
+              <p class="settings-msg hidden" id="couponRedeemMsg"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="billing-balance-confirm billing-view" id="billingBalanceConfirm" aria-hidden="true" aria-labelledby="billingBalanceConfirmTitle">
+      <header class="billing-balance-confirm-header">
+        <button type="button" class="settings-back billing-balance-confirm-back" id="billingBalanceConfirmBack" data-i18n="billingBalanceConfirmBack">プラン選択に戻る</button>
+        <h2 class="billing-section-title" id="billingBalanceConfirmTitle" data-i18n="billingBalanceConfirmTitle">支払い確認</h2>
+        <p class="billing-section-desc" data-i18n="billingBalanceConfirmDesc">残高から1ヶ月分を引き落とします。内容をご確認のうえ、申し込んでください。</p>
+      </header>
+      <div class="settings-card billing-balance-confirm-card">
+        <dl class="billing-balance-confirm-summary">
+          <div class="billing-balance-confirm-row">
+            <dt data-i18n="billingBalanceConfirmPlan">プラン</dt>
+            <dd id="billingBalanceConfirmPlan">—</dd>
+          </div>
+          <div class="billing-balance-confirm-row">
+            <dt data-i18n="billingBalanceConfirmAmount">お支払い金額</dt>
+            <dd id="billingBalanceConfirmAmount">—</dd>
+          </div>
+          <div class="billing-balance-confirm-row">
+            <dt data-i18n="billingBalanceConfirmCurrent">現在の残高</dt>
+            <dd id="billingBalanceConfirmCurrent">—</dd>
+          </div>
+          <div class="billing-balance-confirm-row billing-balance-confirm-row--discount hidden" id="billingBalanceConfirmDiscountRow">
+            <dt data-i18n="billingBalanceConfirmDiscount">クーポン割引</dt>
+            <dd id="billingBalanceConfirmDiscount">—</dd>
+          </div>
+          <div class="billing-balance-confirm-row billing-balance-confirm-row--emphasis">
+            <dt data-i18n="billingBalanceConfirmAfter">支払後の残高</dt>
+            <dd id="billingBalanceConfirmAfter">—</dd>
+          </div>
+        </dl>
+        <div class="billing-balance-confirm-coupon" id="billingBalanceCouponSection">
+          <button type="button" class="billing-balance-coupon-toggle settings-btn settings-btn--secondary" id="billingBalanceCouponToggle" data-i18n="billingBalanceCouponToggle">
+            クーポンコードを利用する
+          </button>
+          <div class="billing-balance-coupon-panel hidden" id="billingBalanceCouponPanel">
+            <div class="billing-balance-coupon-row">
+              <input type="text" class="billing-balance-coupon-input" id="billingBalanceCouponCode" autocomplete="off" data-i18n-placeholder="billingCouponPlaceholder" placeholder="例: WELCOME2026">
+              <button type="button" class="settings-btn" id="billingBalanceCouponApply" data-i18n="billingBalanceCouponApply">適用</button>
+            </div>
+            <p class="settings-msg hidden" id="billingBalanceCouponMsg"></p>
+          </div>
+          <p class="billing-balance-coupon-applied hidden" id="billingBalanceCouponApplied"></p>
+        </div>
+        <div class="billing-balance-confirm-actions">
+          <button type="button" class="settings-btn settings-btn--primary" id="billingBalanceConfirmSubmit" data-i18n="billingBalanceConfirmSubmit">申し込む</button>
+          <button type="button" class="settings-btn settings-btn--secondary" id="billingBalanceConfirmCancel" data-i18n="billingBalanceConfirmCancel">キャンセル</button>
+        </div>
+        <p class="settings-msg hidden" id="billingBalanceConfirmMsg"></p>
+      </div>
+    </div>
+    </div>
+    <p class="billing-error hidden" id="billingError"></p>
+  </div>
+</main>

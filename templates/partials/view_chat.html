@@ -1,0 +1,198 @@
+<main class="main page-load-animate" id="chatMain">
+  <div class="model-select-wrap">
+    <div class="model-select-column">
+      <span class="secret-mode-label hidden" id="secretModeLabel" aria-hidden="true">SecretMode</span>
+      <div class="model-select-left">
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebarRegion">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+        </button>
+        <button type="button" class="model-select-btn" id="modelSelectBtn" aria-expanded="false" aria-haspopup="listbox" aria-label="モデルを選択">
+          <span class="model-select-trigger-wrap">
+            <span class="model-select-trigger">モデルを選択</span>
+            <span class="model-select-trigger-desc hidden" id="modelSelectTriggerDesc"></span>
+          </span>
+          <svg class="model-select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div class="model-select-menu hidden" id="modelSelectMenu" role="listbox"></div>
+        <button type="button" class="model-select-btn custom-agent-select-btn{% if not user.custom_agents_enabled %} hidden{% endif %}" id="customAgentSelectBtn" aria-expanded="false" aria-haspopup="listbox" aria-label="エージェントを選択" aria-hidden="{{ 'false' if user.custom_agents_enabled else 'true' }}">
+          <span class="model-select-trigger-wrap">
+            <span class="model-select-trigger" id="customAgentSelectTrigger" data-i18n="customAgentSelectDefault">エージェント</span>
+          </span>
+          <svg class="model-select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div class="model-select-menu hidden" id="customAgentSelectMenu" role="listbox"></div>
+      </div>
+    </div>
+    <div class="chat-header-actions">
+    <label class="private-chat-toggle" id="privateChatToggleWrap" title="">
+      <span class="private-chat-toggle-label">
+        <span class="private-chat-toggle-text" data-i18n="privateChatLabel">プライベートチャット</span>
+        <span class="private-chat-hint" id="privateChatHint" data-i18n="privateChatHint">履歴に残りません。約35分後に自動削除されます。</span>
+      </span>
+      <span class="settings-switch private-chat-switch">
+        <input type="checkbox" class="settings-switch-input" id="privateChatToggle" data-i18n-aria="privateChatAria" aria-describedby="privateChatHint">
+        <span class="settings-switch-track" aria-hidden="true"></span>
+      </span>
+    </label>
+    <div class="chat-share-wrap">
+      <button type="button" class="chat-share-btn hidden" id="chatShareBtn" data-i18n-aria="chatShareAria" title="" aria-expanded="false" aria-haspopup="dialog" aria-controls="chatSharePanel">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0 0 18 8.02c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81A2.99 2.99 0 0 0 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.76 0 1.44-.3 1.96-.77l7.05 4.11c-.05.23-.09.46-.09.7 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/></svg>
+        <span class="chat-share-btn-label" data-i18n="chatShareLabel">共有</span>
+      </button>
+      <div class="chat-share-panel hidden" id="chatSharePanel" role="dialog" aria-labelledby="chatSharePanelTitle">
+        <p class="chat-share-panel-title" id="chatSharePanelTitle" data-i18n="chatShareWhoTitle">誰と共有しますか?</p>
+        <div class="chat-share-visibility" id="chatShareVisibility" role="radiogroup" data-i18n-aria="chatShareVisibilityAria">
+          <button type="button" class="chat-share-visibility-btn" data-visibility="private" role="radio" aria-checked="true">
+            <span class="chat-share-visibility-label" data-i18n="chatShareModePrivate">プライベート</span>
+            <span class="chat-share-visibility-desc" data-i18n="chatShareModePrivateDesc">自分だけ</span>
+          </button>
+          <button type="button" class="chat-share-visibility-btn" data-visibility="login_required" role="radio" aria-checked="false">
+            <span class="chat-share-visibility-label" data-i18n="chatShareModeLogin">鍵付きパブリック</span>
+            <span class="chat-share-visibility-desc" data-i18n="chatShareModeLoginDesc">ログインが必要</span>
+          </button>
+          <button type="button" class="chat-share-visibility-btn" data-visibility="public" role="radio" aria-checked="false">
+            <span class="chat-share-visibility-label" data-i18n="chatShareModePublic">パブリック</span>
+            <span class="chat-share-visibility-desc" data-i18n="chatShareModePublicDesc">誰でも閲覧可</span>
+          </button>
+        </div>
+        <div class="chat-share-link-row hidden" id="chatShareLinkRow">
+          <input type="text" class="chat-share-link-input" id="chatShareLinkInput" readonly>
+          <button type="button" class="chat-share-copy-btn" id="chatShareCopyBtn" data-i18n="chatShareCopyLink">リンクをコピー</button>
+        </div>
+        <p class="chat-share-panel-subtitle" data-i18n="chatShareCollabTitle">セッションの共有（ログイン必須）</p>
+        <p class="chat-share-panel-desc" data-i18n="chatShareCollabDesc">リアルタイムで会話・設定・生成を同期します。共有先はログインが必要です。</p>
+        <div class="chat-share-collab" id="chatShareCollab" role="radiogroup" data-i18n-aria="chatShareCollabAria">
+          <button type="button" class="chat-share-collab-btn chat-share-visibility-btn" data-collab-mode="private" role="radio" aria-checked="true">
+            <span class="chat-share-visibility-label" data-i18n="chatShareCollabPrivate">ライブ共有なし</span>
+          </button>
+          <button type="button" class="chat-share-collab-btn chat-share-visibility-btn" data-collab-mode="view_only" role="radio" aria-checked="false">
+            <span class="chat-share-visibility-label" data-i18n="chatShareCollabViewOnly">閲覧のみ</span>
+            <span class="chat-share-visibility-desc" data-i18n="chatShareCollabViewOnlyDesc">閲覧・生成の表示のみ</span>
+          </button>
+          <button type="button" class="chat-share-collab-btn chat-share-visibility-btn" data-collab-mode="participate" role="radio" aria-checked="false">
+            <span class="chat-share-visibility-label" data-i18n="chatShareCollabParticipate">セッション参加OK</span>
+            <span class="chat-share-visibility-desc" data-i18n="chatShareCollabParticipateDesc">送信・設定変更も可能</span>
+          </button>
+        </div>
+        <div class="chat-share-link-row hidden" id="chatShareCollabLinkRow">
+          <input type="text" class="chat-share-link-input" id="chatShareCollabLinkInput" readonly>
+          <button type="button" class="chat-share-copy-btn" id="chatShareCollabCopyBtn" data-i18n="chatShareCopyLink">リンクをコピー</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="chat-header-fade" aria-hidden="true"></div>
+  <div class="chat-conversation" id="chatConversation">
+  <div class="chat-session-title-bar hidden" id="chatSessionTitleBar">
+    <p class="chat-session-title" id="chatSessionTitle"></p>
+  </div>
+  <nav class="chat-message-nav hidden" id="chatMessageNav" aria-label="発言へ移動">
+    <div class="chat-message-nav-inner" id="chatMessageNavInner">
+      <ul class="chat-message-nav-list" id="chatMessageNavList" role="list"></ul>
+    </div>
+  </nav>
+  <div class="chat-area" id="chatArea">
+    <div class="welcome page-load-stagger" id="welcome">
+      <h1 id="welcomeHeading"></h1>
+      <div class="suggestions">
+        <button type="button" class="suggestion" data-prompt=""></button>
+        <button type="button" class="suggestion" data-prompt=""></button>
+        <button type="button" class="suggestion" data-prompt=""></button>
+        <button type="button" class="suggestion" data-prompt=""></button>
+      </div>
+    </div>
+    <div class="messages hidden" id="messages"></div>
+    <button type="button" class="chat-scroll-to-bottom hidden" id="chatScrollToBottomBtn" aria-label="最新へ" data-i18n-aria="chatScrollToLatest">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+    </button>
+  </div>
+  <div class="input-area page-load-animate">
+    <div class="input-wrapper">
+      <div class="chat-restriction-notice hidden" id="chatRestrictionNotice" role="alert" aria-live="polite">
+        <p class="chat-restriction-notice-text" id="chatRestrictionNoticeText"></p>
+        <div class="chat-restriction-notice-actions">
+          <a href="/billing" class="chat-restriction-notice-link hidden" id="chatRestrictionBillingLink">プラン/課金へ</a>
+          <button type="button" class="chat-restriction-notice-dismiss" id="chatRestrictionNoticeDismiss" aria-label="閉じる"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+        </div>
+      </div>
+      <div class="message-edit-notice hidden" id="messageEditNotice" role="status" aria-live="polite">
+        <p class="message-edit-notice-text" id="messageEditNoticeText"></p>
+        <button type="button" class="message-edit-notice-cancel" id="messageEditNoticeCancel">キャンセル</button>
+      </div>
+      <p class="ai-disclaimer" data-i18n="aiDisclaimer">AIが生成する内容は正確でない場合があります。</p>
+      <div class="chat-tools-bar" id="chatToolsBar">
+        <div class="chat-tools-bar-wrap">
+          <button type="button" class="chat-tools-summary" id="chatToolsSummaryBtn" aria-expanded="false" aria-haspopup="dialog" aria-controls="chatToolsPopover" data-i18n="chatToolsAllDisabled">ツールは無効です。</button>
+          <div class="chat-tools-popover hidden" id="chatToolsPopover" role="dialog" aria-labelledby="chatToolsPopoverTitle">
+            <p class="chat-tools-popover-title" id="chatToolsPopoverTitle" data-i18n="chatToolsPopoverTitle">チャットツール</p>
+            <div class="chat-tools-popover-list" id="chatToolsPopoverList"></div>
+            <p class="chat-tools-popover-empty hidden" id="chatToolsPopoverEmpty" data-i18n="chatToolsPopoverEmpty">利用できるツールがありません</p>
+          </div>
+        </div>
+      </div>
+      <div class="attachment-preview hidden" id="attachmentPreview"></div>
+      <div class="ocr-card-area hidden" id="ocrCardArea" aria-live="polite"></div>
+      <div class="input-row">
+        <div class="input-tools">
+          <div class="input-tool-wrap">
+            <button type="button" class="input-tool-btn" id="attachBtn" aria-label="添付" aria-expanded="false" aria-haspopup="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </button>
+            <div class="attach-menu hidden" id="attachMenu" role="menu">
+              <button type="button" class="attach-menu-item" id="attachFileBtn" role="menuitem">ファイルをアップロード</button>
+              <button type="button" class="attach-menu-item" id="attachPhotoBtn" role="menuitem">写真を追加</button>
+              <button type="button" class="attach-menu-item" id="attachCameraBtn" role="menuitem">カメラで撮影</button>
+              <button type="button" class="attach-menu-item attach-menu-item--section-start hidden" id="attachDeepResearchBtn" role="menuitemcheckbox" aria-checked="false" data-i18n="attachMenuDeepResearch">DeepResearch</button>
+            </div>
+          </div>
+          <button type="button" class="deep-research-indicator intelligent-search-indicator hidden" id="deepResearchIndicator" aria-label="DeepResearch" tabindex="0">
+            <svg class="intelligent-search-indicator-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zm-1 15v2h2v-2h-2zm0-11a5 5 0 0 1 5 5c0 1.77-.93 3.32-2.33 4.2a1 1 0 0 0-.67.94V15h-4v-1.86a1 1 0 0 0-.67-.94A4.99 4.99 0 0 1 7 11a5 5 0 0 1 5-5z"/></svg>
+            <span class="intelligent-search-tooltip" role="tooltip">
+              <span class="intelligent-search-tooltip-title" data-i18n="deepResearchTooltipTitle">DeepResearchが有効です</span>
+              <span class="intelligent-search-tooltip-desc" data-i18n="deepResearchTooltipDesc">クリックでオフにします。複数回のWeb検索で深く調査します。</span>
+            </span>
+          </button>
+          <span class="intelligent-search-indicator hidden" id="intelligentSearchIndicator" role="status" tabindex="0" aria-label="IntelligentSearch 有効">
+            <svg class="intelligent-search-indicator-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <span class="intelligent-search-tooltip" role="tooltip">
+              <span class="intelligent-search-tooltip-title" data-i18n="intelligentSearchTooltipTitle">IntelligentSearchが有効です</span>
+              <span class="intelligent-search-tooltip-desc" data-i18n="intelligentSearchTooltipDesc">強力な推論,検索機能が利用可能</span>
+            </span>
+          </span>
+          <div class="input-tool-wrap">
+            <button type="button" class="image-generation-indicator hidden" id="imageGenerationIndicator" aria-label="画像生成 設定" aria-expanded="false" aria-haspopup="dialog">
+              <svg class="image-generation-indicator-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              <span class="intelligent-search-tooltip image-gen-hover-tooltip" role="tooltip">
+                <span class="intelligent-search-tooltip-title" data-i18n="imageGenerationTooltipTitle">画像生成が有効です</span>
+                <span class="intelligent-search-tooltip-desc" data-i18n="imageGenerationTooltipDesc">クリックでエンジンとサイズを設定</span>
+              </span>
+            </button>
+            <div class="image-gen-popover hidden" id="imageGenPopover" role="dialog" aria-labelledby="imageGenPopoverTitle">
+              <p class="image-gen-popover-title" id="imageGenPopoverTitle" data-i18n="imageGenPopoverTitle">画像生成の設定</p>
+              <div class="image-gen-popover-field">
+                <label for="imageGenModelSelect" data-i18n="imageGenEngineLabel">エンジン</label>
+                <select id="imageGenModelSelect"></select>
+              </div>
+              <div class="image-gen-popover-field">
+                <label for="imageGenSizeSelect" data-i18n="imageGenSizeLabel">サイズ</label>
+                <select id="imageGenSizeSelect"></select>
+              </div>
+              <p class="image-gen-popover-hint" id="imageGenPopoverHint" data-i18n="imageGenPopoverHint">チャットで画像生成ツールが呼ばれたときに適用されます</p>
+            </div>
+          </div>
+        </div>
+        <textarea id="messageInput" class="chat-message-input" rows="1" placeholder="メッセージを入力..." data-i18n-placeholder="messagePlaceholder"></textarea>
+        <button type="button" class="send-btn" id="sendBtn" aria-label="送信">
+          <svg class="send-btn-icon send-btn-icon--send" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          <svg class="send-btn-icon send-btn-icon--stop hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>
+        </button>
+      </div>
+      <input type="file" id="fileInput" class="hidden" multiple accept="image/png,image/jpeg,image/gif,image/webp,application/pdf,.pdf,.txt,.md,.json,.csv,.py,.js,.ts,.html,.css,.xml,.yaml,.yml,.log">
+      <input type="file" id="photoInput" class="hidden" accept="image/png,image/jpeg,image/gif,image/webp" multiple>
+      <input type="file" id="cameraInput" class="hidden" accept="image/png,image/jpeg,image/gif,image/webp" capture="environment">
+    </div>
+  </div>
+  <p class="private-chat-frame-notice hidden" id="privateChatFrameNotice" role="status" aria-live="polite" data-i18n="privateChatFrameNotice">プライベートチャットです ここでの会話は記録に残りません</p>
+  </div>
+</main>

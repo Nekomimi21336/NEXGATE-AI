@@ -1,0 +1,27 @@
+<main class="main announcements-main page-load-animate" id="announcementsMain">
+  <header class="settings-header announcements-page-header">
+    <div class="settings-header-inner">
+      <a href="/chat" class="settings-back" data-i18n="backToChat">チャットに戻る</a>
+      <div class="announcements-page-title-wrap">
+        <h1 class="settings-header-title" data-i18n="announcementsTitle">お知らせ</h1>
+        <p class="announcements-page-subtitle" data-i18n="announcementsSubtitle">サービスからのお知らせを確認できます</p>
+      </div>
+    </div>
+  </header>
+  <div class="announcements-body" id="announcementsBody">
+    <div class="announcements-loading-wrap" id="announcementsLoading">
+      <p class="announcements-loading-text" data-i18n="announcementsLoading">読み込み中...</p>
+    </div>
+    <p class="announcements-empty hidden" id="announcementsEmpty" data-i18n="announcementsEmpty">現在お知らせはありません</p>
+    <div class="announcements-layout hidden" id="announcementsLayout">
+      <nav class="announcements-list" id="announcementsList" aria-label="お知らせ一覧"></nav>
+      <article class="announcements-detail" id="announcementsDetail" aria-live="polite">
+        <header class="announcements-detail-header">
+          <time class="announcements-detail-date" id="announcementsDetailDate"></time>
+          <h2 class="announcements-detail-title" id="announcementsDetailTitle"></h2>
+        </header>
+        <div class="announcements-detail-body markdown-body" id="announcementsDetailBody"></div>
+      </article>
+    </div>
+  </div>
+</main>

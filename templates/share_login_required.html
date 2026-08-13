@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログインが必要です - NEXGATE AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body.share-login-page {
+      margin: 0;
+      min-height: 100vh;
+      height: auto;
+      overflow: auto;
+      display: grid;
+      place-items: center;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: system-ui, sans-serif;
+    }
+    .box { text-align: center; padding: 24px; max-width: 420px; }
+    .box p { color: var(--text-secondary); line-height: 1.6; }
+    .box a { color: var(--accent); text-decoration: none; }
+    .box a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body class="share-login-page" data-theme="dark">
+  <div class="box">
+    <h1>ログインが必要です</h1>
+    <p>この共有リンクはログインしたユーザーのみ閲覧できます。</p>
+    <p><a href="/login">ログインする</a></p>
+    <p><a href="/share/{{ share_id }}">ログイン後に再度開く</a></p>
+  </div>
+</body>
+</html>

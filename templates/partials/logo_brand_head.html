@@ -1,0 +1,25 @@
+<script>
+(function () {
+  var KEY = "nexgate_logo_anim_at";
+  var COOLDOWN_MS = 60000;
+  var last = parseInt(sessionStorage.getItem(KEY), 10);
+  if (last && Date.now() - last < COOLDOWN_MS) {
+    document.documentElement.classList.add("logo-brand-skip");
+  }
+})();
+</script>
+<style>
+  html.logo-brand-skip .logo-brand {
+    color: var(--text-primary);
+    animation: none !important;
+  }
+
+  html.logo-brand-skip .logo-brand::before {
+    display: none !important;
+  }
+
+  html.logo-brand-skip .sidebar-brand-experiment {
+    opacity: 0.72;
+    animation: none !important;
+  }
+</style>

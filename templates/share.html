@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>{{ share.title }} - NEXGATE AI</title>
+  {% include 'partials/theme_script.html' %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ asset_version }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}?v={{ asset_version }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <style>
+    body.share-page {
+      margin: 0;
+      min-height: 100vh;
+      height: auto;
+      overflow: auto;
+      overflow-x: hidden;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    .share-shell {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    .share-header {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .share-brand {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin: 0 0 8px;
+    }
+    .share-title {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .share-meta {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .share-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .share-message {
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+    }
+    .share-message--user {
+      border-color: rgba(84, 54, 218, 0.25);
+      background: rgba(84, 54, 218, 0.06);
+    }
+    .share-message-role {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .share-message-body {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .share-message-body.markdown-body p {
+      margin: 0 0 0.75em;
+      white-space: normal;
+    }
+    .share-message-body.markdown-body p:last-child {
+      margin-bottom: 0;
+    }
+    .share-footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .share-footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body class="share-page" data-theme="dark">
+  <div class="share-shell">
+    <header class="share-header">
+      <p class="share-brand">NEXGATE AI · Shared conversation</p>
+      <h1 class="share-title">{{ share.title }}</h1>
+      <p class="share-meta">共有日: {{ share.created_label }}</p>
+    </header>
+    <div class="share-messages" id="shareMessages">
+      {% for msg in share.messages %}
+      <article class="share-message share-message--{{ msg.role }}">
+        <div class="share-message-role">{{ 'ユーザー' if msg.role == 'user' else 'AI' }}</div>
+        <div class="share-message-body{% if msg.role == 'assistant' %} markdown-body{% endif %}"{% if msg.role == 'assistant' %} data-markdown="1"{% endif %}>{{ msg.content }}</div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="share-footer"><a href="/">NEXGATE AI で始める</a></p>
+  </div>
+  <script src="{{ url_for('static', filename='js/vendor/marked.min.js') }}?v={{ asset_version }}"></script>
+  <script src="{{ url_for('static', filename='js/vendor/dompurify.min.js') }}?v={{ asset_version }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/math-render.js') }}?v={{ asset_version }}"></script>
+  <script src="{{ url_for('static', filename='js/markdown.js') }}?v={{ asset_version }}"></script>
+  <script src="{{ url_for('static', filename='js/table-export.js') }}?v={{ asset_version }}"></script>
+  <script src="{{ url_for('static', filename='js/vendor/diagram/mermaid.min.js') }}?v={{ asset_version }}"></script>
+  <script src="{{ url_for('static', filename='js/diagram-extension.js') }}?v={{ asset_version }}"></script>
+  <script src="{{ url_for('static', filename='js/image-lightbox.js') }}?v={{ asset_version }}"></script>
+  <script>
+    document.querySelectorAll("[data-markdown]").forEach((el) => {
+      const raw = el.textContent || "";
+      if (typeof window.applyMarkdownContent === "function") {
+        void window.applyMarkdownContent(el, raw).then(() => {
+          el.classList.add("markdown-rendered");
+        });
+      }
+    });
+  </script>
+</body>
+</html>

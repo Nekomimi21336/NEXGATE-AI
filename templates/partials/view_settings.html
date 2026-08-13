@@ -1,0 +1,978 @@
+<main class="main settings-main settings-main--v2" id="settingsMain">
+  <header class="settings-header settings-header--v2">
+    <div class="settings-header-inner">
+      <a href="/chat" class="settings-back" data-i18n="backToChat">チャットに戻る</a>
+      <div class="settings-header-text">
+        <h1 class="settings-header-title" data-i18n="settingsTitle">設定</h1>
+        <p class="settings-header-sub" data-i18n="settingsSubtitle">NEXGATE AIのアカウント設定やテーマ、より高度な機能を設定</p>
+      </div>
+    </div>
+  </header>
+  <div class="settings-body settings-body--v2">
+    <aside class="settings-nav settings-nav--v2" aria-label="設定カテゴリ">
+      <nav class="settings-nav-list">
+        <div class="settings-nav-group">
+          <p class="settings-nav-category" data-i18n="navCategoryGeneral">一般</p>
+          <button type="button" class="settings-nav-item" data-panel="general" data-i18n="navAccount">
+            <span class="settings-nav-icon" aria-hidden="true">◎</span>
+            <span class="settings-nav-label">アカウント</span>
+          </button>
+          <button type="button" class="settings-nav-item" data-panel="billing-info" data-i18n="navBillingInfo">
+            <span class="settings-nav-icon" aria-hidden="true">¥</span>
+            <span class="settings-nav-label">請求情報</span>
+          </button>
+          <button type="button" class="settings-nav-item" data-panel="security" data-i18n="navSecurity">
+            <span class="settings-nav-icon" aria-hidden="true">⛨</span>
+            <span class="settings-nav-label">セキュリティ</span>
+          </button>
+        </div>
+        <div class="settings-nav-group">
+          <p class="settings-nav-category" data-i18n="navCategoryExperimental">試験機能</p>
+          <button type="button" class="settings-nav-item" data-panel="embed" data-i18n="navEmbed">組み込み</button>
+          <button type="button" class="settings-nav-item" data-panel="theme" data-i18n="navTheme">テーマ</button>
+          <button type="button" class="settings-nav-item" data-panel="display" data-i18n="navDisplay">表示</button>
+          <button type="button" class="settings-nav-item" data-panel="performance" data-i18n="navPerformance">パフォーマンス</button>
+          <button type="button" class="settings-nav-item" data-panel="extensions" data-i18n="navExtensions">拡張機能</button>
+          <button type="button" class="settings-nav-item hidden" id="settingsMemoryNav" data-panel="memory-settings" data-i18n="navMemorySettings" aria-hidden="true">メモリ設定</button>
+          <button type="button" class="settings-nav-item" data-panel="integrations" data-i18n="navIntegrations">連携</button>
+          <button type="button" class="settings-nav-item{% if not user.custom_agents_enabled %} hidden{% endif %}" id="settingsAgentNav" data-panel="agent" data-i18n="navAgent" aria-hidden="{{ 'false' if user.custom_agents_enabled else 'true' }}">エージェント</button>
+        </div>
+      </nav>
+    </aside>
+    <div class="settings-panels">
+      <section id="panel-general" class="settings-panel" aria-labelledby="general-heading">
+        <header class="settings-panel-header settings-panel-header--v2">
+          <h2 id="general-heading" data-i18n="navAccount">アカウント</h2>
+          <p data-i18n="accountDesc">プロフィールと API アクセスを管理します。請求情報は「請求情報」タブで設定できます。</p>
+        </header>
+
+        <div class="settings-account-hero" id="settingsAccountHero">
+          <div class="settings-account-avatar" id="accountProfileAvatar" aria-hidden="true">{{ (user.display_name or user.username)[:1] | upper }}</div>
+          <div class="settings-account-hero-body">
+            <p class="settings-account-hero-name" id="accountProfileDisplayName">{{ user.display_name }}</p>
+            <p class="settings-account-hero-meta">
+              <code class="settings-code" id="accountProfileUsername">{{ user.username }}</code>
+            </p>
+            <div class="settings-account-hero-tags">
+              <span class="settings-account-plan-badge" id="accountProfilePlan">{{ user.plan_name or user.plan }}</span>
+              <a href="/billing" class="settings-account-balance-link" id="accountProfileBalanceLink">
+                <span data-i18n="accountBalanceLabel">残高</span>
+                <strong id="accountProfileBalance">¥{{ user.balance | int }}</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-card settings-card--v2">
+          <div class="settings-card-head">
+            <h3 class="settings-card-title" data-i18n="generalSectionDisplay">表示・言語</h3>
+            <p class="settings-card-desc" data-i18n="generalDesc">チャットでの表示名とアプリの言語を設定します。</p>
+          </div>
+          <form id="generalForm" class="settings-form">
+            <div class="settings-field">
+              <label for="settingsDisplayName" data-i18n="displayName">表示名</label>
+              <input type="text" id="settingsDisplayName" value="{{ user.display_name }}" required autocomplete="nickname">
+              <span class="settings-hint" data-i18n="generalDisplayNameHint">チャットやサイドバーに表示される名前です</span>
+            </div>
+            <div class="settings-field">
+              <label for="settingsLanguage" data-i18n="language">言語</label>
+              <select id="settingsLanguage">
+                <option value="ja"{% if user.language == 'ja' %} selected{% endif %}>日本語</option>
+                <option value="en"{% if user.language == 'en' %} selected{% endif %}>English</option>
+                <option value="ko"{% if user.language == 'ko' %} selected{% endif %}>한국어</option>
+              </select>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="generalMsg"></p>
+              <button type="submit" class="settings-btn" data-i18n="save">変更を保存</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="settings-card settings-card--v2">
+          <div class="settings-card-head">
+            <h3 class="settings-card-title" data-i18n="apiPortalSectionTitle">API</h3>
+            <p class="settings-card-desc" data-i18n="apiPortalSectionDesc">外部向け OpenAI 互換 API のトークンを管理します。</p>
+          </div>
+          <div class="settings-form settings-form--toggles settings-api-access-panel" id="apiAccessSettings">
+            <label class="settings-toggle-row" for="settingsApiAccessEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="apiAccessEnableLabel">API アクセスを有効化</strong>
+                <span class="settings-toggle-desc" data-i18n="apiAccessEnableDesc">オンにすると API トークンの発行と外部連携が利用できます。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="settingsApiAccessEnabled" name="api_enabled">
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="settingsOnDemandBillingEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="onDemandBillingEnableLabel">オンデマンド課金を有効化</strong>
+                <span class="settings-toggle-desc" data-i18n="onDemandBillingEnableDesc">プランの利用上限を超えた分をプリペイド残高から自動で差し引きます。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="settingsOnDemandBillingEnabled" name="on_demand_billing_enabled">
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <p class="settings-hint hidden" id="settingsApiPlanBlockedHint" role="status"></p>
+            <div class="settings-api-portal-actions hidden" id="settingsApiPortalActions">
+              <a id="settingsApiPortalLink" class="settings-btn settings-btn--secondary" href="/api/auth/go-portal" target="_blank" rel="noopener" data-i18n="apiPortalOpen">API管理を開く</a>
+            </div>
+            <p class="settings-msg hidden" id="apiAccessMsg"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-billing-info" class="settings-panel" aria-labelledby="billing-info-heading">
+        <header class="settings-panel-header settings-panel-header--v2">
+          <h2 id="billing-info-heading" data-i18n="navBillingInfo">請求情報</h2>
+          <p data-i18n="billingInfoDesc">請求先、連絡先、表示通貨を管理します。</p>
+        </header>
+
+        <div class="settings-card settings-card--v2">
+          <div class="settings-card-head">
+            <h3 class="settings-card-title" data-i18n="billingInfoContactSection">連絡先</h3>
+            <p class="settings-card-desc" data-i18n="billingInfoContactDesc">請求書やお知らせの送付先です</p>
+          </div>
+          <form id="billingInfoForm" class="settings-form">
+            <div class="settings-field">
+              <label data-i18n="accountEmail">メールアドレス</label>
+              <div class="settings-sensitive-row">
+                <span class="settings-sensitive-value" id="billingInfoEmailDisplay" aria-live="polite"></span>
+                <input type="email" id="billingInfoEmail" class="settings-sensitive-input hidden" value="{{ user.email }}" autocomplete="email" inputmode="email">
+                <button type="button" class="settings-sensitive-toggle" id="billingInfoEmailToggle" aria-label="メールアドレスを表示" title="表示">
+                  <span class="settings-sensitive-toggle-icon" aria-hidden="true">👁</span>
+                </button>
+              </div>
+            </div>
+            <div class="settings-field-grid">
+              <div class="settings-field">
+                <label for="billingInfoLastName" data-i18n="billingInfoLastName">姓（本名）</label>
+                <input type="text" id="billingInfoLastName" value="{{ user.last_name | default('', true) }}" autocomplete="family-name">
+              </div>
+              <div class="settings-field">
+                <label for="billingInfoFirstName" data-i18n="billingInfoFirstName">名（本名）</label>
+                <input type="text" id="billingInfoFirstName" value="{{ user.first_name | default('', true) }}" autocomplete="given-name">
+              </div>
+            </div>
+            <div class="settings-field">
+              <label for="billingInfoPhone" data-i18n="accountPhone">電話番号</label>
+              <input type="tel" id="billingInfoPhone" value="{{ user.phone }}" autocomplete="tel" inputmode="tel">
+            </div>
+            <div class="settings-field">
+              <label for="billingInfoCurrency" data-i18n="billingInfoCurrency">標準通貨</label>
+              <select id="billingInfoCurrency">
+                <option value="JPY"{% if (user.billing_currency | default('JPY')) == 'JPY' %} selected{% endif %}>JPY — 日本円</option>
+                <option value="USD"{% if user.billing_currency == 'USD' %} selected{% endif %}>USD — 米ドル</option>
+                <option value="EUR"{% if user.billing_currency == 'EUR' %} selected{% endif %}>EUR — ユーロ</option>
+                <option value="KRW"{% if user.billing_currency == 'KRW' %} selected{% endif %}>KRW — 韓国ウォン</option>
+              </select>
+              <span class="settings-hint" data-i18n="billingInfoCurrencyHint">請求書や残高表示の基準通貨です</span>
+            </div>
+            <div class="settings-card-head settings-card-head--nested">
+              <h4 class="settings-card-title" data-i18n="accountBillingSection">請求先住所</h4>
+            </div>
+            <div class="settings-field">
+              <label for="billingInfoBillingName" data-i18n="accountBillingName">請求先名（会社名・氏名）</label>
+              <input type="text" id="billingInfoBillingName" value="{{ user.billing.name | default('', true) }}" autocomplete="organization">
+            </div>
+            <div class="settings-field-grid">
+              <div class="settings-field">
+                <label for="billingInfoCountry" data-i18n="billingInfoCountry">国 / 地域</label>
+                <input type="text" id="billingInfoCountry" value="{{ user.billing.country | default('', true) }}" autocomplete="country-name">
+              </div>
+              <div class="settings-field">
+                <label for="billingInfoPostal" data-i18n="accountBillingPostal">郵便番号</label>
+                <input type="text" id="billingInfoPostal" value="{{ user.billing.postal_code | default('', true) }}" autocomplete="postal-code" inputmode="numeric">
+              </div>
+              <div class="settings-field settings-field--wide">
+                <label for="billingInfoAddress" data-i18n="accountBillingAddress">住所</label>
+                <textarea id="billingInfoAddress" rows="3" autocomplete="street-address">{{ user.billing.address | default('', true) }}</textarea>
+              </div>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="billingInfoMsg"></p>
+              <button type="submit" class="settings-btn" data-i18n="billingInfoSave">請求情報を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="panel-security" class="settings-panel" aria-labelledby="security-heading">
+        <header class="settings-panel-header">
+          <h2 id="security-heading">セキュリティ</h2>
+          <p>ログインパスワードを変更します。定期的な変更を推奨します。</p>
+        </header>
+        <div class="settings-card">
+          <form id="passwordForm" class="settings-form">
+            <div class="settings-field">
+              <label for="currentPassword">現在のパスワード</label>
+              <input type="password" id="currentPassword" required autocomplete="current-password">
+            </div>
+            <div class="settings-field">
+              <label for="newPassword">新しいパスワード</label>
+              <input type="password" id="newPassword" required autocomplete="new-password" minlength="4">
+              <span class="settings-hint">4文字以上で入力してください</span>
+            </div>
+            <div class="settings-field">
+              <label for="confirmPassword">新しいパスワード（確認）</label>
+              <input type="password" id="confirmPassword" required autocomplete="new-password" minlength="4">
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="passwordMsg"></p>
+              <button type="submit" class="settings-btn">パスワードを変更</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="panel-embed" class="settings-panel" aria-labelledby="embed-heading">
+        <header class="settings-panel-header">
+          <h2 id="embed-heading" data-i18n="embedTitle">組み込み</h2>
+          <p data-i18n="embedDesc">チャットに組み込む機能の既定値を設定します。</p>
+        </header>
+        <div class="settings-card">
+          <div class="settings-form settings-form--toggles" id="embedSettings">
+            <label class="settings-toggle-row" for="embedWebSearchEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="embedWebSearchLabel">IntelligentSearch</strong>
+                <span class="settings-toggle-desc" data-i18n="embedWebSearchDesc">オンにすると、AIが質問内容から検索の要否を判断し、必要なときだけWeb検索を行います。チャット入力欄にシンボルが表示されます。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="embedWebSearchEnabled" name="web_search_enabled"{% if user.web_search_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="embedGeolocationEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="embedGeolocationLabel">GeoLocation</strong>
+                <span class="settings-toggle-desc" data-i18n="embedGeolocationDesc">オンにすると、送信時にブラウザの位置情報（許可が必要）から市区町村レベルのおおよその地域をAIに渡します。座標や住所の詳細は送りません。天気など地域に依存する質問に役立ちます。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="embedGeolocationEnabled" name="geolocation_enabled"{% if user.geolocation_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="embedImageGenerationEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="embedImageGenerationLabel">画像生成</strong>
+                <span class="settings-toggle-desc" data-i18n="embedImageGenerationDesc">オンにすると、チャットで画像生成が可能になります（プラン・管理設定に準じます）。チャット入力欄にシンボルが表示されます。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="embedImageGenerationEnabled" name="image_generation_enabled"{% if user.image_generation_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="embedUserQuestionsEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="embedUserQuestionsLabel">ユーザーへの質問</strong>
+                <span class="settings-toggle-desc" data-i18n="embedUserQuestionsDesc">オンにすると、AIが不明点を感じたときだけ質問ツールで確認し、入力欄の上に選択式モーダルを表示します。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="embedUserQuestionsEnabled" name="user_questions_enabled"{% if user.user_questions_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <p class="settings-msg hidden" id="embedMsg"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-theme" class="settings-panel" aria-labelledby="theme-heading">
+        <header class="settings-panel-header">
+          <h2 id="theme-heading" data-i18n="themeTitle">テーマ</h2>
+          <p data-i18n="themeDesc">アプリの配色を選びます。システムに合わせると OS の設定に従います。</p>
+        </header>
+        <div class="settings-card">
+          <div class="settings-form settings-form--toggles" id="themeSettings">
+            <div class="settings-toggle-row settings-theme-row">
+              <span class="settings-toggle-label">
+                <strong data-i18n="themeAppearanceLabel">テーマカラー</strong>
+                <span class="settings-toggle-desc" data-i18n="themeAppearanceDesc">ライト・ダーク・システム連動から選択します。変更はすぐに反映され、自動で保存されます。</span>
+              </span>
+              <select class="settings-theme-select" id="settingsTheme" aria-labelledby="theme-heading">
+                <option value="system"{% if user.theme == 'system' %} selected{% endif %} data-i18n-opt="themeSystem">システム</option>
+                <option value="dark"{% if user.theme == 'dark' %} selected{% endif %} data-i18n-opt="themeDark">ダーク</option>
+                <option value="midnight"{% if user.theme == 'midnight' %} selected{% endif %} data-i18n-opt="themeMidnight">ミッドナイト</option>
+                <option value="light"{% if user.theme == 'light' %} selected{% endif %} data-i18n-opt="themeLight">ホワイト</option>
+              </select>
+            </div>
+            <p class="settings-msg hidden" id="themeMsg"></p>
+          </div>
+        </div>
+        <div class="settings-card settings-card--v2">
+          <div class="settings-card-head">
+            <h3 class="settings-card-title" data-i18n="themeBgTitle">背景パターン</h3>
+            <p class="settings-card-desc" data-i18n="themeBgDesc">チャット画面の背景を選びます。変更はすぐに反映され、自動で保存されます。</p>
+          </div>
+          <div class="settings-bg-pattern-picker" id="settingsChatBackground" role="radiogroup" aria-labelledby="themeBgTitle">
+            <button
+              type="button"
+              class="settings-bg-pattern-btn{% if (user.chat_background_pattern|default('simple')) != 'grid' %} is-active{% endif %}"
+              data-pattern="simple"
+              role="radio"
+              aria-checked="{{ 'true' if (user.chat_background_pattern|default('simple')) != 'grid' else 'false' }}"
+            >
+              <span class="settings-bg-pattern-preview settings-bg-pattern-preview--simple" aria-hidden="true"></span>
+              <span class="settings-bg-pattern-label" data-i18n="themeBgSimple">シンプル</span>
+              <span class="settings-bg-pattern-desc" data-i18n="themeBgSimpleDesc">単色の背景（現在の表示）</span>
+            </button>
+            <button
+              type="button"
+              class="settings-bg-pattern-btn{% if (user.chat_background_pattern|default('simple')) == 'grid' %} is-active{% endif %}"
+              data-pattern="grid"
+              role="radio"
+              aria-checked="{{ 'true' if (user.chat_background_pattern|default('simple')) == 'grid' else 'false' }}"
+            >
+              <span class="settings-bg-pattern-preview settings-bg-pattern-preview--grid" aria-hidden="true"></span>
+              <span class="settings-bg-pattern-label" data-i18n="themeBgGrid">グリッド</span>
+              <span class="settings-bg-pattern-desc" data-i18n="themeBgGridDesc">TASKS と同じドットグリッドをチャットの背面に表示</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-display" class="settings-panel" aria-labelledby="display-heading">
+        <header class="settings-panel-header">
+          <h2 id="display-heading" data-i18n="displayTitle">表示</h2>
+          <p data-i18n="displayDesc">チャット画面の表示オプションを設定します。</p>
+        </header>
+        <div class="settings-card">
+          <div class="settings-form settings-form--toggles" id="displaySettings">
+            <label class="settings-toggle-row" for="displayReasoningCardsEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="displayReasoningLabel">推論カード</strong>
+                <span class="settings-toggle-desc" data-i18n="displayReasoningDesc">デバッグ用。モデルの推論過程を折りたたみカードで表示します（通常はオフ推奨）。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="displayReasoningCardsEnabled" name="reasoning_cards_enabled"{% if user.reasoning_cards_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="displayToolTraceEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="displayToolTraceLabel">ツール表示</strong>
+                <span class="settings-toggle-desc" data-i18n="displayToolTraceDesc">デバッグ用。ツール呼び出し時にツール名と経過時間をチャットに表示します。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="displayToolTraceEnabled" name="tool_trace_enabled"{% if user.tool_trace_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="displayExpressionExtensionEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="displayExpressionExtensionLabel">表現の拡張</strong>
+                <span class="settings-toggle-desc" data-i18n="displayExpressionExtensionDesc">オンにすると、AIがフローチャートやシーケンス図（Markdown+UML）を出力できるようになります。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="displayExpressionExtensionEnabled" name="expression_extension_enabled"{% if user.expression_extension_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="displayFullInfoEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="displayFullInfoLabel">全情報の表示</strong>
+                <span class="settings-toggle-desc" data-i18n="displayFullInfoDesc">デバッグ用。システムプロンプト・送信内容・ツール呼び出し・出力をチャット右側のパネルに生データで表示します。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="displayFullInfoEnabled" name="full_info_display_enabled"{% if user.full_info_display_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <p class="settings-msg hidden" id="displayMsg"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-performance" class="settings-panel" aria-labelledby="performance-heading">
+        <header class="settings-panel-header">
+          <h2 id="performance-heading" data-i18n="performanceTitle">パフォーマンス</h2>
+          <p data-i18n="performanceDesc">応答の高速化のための設定です。</p>
+        </header>
+        <div class="settings-card">
+          <div class="settings-form settings-form--toggles" id="performanceSettings">
+            <label class="settings-toggle-row" for="performanceReasoningDisabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="performanceReasoningLabel">推論を無効化</strong>
+                <span class="settings-toggle-desc" data-i18n="performanceReasoningDesc">モデルの内部推論（思考）をオフにして応答を速くします。回答の精度が低下する可能性があるため、速度優先のときのみ有効にしてください。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="performanceReasoningDisabled" name="reasoning_disabled"{% if user.reasoning_disabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" id="performanceReasoningInEnglishRow" for="performanceReasoningInEnglish">
+              <span class="settings-toggle-label">
+                <strong data-i18n="performanceReasoningInEnglishLabel">推論の高精度化</strong>
+                <span class="settings-toggle-desc" data-i18n="performanceReasoningInEnglishDesc">推論に最適な言語を選択し高速かつ高精度に推論を行います。</span>
+                <span class="settings-toggle-desc settings-toggle-hint hidden" id="performanceReasoningInEnglishHint"></span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="performanceReasoningInEnglish" name="reasoning_in_english"{% if user.reasoning_in_english %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="performanceCostPerformanceMaximized">
+              <span class="settings-toggle-label">
+                <strong data-i18n="performanceCostPerformanceLabel">コストパフォーマンス最大化</strong>
+                <span class="settings-toggle-desc" data-i18n="performanceCostPerformanceDesc">推論や生成物の質をできるだけ保ちつつ、推論量と出力量を極限まで抑えます。出力の品質が低下する場合があります。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="performanceCostPerformanceMaximized" name="cost_performance_maximized"{% if user.cost_performance_maximized %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <p class="settings-msg hidden" id="performanceMsg"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-extensions" class="settings-panel" aria-labelledby="extensions-heading">
+        <header class="settings-panel-header">
+          <h2 id="extensions-heading" data-i18n="extensionsTitle">拡張機能</h2>
+          <p data-i18n="extensionsDesc">試験中の拡張機能を有効にします。</p>
+        </header>
+        <div class="settings-card">
+          <div class="settings-form settings-form--toggles" id="extensionsSettings">
+            <label class="settings-toggle-row" for="extensionsTasksEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="extensionsTasksLabel">TASKSを有効化</strong>
+                <span class="settings-toggle-desc" data-i18n="extensionsTasksDesc">オンにすると、TASKS機能（試験）が利用可能になります。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="extensionsTasksEnabled" name="tasks_enabled"{% if user.tasks_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="extensionsMemoryEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="extensionsMemoryLabel">メモリを有効化</strong>
+                <span class="settings-toggle-desc" data-i18n="extensionsMemoryDesc">人や会話・物事の自然な記憶機能（試験）を有効にします。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="extensionsMemoryEnabled" name="memory_enabled"{% if user.memory_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="extensionsProjectsEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="extensionsProjectsLabel">プロジェクトスペースの有効化</strong>
+                <span class="settings-toggle-desc" data-i18n="extensionsProjectsDesc">オンにすると、Projects機能（試験）が利用可能になります。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="extensionsProjectsEnabled" name="projects_enabled"{% if user.projects_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="extensionsInfoExpertEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="extensionsInfoExpertLabel">InfoExpertを有効化</strong>
+                <span class="settings-toggle-desc" data-i18n="extensionsInfoExpertDesc">オンにすると、サイドバーに AskExpert タブが表示されます（試験）。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="extensionsInfoExpertEnabled" name="info_expert_enabled"{% if user.info_expert_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="extensionsDeepResearchEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="extensionsDeepResearchLabel">DeepResearchを有効化</strong>
+                <span class="settings-toggle-desc" data-i18n="extensionsDeepResearchDesc">オンにすると、チャットで徹底調査モード（試験）が利用可能になります。IntelligentSearch がオンである必要があります。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="extensionsDeepResearchEnabled" name="deep_research_enabled"{% if user.deep_research_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="settings-toggle-row" for="extensionsIntelligentSearchOverrideEnabled">
+              <span class="settings-toggle-label">
+                <strong data-i18n="extensionsIntelligentSearchOverrideLabel">IntelligentSearchのオーバーライド</strong>
+                <span class="settings-toggle-desc" data-i18n="extensionsIntelligentSearchOverrideDesc">オンにすると、検索結果ページ内のリンクを一覧化し、AIが調査すべきリンクを選別して本文を取得します（試験）。bot対策サイトでも取得を試みます。IntelligentSearch がオンである必要があります。</span>
+              </span>
+              <span class="settings-switch">
+                <input type="checkbox" class="settings-switch-input" id="extensionsIntelligentSearchOverrideEnabled" name="intelligent_search_override_enabled"{% if user.intelligent_search_override_enabled %} checked{% endif %}>
+                <span class="settings-switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <div class="settings-form hidden" id="extensionsDeepResearchPrefsWrap">
+              <div class="settings-field">
+                <label for="extensionsDeepResearchMaxRounds" data-i18n="extensionsDeepResearchMaxRoundsLabel">DeepResearch: 検索の最大回数</label>
+                <select id="extensionsDeepResearchMaxRounds" name="max_search_rounds">
+                  <option value="3"{% if user.deep_research_prefs.max_search_rounds == 3 %} selected{% endif %}>3</option>
+                  <option value="4"{% if user.deep_research_prefs.max_search_rounds == 4 %} selected{% endif %}>4</option>
+                  <option value="5"{% if user.deep_research_prefs.max_search_rounds == 5 %} selected{% endif %}>5</option>
+                  <option value="6"{% if user.deep_research_prefs.max_search_rounds == 6 %} selected{% endif %}>6</option>
+                  <option value="7"{% if user.deep_research_prefs.max_search_rounds == 7 %} selected{% endif %}>7</option>
+                  <option value="8"{% if user.deep_research_prefs.max_search_rounds == 8 %} selected{% endif %}>8</option>
+                </select>
+                <p class="settings-field-hint" data-i18n="extensionsDeepResearchMaxRoundsHint">1ターンあたりの web_search 上限です。</p>
+              </div>
+              <button type="button" class="settings-btn" id="extensionsDeepResearchPrefsSave" data-i18n="save">保存</button>
+            </div>
+            <p class="settings-msg hidden" id="extensionsMsg"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-memory-settings" class="settings-panel" aria-labelledby="memory-settings-heading">
+        <header class="settings-panel-header">
+          <h2 id="memory-settings-heading" data-i18n="memorySettingsTitle">メモリ設定</h2>
+          <p data-i18n="memorySettingsDesc">AIが参照する記憶内容を管理します。チャットからも保存・更新できます。</p>
+        </header>
+        <div class="settings-card">
+          <div class="memory-settings-summary hidden" id="memorySettingsSummary" aria-live="polite"></div>
+          <div class="memory-settings-toolbar">
+            <button type="button" class="settings-btn" id="memorySettingsAdd" data-i18n="memorySettingsAdd">追加</button>
+            <p class="settings-msg hidden" id="memorySettingsMsg"></p>
+          </div>
+          <p class="settings-placeholder hidden" id="memorySettingsEmpty" data-i18n="memorySettingsEmpty">保存されたメモリはありません。</p>
+          <ul class="memory-settings-list" id="memorySettingsList" aria-live="polite"></ul>
+        </div>
+        <dialog class="memory-settings-dialog" id="memorySettingsDialog">
+          <form id="memorySettingsForm" class="settings-form memory-settings-form" method="dialog">
+            <h3 class="memory-settings-dialog-title" id="memorySettingsDialogTitle" data-i18n="memorySettingsAdd">追加</h3>
+            <div class="settings-field">
+              <label for="memorySettingsTitle" data-i18n="memorySettingsFieldTitle">タイトル</label>
+              <input type="text" id="memorySettingsTitle" autocomplete="off">
+            </div>
+            <div class="settings-field">
+              <label for="memorySettingsCategory" data-i18n="memorySettingsFieldCategory">カテゴリ</label>
+              <select id="memorySettingsCategory">
+                <option value="general" data-i18n="memoryCategoryGeneral">一般</option>
+                <option value="person" data-i18n="memoryCategoryPerson">人</option>
+                <option value="conversation" data-i18n="memoryCategoryConversation">会話</option>
+                <option value="thing" data-i18n="memoryCategoryThing">物事</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="memorySettingsContent" data-i18n="memorySettingsFieldContent">内容</label>
+              <textarea id="memorySettingsContent" rows="5" required></textarea>
+            </div>
+            <div class="memory-settings-dialog-actions">
+              <button type="button" class="settings-btn settings-btn--secondary" id="memorySettingsCancel" data-i18n="memorySettingsCancel">キャンセル</button>
+              <button type="submit" class="settings-btn" id="memorySettingsSave" data-i18n="save">保存</button>
+            </div>
+          </form>
+        </dialog>
+      </section>
+
+      <section id="panel-integrations" class="settings-panel" aria-labelledby="integrations-heading">
+        <header class="settings-panel-header">
+          <h2 id="integrations-heading" data-i18n="integrationsTitle">連携</h2>
+          <p data-i18n="integrationsDesc">外部サービスとの連携を管理します。</p>
+        </header>
+        <nav class="settings-integrations-tabs" role="tablist" aria-label="連携カテゴリ">
+          <button type="button" class="settings-integrations-tab active" role="tab" id="integrations-tab-overview" data-integrations-tab="overview" aria-controls="integrations-panel-overview" aria-selected="true" data-i18n="integrationsTabOverview">概要</button>
+          <button type="button" class="settings-integrations-tab" role="tab" id="integrations-tab-google" data-integrations-tab="google" aria-controls="integrations-panel-google" aria-selected="false" data-i18n="integrationsTabGoogle">Googleと連携</button>
+          <button type="button" class="settings-integrations-tab" role="tab" id="integrations-tab-discord" data-integrations-tab="discord" aria-controls="integrations-panel-discord" aria-selected="false" data-i18n="integrationsTabDiscord">Discordと連携</button>
+          <button type="button" class="settings-integrations-tab" role="tab" id="integrations-tab-computelab" data-integrations-tab="computelab" aria-controls="integrations-panel-computelab" aria-selected="false" data-i18n="integrationsTabComputelab">ComputeLabと連携</button>
+        </nav>
+        <div id="integrations-panel-overview" class="settings-integrations-panel active" role="tabpanel" aria-labelledby="integrations-tab-overview" data-integrations-panel="overview">
+          <div class="settings-card">
+            <p class="settings-placeholder" data-i18n="integrationsOverviewDesc">カレンダーやドライブなど、外部サービスとの連携をここから設定できます。</p>
+            <ul class="settings-integrations-list">
+              <li class="settings-integrations-list-item">
+                <span class="settings-integrations-list-name" data-i18n="integrationsGoogleName">Google</span>
+                <span class="settings-integrations-list-status" id="integrationsGoogleOverviewStatus" data-i18n="integrationsGoogleStatusDisconnected">未接続</span>
+              </li>
+              <li class="settings-integrations-list-item">
+                <span class="settings-integrations-list-name" data-i18n="integrationsDiscordName">Discord</span>
+                <span class="settings-integrations-list-status" id="integrationsDiscordOverviewStatus" data-i18n="integrationsDiscordStatusDisconnected">未接続</span>
+              </li>
+              <li class="settings-integrations-list-item">
+                <span class="settings-integrations-list-name" data-i18n="integrationsComputelabName">ComputeLab</span>
+                <span class="settings-integrations-list-status" id="integrationsComputelabOverviewStatus" data-i18n="integrationsComputelabStatusDisconnected">未接続</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div id="integrations-panel-google" class="settings-integrations-panel" role="tabpanel" aria-labelledby="integrations-tab-google" data-integrations-panel="google" hidden>
+          <div class="settings-card settings-google-card">
+            <div class="settings-google-header">
+              <div class="settings-google-brand" aria-hidden="true">
+                <svg class="settings-google-icon" viewBox="0 0 24 24" width="28" height="28" focusable="false">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="settings-google-title" data-i18n="integrationsGoogleTitle">Googleアカウント</h3>
+                <p class="settings-google-desc" data-i18n="integrationsGoogleDesc">Googleアカウントを接続し、カレンダーとGmailをAIから利用できます。</p>
+              </div>
+            </div>
+            <div class="settings-info-list settings-info-list--compact settings-google-status">
+              <div class="settings-info-row">
+                <span class="settings-info-label" data-i18n="integrationsGoogleStatusLabel">接続状態</span>
+                <span class="settings-info-value" id="googleConnectionStatus" data-i18n="integrationsGoogleStatusDisconnected">未接続</span>
+              </div>
+            </div>
+            <p class="settings-google-scopes" data-i18n="integrationsGoogleScopes">ツール連携: Googleカレンダー・Gmail。ログイン連携: メールアドレスとプロフィール。</p>
+            <div class="settings-google-actions">
+              <button type="button" class="settings-btn settings-btn--google" id="googleConnectBtn" data-i18n="integrationsGoogleConnect">Googleで接続</button>
+              <button type="button" class="settings-btn settings-btn--secondary hidden" id="googleDisconnectBtn" data-i18n="integrationsGoogleDisconnect">接続を解除</button>
+              <p class="settings-hint hidden" id="googleOAuthHint" data-i18n="integrationsGoogleNotConfigured">サーバーに Google OAuth が未設定です（GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET）。</p>
+            </div>
+            <div class="settings-google-sections hidden" id="googleSettingsSections">
+              <div class="settings-google-section hidden" id="googleToolsSection">
+                <p class="settings-section-label" data-i18n="integrationsGoogleToolsHeading">ツール</p>
+                <div class="settings-form settings-form--toggles settings-google-toggles">
+                  <p class="settings-hint hidden" id="googlePlanBlockedHint" role="status"></p>
+                  <label class="settings-toggle-row" for="googleCalendarEnabled">
+                    <span class="settings-toggle-label">
+                      <strong data-i18n="integrationsGoogleCalendarLabel">Googleカレンダー</strong>
+                      <span class="settings-toggle-desc" data-i18n="integrationsGoogleCalendarDesc">オンにすると、AIが予定の確認・追加・削除を行えます。</span>
+                    </span>
+                    <span class="settings-switch">
+                      <input type="checkbox" class="settings-switch-input" id="googleCalendarEnabled" name="google_calendar_enabled">
+                      <span class="settings-switch-track" aria-hidden="true"></span>
+                    </span>
+                  </label>
+                  <label class="settings-toggle-row" for="googleGmailEnabled">
+                    <span class="settings-toggle-label">
+                      <strong data-i18n="integrationsGoogleGmailLabel">Gmail</strong>
+                      <span class="settings-toggle-desc" data-i18n="integrationsGoogleGmailDesc">オンにすると、AIがメールの一覧・本文取得・送信を行えます。</span>
+                    </span>
+                    <span class="settings-switch">
+                      <input type="checkbox" class="settings-switch-input" id="googleGmailEnabled" name="google_gmail_enabled">
+                      <span class="settings-switch-track" aria-hidden="true"></span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div class="settings-google-section" id="googleFeaturesSection">
+                <p class="settings-section-label" data-i18n="integrationsGoogleFeaturesHeading">機能</p>
+                <div class="settings-form settings-form--toggles settings-google-toggles">
+                  <label class="settings-toggle-row" for="googleLoginEnabled">
+                    <span class="settings-toggle-label">
+                      <strong data-i18n="integrationsGoogleLoginLabel">Googleアカウントでログインを許可する</strong>
+                      <span class="settings-toggle-desc" data-i18n="integrationsGoogleLoginDesc">オンにすると、この Nexgate アカウントへ Google でサインインできます。</span>
+                    </span>
+                    <span class="settings-switch">
+                      <input type="checkbox" class="settings-switch-input" id="googleLoginEnabled" name="google_login_enabled">
+                      <span class="settings-switch-track" aria-hidden="true"></span>
+                    </span>
+                  </label>
+                  <p class="settings-hint hidden" id="googleLoginEmailHint"></p>
+                  <button type="button" class="settings-btn settings-btn--google hidden" id="googleLoginLinkBtn" data-i18n="integrationsGoogleLoginLink">Googleアカウントでログインを有効にする</button>
+                </div>
+              </div>
+              <p class="settings-msg hidden" id="googleMsg"></p>
+            </div>
+          </div>
+        </div>
+        <div id="integrations-panel-discord" class="settings-integrations-panel" role="tabpanel" aria-labelledby="integrations-tab-discord" data-integrations-panel="discord" hidden>
+          <div class="settings-card settings-discord-card">
+            <div class="settings-discord-header">
+              <div class="settings-discord-brand" aria-hidden="true">
+                <svg class="settings-discord-icon" viewBox="0 0 24 24" width="28" height="28" focusable="false">
+                  <path fill="#5865F2" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="settings-discord-title" data-i18n="integrationsDiscordTitle">Discordアカウント</h3>
+                <p class="settings-discord-desc" data-i18n="integrationsDiscordDesc">Discordアカウントでログインできるように設定します。</p>
+              </div>
+            </div>
+            <div class="settings-info-list settings-info-list--compact settings-discord-status">
+              <div class="settings-info-row">
+                <span class="settings-info-label" data-i18n="integrationsDiscordStatusLabel">接続状態</span>
+                <span class="settings-info-value" id="discordConnectionStatus" data-i18n="integrationsDiscordStatusDisconnected">未接続</span>
+              </div>
+            </div>
+            <p class="settings-hint hidden" id="discordOAuthHint" data-i18n="integrationsDiscordNotConfigured">サーバーに Discord OAuth が未設定です（DISCORD_CLIENT_ID / DISCORD_CLIENT_SECRET）。</p>
+            <div class="settings-discord-sections hidden" id="discordSettingsSections">
+              <div class="settings-discord-section" id="discordFeaturesSection">
+                <p class="settings-section-label" data-i18n="integrationsDiscordFeaturesHeading">機能</p>
+                <div class="settings-form settings-form--toggles settings-discord-toggles">
+                  <label class="settings-toggle-row" for="discordLoginEnabled">
+                    <span class="settings-toggle-label">
+                      <strong data-i18n="integrationsDiscordLoginLabel">Discordアカウントでログインを許可する</strong>
+                      <span class="settings-toggle-desc" data-i18n="integrationsDiscordLoginDesc">オンにすると、この Nexgate アカウントへ Discord でサインインできます。</span>
+                    </span>
+                    <span class="settings-switch">
+                      <input type="checkbox" class="settings-switch-input" id="discordLoginEnabled" name="discord_login_enabled">
+                      <span class="settings-switch-track" aria-hidden="true"></span>
+                    </span>
+                  </label>
+                  <p class="settings-hint hidden" id="discordLoginUsernameHint"></p>
+                  <button type="button" class="settings-btn settings-btn--discord hidden" id="discordLoginLinkBtn" data-i18n="integrationsDiscordLoginLink">Discordアカウントでログインを有効にする</button>
+                </div>
+              </div>
+              <p class="settings-msg hidden" id="discordMsg"></p>
+            </div>
+          </div>
+        </div>
+        <div id="integrations-panel-computelab" class="settings-integrations-panel" role="tabpanel" aria-labelledby="integrations-tab-computelab" data-integrations-panel="computelab" hidden>
+          <div class="settings-card settings-computelab-card">
+            <div class="settings-computelab-header">
+              <div class="settings-computelab-brand" aria-hidden="true">
+                <svg class="settings-computelab-icon" viewBox="0 0 24 24" width="28" height="28" focusable="false">
+                  <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="#6d48ff" stroke-width="1.8"/>
+                  <path d="M7 9h4v2H7zm6 0h4v2h-4zm-6 4h4v2H7zm6 0h4v2h-4z" fill="#6d48ff"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="settings-computelab-title" data-i18n="integrationsComputelabTitle">ComputeLab</h3>
+                <p class="settings-computelab-desc" data-i18n="integrationsComputelabDesc">API キーを登録すると、チャットからスポット Docker インスタンスの作成・操作ができます。</p>
+                <p class="settings-hint settings-computelab-data-hint" data-i18n="integrationsComputelabDataHint">デプロイ先はインスタンスの /data 領域です。ダッシュボードのファイルエクスプローラーからも編集・確認できます。</p>
+              </div>
+            </div>
+            <div class="settings-info-list settings-info-list--compact settings-computelab-status">
+              <div class="settings-info-row">
+                <span class="settings-info-label" data-i18n="integrationsComputelabStatusLabel">接続状態</span>
+                <span class="settings-info-value" id="computelabConnectionStatus" data-i18n="integrationsComputelabStatusDisconnected">未接続</span>
+              </div>
+            </div>
+            <p class="settings-computelab-scopes" data-i18n="integrationsComputelabScopes">ダッシュボードの API 画面で発行した cl_live_ キーを入力してください。</p>
+            <div class="settings-computelab-actions">
+              <div class="settings-form settings-form--stacked" id="computelabKeyForm">
+                <label class="settings-label" for="computelabApiKey" data-i18n="integrationsComputelabApiKeyLabel">API キー</label>
+                <input type="password" class="settings-input" id="computelabApiKey" name="computelab_api_key" autocomplete="off" spellcheck="false" placeholder="cl_live_…">
+                <p class="settings-hint hidden" id="computelabKeyPrefixHint"></p>
+                <div class="settings-computelab-key-actions">
+                  <button type="button" class="settings-btn settings-btn--computelab" id="computelabSaveKeyBtn" data-i18n="integrationsComputelabSaveKey">キーを保存</button>
+                  <button type="button" class="settings-btn settings-btn--secondary hidden" id="computelabDisconnectBtn" data-i18n="integrationsComputelabDisconnect">接続を解除</button>
+                </div>
+              </div>
+            </div>
+            <div class="settings-computelab-sections hidden" id="computelabSettingsSections">
+              <div class="settings-computelab-section" id="computelabToolsSection">
+                <p class="settings-section-label" data-i18n="integrationsComputelabToolsHeading">ツール</p>
+                <div class="settings-form settings-form--toggles settings-computelab-toggles">
+                  <label class="settings-toggle-row" for="computelabToolsEnabled">
+                    <span class="settings-toggle-label">
+                      <strong data-i18n="integrationsComputelabToolsLabel">ComputeLab [Beta] ツール</strong>
+                      <span class="settings-toggle-desc" data-i18n="integrationsComputelabToolsDesc">オンにすると、AIがインスタンスの一覧・作成・起動停止・コマンド実行を行えます。</span>
+                    </span>
+                    <span class="settings-switch">
+                      <input type="checkbox" class="settings-switch-input" id="computelabToolsEnabled" name="computelab_tools_enabled">
+                      <span class="settings-switch-track" aria-hidden="true"></span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <p class="settings-msg hidden" id="computelabMsg"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-agent" class="settings-panel settings-panel--agents" data-custom-agents-screen="list">
+        <div id="customAgentsListScreen" class="custom-agents-screen">
+          <header class="settings-panel-header">
+            <h2 id="agent-heading" data-i18n="agentTitle">エージェント</h2>
+            <p data-i18n="agentDesc">応答の仕方や専門知識を持つエージェントを作成します。チャット送信時に選択して使えます。</p>
+          </header>
+          <div class="settings-card">
+            <div class="custom-agents-list-toolbar">
+              <button type="button" class="settings-btn" id="customAgentsAdd" data-i18n="customAgentsAdd">新規作成</button>
+              <p class="settings-msg hidden" id="customAgentsMsg"></p>
+            </div>
+            <p class="settings-placeholder hidden" id="customAgentsEmpty" data-i18n="customAgentsEmpty">エージェントがありません。新規作成してください。</p>
+            <ul class="custom-agents-list" id="customAgentsList" aria-live="polite"></ul>
+          </div>
+        </div>
+        <div id="customAgentsEditorScreen" class="custom-agents-screen hidden" aria-hidden="true">
+          <header class="settings-panel-header custom-agents-editor-header">
+            <button type="button" class="settings-back custom-agents-back-list" id="customAgentsBackList" data-i18n="customAgentsBackToList">一覧に戻る</button>
+            <h2 id="customAgentsEditorHeading" data-i18n="customAgentsEdit">編集</h2>
+            <p id="customAgentsEditorSubheading" class="custom-agents-editor-subheading"></p>
+          </header>
+          <div class="settings-card custom-agents-editor-card">
+            <nav class="settings-integrations-tabs custom-agents-editor-tabs" role="tablist" aria-label="エージェント編集">
+              <button type="button" class="settings-integrations-tab active" role="tab" id="customAgentsTabBasics" data-agent-tab="basics" aria-controls="customAgentsPanelBasics" aria-selected="true" data-i18n="customAgentsTabBasics">基本情報</button>
+              <button type="button" class="settings-integrations-tab" role="tab" id="customAgentsTabPersonality" data-agent-tab="personality" aria-controls="customAgentsPanelPersonality" aria-selected="false" data-i18n="customAgentsTabPersonality">性格</button>
+              <button type="button" class="settings-integrations-tab" role="tab" id="customAgentsTabKnowledge" data-agent-tab="knowledge" aria-controls="customAgentsPanelKnowledge" aria-selected="false" data-i18n="customAgentsTabKnowledge">知識ベース</button>
+            </nav>
+            <p class="settings-msg hidden" id="customAgentsEditorMsg"></p>
+            <form id="customAgentsForm" class="settings-form custom-agents-form" novalidate>
+                <div id="customAgentsPanelBasics" class="custom-agents-tab-panel active" role="tabpanel" aria-labelledby="customAgentsTabBasics" data-agent-panel="basics">
+                  <dl class="custom-agents-meta-list">
+                    <div class="custom-agents-meta-row">
+                      <dt data-i18n="customAgentsFavoriteLabel">お気に入り</dt>
+                      <dd>
+                        <button type="button" class="custom-agents-favorite-toggle" id="customAgentsFavoriteBtn" aria-pressed="false" data-i18n-aria="customAgentsFavoriteAria">
+                          <span class="custom-agents-favorite-icon" aria-hidden="true">☆</span>
+                        </button>
+                      </dd>
+                    </div>
+                    <div class="custom-agents-meta-row" data-basics-field="name">
+                      <dt data-i18n="customAgentsFieldName">名前</dt>
+                      <dd>
+                        <div class="custom-agents-meta-main">
+                          <span class="custom-agents-meta-value" id="customAgentsNameDisplay">—</span>
+                          <button type="button" class="custom-agents-meta-icon-btn" data-edit-basics="name" data-i18n-aria="customAgentsEditFieldAria" aria-label="編集">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                          </button>
+                        </div>
+                        <div class="custom-agents-meta-editor hidden" data-basics-editor="name">
+                          <input type="text" id="customAgentsName" maxlength="80" autocomplete="off">
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="custom-agents-meta-row">
+                      <dt data-i18n="customAgentsFieldCreatedAt">作成日</dt>
+                      <dd><span class="custom-agents-meta-value" id="customAgentsCreatedAt">—</span></dd>
+                    </div>
+                    <div class="custom-agents-meta-row" data-basics-field="description">
+                      <dt data-i18n="customAgentsFieldDescription">説明</dt>
+                      <dd>
+                        <div class="custom-agents-meta-main">
+                          <span class="custom-agents-meta-value custom-agents-meta-value--multiline" id="customAgentsDescriptionDisplay">—</span>
+                          <button type="button" class="custom-agents-meta-icon-btn" data-edit-basics="description" data-i18n-aria="customAgentsEditFieldAria" aria-label="編集">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                          </button>
+                        </div>
+                        <div class="custom-agents-meta-editor hidden" data-basics-editor="description">
+                          <textarea id="customAgentsDescription" rows="3" maxlength="400"></textarea>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="custom-agents-meta-row">
+                      <dt data-i18n="customAgentsFieldUuid">UUID</dt>
+                      <dd>
+                        <div class="custom-agents-meta-main">
+                          <span class="custom-agents-meta-value custom-agents-meta-value--mono" id="customAgentsUuidDisplay">—</span>
+                          <button type="button" class="custom-agents-meta-icon-btn" id="customAgentsCopyUuid" data-i18n-aria="customAgentsCopyUuidAria" aria-label="UUIDをコピー">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                          </button>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="custom-agents-meta-row" data-basics-field="visibility">
+                      <dt data-i18n="customAgentsVisibilityLabel">公開設定</dt>
+                      <dd>
+                        <div class="custom-agents-meta-main">
+                          <span class="custom-agents-meta-value" id="customAgentsVisibilityDisplay">—</span>
+                          <button type="button" class="custom-agents-meta-icon-btn" data-edit-basics="visibility" data-i18n-aria="customAgentsEditFieldAria" aria-label="編集">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                          </button>
+                        </div>
+                        <div class="custom-agents-meta-editor hidden" data-basics-editor="visibility">
+                          <select id="customAgentsVisibilitySelect" class="custom-agents-meta-select">
+                            <option value="public" data-i18n="customAgentsVisibilityPublic">公開</option>
+                            <option value="unlisted" data-i18n="customAgentsVisibilityUnlisted">公開（リンクのみ）</option>
+                            <option value="private" data-i18n="customAgentsVisibilityPrivate">非公開</option>
+                          </select>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="custom-agents-meta-row hidden" id="customAgentsShareLinkField">
+                      <dt data-i18n="customAgentsShareLink">共有リンク</dt>
+                      <dd>
+                        <div class="custom-agents-meta-main">
+                          <span class="custom-agents-meta-value custom-agents-meta-value--mono custom-agents-meta-value--truncate" id="customAgentsShareLinkDisplay">—</span>
+                          <button type="button" class="custom-agents-meta-icon-btn" id="customAgentsCopyShareLink" data-i18n-aria="customAgentsCopyLinkAria" aria-label="リンクをコピー">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                          </button>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="custom-agents-meta-row hidden" id="customAgentsUsageField">
+                      <dt data-i18n="customAgentsUsageCount">利用者数</dt>
+                      <dd><span class="custom-agents-meta-value" id="customAgentsUsageCount">0</span></dd>
+                    </div>
+                    <div class="custom-agents-meta-row" data-basics-field="model">
+                      <dt data-i18n="customAgentsFieldModel">モデル</dt>
+                      <dd>
+                        <div class="custom-agents-meta-main">
+                          <span class="custom-agents-meta-value" id="customAgentsModelDisplay">—</span>
+                          <button type="button" class="custom-agents-meta-icon-btn" data-edit-basics="model" data-i18n-aria="customAgentsEditFieldAria" aria-label="編集">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                          </button>
+                        </div>
+                        <div class="custom-agents-meta-editor hidden" data-basics-editor="model">
+                          <select id="customAgentsModel" class="custom-agents-meta-select"></select>
+                        </div>
+                      </dd>
+                    </div>
+                  </dl>
+                  <div class="custom-agents-meta-section" id="customAgentsOwnerSection">
+                    <p class="custom-agents-meta-section-title" data-i18n="customAgentsOwnerSectionTitle">オーナー設定</p>
+                    <p class="custom-agents-meta-section-desc" id="customAgentsOwnerBadge" data-i18n="customAgentsOwnerBadge">あなたはこのエージェントのオーナーです</p>
+                    <dl class="custom-agents-meta-list custom-agents-meta-list--nested">
+                      <div class="custom-agents-meta-row custom-agents-meta-row--toggle">
+                        <dt>
+                          <span data-i18n="customAgentsForceReasoningLabel">推論を強制</span>
+                          <span class="custom-agents-meta-hint" data-i18n="customAgentsForceReasoningHint">利用者の推論無効化設定より優先します</span>
+                        </dt>
+                        <dd>
+                          <label class="settings-switch custom-agents-meta-switch">
+                            <input type="checkbox" class="settings-switch-input" id="customAgentsForceReasoning">
+                            <span class="settings-switch-track" aria-hidden="true"></span>
+                          </label>
+                        </dd>
+                      </div>
+                      <div class="custom-agents-meta-row custom-agents-meta-row--select">
+                        <dt>
+                          <label for="customAgentsReasoningDisplay" data-i18n="customAgentsReasoningDisplayLabel">推論の表示</label>
+                          <span class="custom-agents-meta-hint" data-i18n="customAgentsReasoningDisplayHint">オーナー以外の利用者向け</span>
+                        </dt>
+                        <dd>
+                          <select id="customAgentsReasoningDisplay" class="custom-agents-meta-select">
+                            <option value="force_show" data-i18n="customAgentsReasoningDisplayForceShow">表示を強制</option>
+                            <option value="hide" data-i18n="customAgentsReasoningDisplayHide">非表示</option>
+                            <option value="user" data-i18n="customAgentsReasoningDisplayUser">ユーザー設定</option>
+                          </select>
+                        </dd>
+                      </div>
+                      <div class="custom-agents-meta-row custom-agents-meta-row--toggle">
+                        <dt>
+                          <span data-i18n="customAgentsShowPersonalityLabel">性格を表示</span>
+                          <span class="custom-agents-meta-hint" data-i18n="customAgentsShowPersonalityHint">オーナー以外の利用者に性格設定を見せます</span>
+                        </dt>
+                        <dd>
+                          <label class="settings-switch custom-agents-meta-switch">
+                            <input type="checkbox" class="settings-switch-input" id="customAgentsShowPersonality">
+                            <span class="settings-switch-track" aria-hidden="true"></span>
+                          </label>
+                        </dd>
+                      </div>
+                      <div class="custom-agents-meta-row custom-agents-meta-row--toggle">
+                        <dt>
+                          <span data-i18n="customAgentsShowKnowledgeLabel">知識ベースを表示</span>
+                          <span class="custom-agents-meta-hint" data-i18n="customAgentsShowKnowledgeHint">オーナー以外の利用者に知識ベースを見せます</span>
+                        </dt>
+                        <dd>
+                          <label class="settings-switch custom-agents-meta-switch">
+                            <input type="checkbox" class="settings-switch-input" id="customAgentsShowKnowledge">
+                            <span class="settings-switch-track" aria-hidden="true"></span>
+                          </label>
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                  <p class="custom-agents-meta-section-desc hidden" id="customAgentsNonOwnerNotice" data-i18n="customAgentsNonOwnerNotice">オーナーではないため、一部の設定は変更できません。</p>
+                </div>
+                <div id="customAgentsPanelPersonality" class="custom-agents-tab-panel" role="tabpanel" aria-labelledby="customAgentsTabPersonality" data-agent-panel="personality" hidden>
+                  <p class="custom-agents-tab-desc" data-i18n="customAgentsTabPersonalityDesc">話し方や態度、回答の方針を書きます。</p>
+                  <div id="customAgentsPersonalityEditorWrap" class="custom-agents-personality-editor">
+                    <div class="settings-field">
+                      <label for="customAgentsInstructions" data-i18n="customAgentsFieldInstructions">性格</label>
+                      <textarea id="customAgentsInstructions" rows="10"></textarea>
+                    </div>
+                  </div>
+                  <p class="custom-agents-tab-desc hidden" id="customAgentsPersonalityHiddenMsg" data-i18n="customAgentsPersonalityHiddenMsg">オーナーが性格設定の閲覧を許可していません。</p>
+                </div>
+                <div id="customAgentsPanelKnowledge" class="custom-agents-tab-panel custom-agents-knowledge-panel" role="tabpanel" aria-labelledby="customAgentsTabKnowledge" data-agent-panel="knowledge" hidden>
+                  <p class="custom-agents-tab-desc" data-i18n="customAgentsTabKnowledgeDesc">タイトル・タグ・内容のセットで知識を登録します（任意）。</p>
+                  <div id="customAgentsKnowledgeEditorWrap" class="custom-agents-knowledge-editor">
+                    <ul id="customAgentsKnowledgeList" class="custom-agents-knowledge-list"></ul>
+                    <p class="custom-agents-knowledge-empty hidden" id="customAgentsKnowledgeEmpty" data-i18n="customAgentsKnowledgeEmpty">知識がありません。項目を追加してください。</p>
+                    <button type="button" class="custom-agents-k-add" id="customAgentsKnowledgeAdd" data-i18n="customAgentsKnowledgeAdd">項目を追加</button>
+                  </div>
+                  <p class="custom-agents-tab-desc hidden" id="customAgentsKnowledgeHiddenMsg" data-i18n="customAgentsKnowledgeHiddenMsg">オーナーが知識ベースの閲覧を許可していません。</p>
+                </div>
+                <div class="custom-agents-editor-footer">
+                  <button type="submit" class="settings-btn" id="customAgentsSave" data-i18n="customAgentsSaveAgent">保存</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>

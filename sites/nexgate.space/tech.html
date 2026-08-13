@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="NEXGATE AI TECHNOLOGY — 2026年時点の自然言語処理の歴史、技術の現在地、開発方針、研究情報。NLP の変遷から LLM・エージェント時代の課題まで。">
+  <link rel="canonical" href="https://nexgate.space/tech">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NEXGATE AI TECHNOLOGY">
+  <meta property="og:title" content="開発・研究情報 — NEXGATE AI TECHNOLOGY">
+  <meta property="og:description" content="2026年時点の自然言語処理の歴史、技術の現在地、開発方針、研究情報。">
+  <meta property="og:url" content="https://nexgate.space/tech">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://nexgate.space/og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="開発・研究情報 — NEXGATE AI TECHNOLOGY">
+  <meta name="twitter:description" content="2026年時点の自然言語処理の歴史、技術の現在地、開発方針、研究情報。">
+  <meta name="twitter:image" content="https://nexgate.space/og.svg">
+  <title>開発・研究情報 — NEXGATE AI TECHNOLOGY</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000000;
+      --surface: #0a0a0a;
+      --line: rgba(255, 255, 255, 0.07);
+      --line-strong: rgba(255, 255, 255, 0.12);
+      --text: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.45);
+      --text-subtle: rgba(255, 255, 255, 0.28);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    html:has(body.is-loading) { background: var(--black); }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    body.is-loading { overflow: hidden; background: var(--black); }
+
+    .ambient-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: var(--black);
+      contain: strict;
+    }
+
+    .ambient-backdrop span {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      will-change: transform;
+      filter: blur(64px);
+    }
+
+    .ambient-layer--a {
+      width: min(92vmax, 740px);
+      height: min(72vmax, 540px);
+      left: 6%;
+      top: 14%;
+      background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 72%);
+      animation: ambientFloatA 34s ease-in-out infinite;
+    }
+
+    .ambient-layer--b {
+      width: min(88vmax, 700px);
+      height: min(68vmax, 500px);
+      right: 4%;
+      top: 38%;
+      left: auto;
+      background:
+        radial-gradient(ellipse 100% 100% at 50% 50%, rgba(255, 255, 255, 0.038) 0%, transparent 70%),
+        radial-gradient(ellipse 85% 65% at 42% 58%, rgba(130, 195, 148, 0.025) 0%, transparent 68%);
+      animation: ambientFloatB 41s ease-in-out infinite;
+    }
+
+    .ambient-layer--c {
+      width: min(96vmax, 820px);
+      height: min(58vmax, 440px);
+      left: 24%;
+      bottom: 6%;
+      top: auto;
+      background: radial-gradient(ellipse 100% 78% at 50% 50%, rgba(255, 255, 255, 0.032) 0%, transparent 74%);
+      animation: ambientFloatC 47s ease-in-out infinite;
+    }
+
+    .ambient-wave {
+      inset: -12% -8%;
+      border-radius: 0;
+      filter: none;
+      opacity: 0.55;
+      background:
+        linear-gradient(108deg, transparent 40%, rgba(255, 255, 255, 0.011) 50%, transparent 60%),
+        linear-gradient(72deg, transparent 36%, rgba(255, 255, 255, 0.007) 47%, transparent 55%);
+      background-size: 220% 220%;
+      animation: ambientWave 54s linear infinite;
+    }
+
+    @keyframes ambientFloatA {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(3.5%, -2.5%) scale(1.05); }
+    }
+
+    @keyframes ambientFloatB {
+      0%, 100% { transform: translate(0, 0) scale(1.02); }
+      50% { transform: translate(-4.5%, 2%) scale(0.97); }
+    }
+
+    @keyframes ambientFloatC {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(2.5%, 3.5%); }
+      66% { transform: translate(-3.5%, -2%); }
+    }
+
+    @keyframes ambientWave {
+      0% { background-position: 0% 42%, 100% 58%; transform: translate3d(0, 0, 0); }
+      50% { background-position: 100% 56%, 0% 44%; transform: translate3d(0, -1.2%, 0); }
+      100% { background-position: 0% 42%, 100% 58%; transform: translate3d(0, 0, 0); }
+    }
+
+    .site-shell { position: relative; z-index: 1; }
+
+    body.is-loading .site-shell {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    body.is-loaded .site-shell { animation: shellReveal 1s ease forwards; }
+
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      background: var(--black);
+      transition: opacity 1.2s ease, visibility 1.2s ease;
+    }
+
+    .page-loader.is-exiting {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-mark {
+      font-size: clamp(1rem, 3.5vw, 1.3rem);
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: loaderFadeIn 2s ease 0.3s forwards;
+    }
+
+    .loader-tagline {
+      font-size: clamp(0.95rem, 3.2vw, 1.2rem);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: 0.02em;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: min(92vw, 480px);
+      line-height: 1.65;
+      opacity: 0;
+      animation: loaderFadeIn 2.2s ease 0.7s forwards;
+    }
+
+    @keyframes loaderFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shellReveal {
+      from { opacity: 0; visibility: hidden; }
+      to { opacity: 1; visibility: visible; }
+    }
+
+    body:not(.is-loaded) .page-hero-label,
+    body:not(.is-loaded) .page-hero-title,
+    body:not(.is-loaded) .page-hero-desc {
+      animation: none;
+      opacity: 0;
+    }
+
+    body.is-loaded .page-hero-label { animation: fadeUp 0.7s ease 0.25s both; }
+    body.is-loaded .page-hero-title { animation: fadeUp 0.7s ease 0.35s both; }
+    body.is-loaded .page-hero-desc { animation: fadeUp 0.7s ease 0.45s both; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 48px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 64px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-logo {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .header-nav a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover { color: var(--text); }
+
+    .header-nav a.is-current { color: var(--text); }
+
+    .header-cta-soon {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 10px 22px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .page-hero {
+      padding: 140px 24px 72px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .page-hero-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 20px;
+    }
+
+    .page-hero-title {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .page-hero-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.75;
+    }
+
+    .page-hero-discord {
+      display: flex;
+      justify-content: center;
+      margin: 4px 0 32px;
+    }
+
+    .discord-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--text-muted);
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .discord-link:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: var(--surface);
+    }
+
+    .discord-link svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .section {
+      padding: 80px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .section-body {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.8;
+      max-width: 720px;
+    }
+
+    .section-body p + p { margin-top: 16px; }
+
+    .section-body-wide {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.85;
+      max-width: 100%;
+    }
+
+    .section-body-wide p + p { margin-top: 16px; }
+
+    .section-subtitle {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-top: 40px;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-subtitle:first-of-type { margin-top: 32px; }
+
+    .timeline {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--line);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 24px;
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--line);
+      background: var(--black);
+      transition: background 0.25s;
+    }
+
+    .timeline-item:last-child { border-bottom: none; }
+
+    .timeline-item:hover { background: var(--surface); }
+
+    .timeline-era {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      padding-top: 2px;
+    }
+
+    .timeline-content h3 {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .timeline-content p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin-top: 40px;
+    }
+
+    .info-grid.info-grid--triple {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .info-grid.info-grid--wide {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .info-card {
+      background: var(--black);
+      padding: 36px 32px;
+      transition: background 0.25s;
+    }
+
+    .info-card:hover { background: var(--surface); }
+
+    .info-tag {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 16px;
+    }
+
+    .info-card h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .info-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .info-list {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info-list li {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .info-list li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--text-subtle);
+    }
+
+    .section-divider {
+      max-width: 1080px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 48px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--text); }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 80px 48px 32px;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: 48px 32px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .footer-logo {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      max-width: 280px;
+      margin-bottom: 28px;
+    }
+
+    .footer-cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      color: var(--text-muted);
+      border: 1px solid var(--line);
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .footer-col h4 {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-links a.is-current { color: var(--text); }
+
+    .footer-links .is-soon {
+      font-size: 0.78rem;
+      color: var(--text-subtle);
+      cursor: default;
+    }
+
+    .footer-bottom {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+
+    .footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page-loader { display: none !important; }
+      body.is-loading { overflow: auto; }
+      body.is-loading .site-shell {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+      .loader-mark { animation: none; opacity: 1; }
+      .loader-tagline { animation: none; opacity: 1; }
+      .page-hero-label, .page-hero-title, .page-hero-desc { animation: none; opacity: 1; }
+      .ambient-backdrop span { animation: none !important; }
+    }
+
+    @media (max-width: 900px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+      .info-grid { grid-template-columns: 1fr; }
+      .info-grid.info-grid--triple { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; gap: 8px; padding: 24px 20px; }
+    }
+
+    @media (max-width: 640px) {
+      .site-header { padding: 0 20px; }
+      .header-nav { display: none; }
+      .header-inner { height: 56px; }
+      .page-hero { padding: 120px 20px 56px; }
+      .section { padding: 56px 20px; }
+      .site-footer { padding: 64px 20px 28px; }
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding-bottom: 40px;
+      }
+    }
+  </style>
+</head>
+<body class="is-loading">
+  <div class="ambient-backdrop" aria-hidden="true">
+    <span class="ambient-layer--a"></span>
+    <span class="ambient-layer--b"></span>
+    <span class="ambient-layer--c"></span>
+    <span class="ambient-wave"></span>
+  </div>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <span class="loader-mark">NEXGATE AI</span>
+    <p class="loader-tagline">Making intelligence accessible — responsibly.</p>
+  </div>
+
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="header-logo">NEXGATE AI TECHNOLOGY</a>
+        <nav class="header-nav" aria-label="メインナビゲーション">
+          <a href="#history">歴史</a>
+          <a href="#landscape">現在地</a>
+          <a href="#development">開発</a>
+          <a href="#research">研究</a>
+          <a href="index.html">トップ</a>
+        </nav>
+        <span class="header-cta-soon" role="status">準備中</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="page-hero">
+        <p class="page-hero-label">Technical</p>
+        <h1 class="page-hero-title">開発・研究情報</h1>
+        <div class="page-hero-discord">
+          <a href="https://discord.gg/zy2jvkz8kk" class="discord-link" target="_blank" rel="noopener noreferrer" aria-label="NEXGATE AI TECHNOLOGY Discord サーバー">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          </a>
+        </div>
+        <p class="page-hero-desc">AIや電子機器は、人間が人間らしく生きるための補助機です。NEXGATE AI はその前提のもと、2026年現在、安全性と持続性を重視し、セキュアな環境で正しい情報を推論によって導き出せる仕組みを追求します。未確定な情報技術を、知識ある者が率先して確立し、一般社会への健全な普及を促進する団体として活動しています。</p>
+      </div>
+
+      <hr class="section-divider">
+
+      <section class="section" id="history">
+        <p class="section-label">History</p>
+        <h2 class="section-title">自然言語処理の歴史</h2>
+        <div class="section-body-wide">
+          <p>「コンピュータに言語を理解させる」という自然言語処理（NLP: Natural Language Processing）の挑戦は、1950年代のチューリングテストや早期の機械翻訳から始まりました。アラン・チューリングが1950年に提唱した「機械は人間のように会話できるか」という問いは、単なる思想実験ではなく、以後75年以上（2026年現在）にわたる研究分野の出発点となりました。</p>
+          <p>1954年のジョージタウン大学でのロシア語→英語機械翻訳実験は、わずか60文程度のデモながら「言語処理は近い将来実用化できる」という期待を社会に広げました。しかし実際には、語順の違い、多義語、文脈依存、文化的ニュアンス——人間の言語が持つ複雑さは、当時の技術では到底扱いきれないものでした。</p>
+          <p>1960年代には ELIZA（1966）のようなパターンマッチング型の対話プログラムが登場し、「理解しているように見える」体験を初めて示しました。同時期の SHRDLU は、限定された世界（ブロックの積み木）の中では、指示を解釈して行動するエージェントとして機能しました。これらは「理解」の実態が、限定された文法と辞書の組み合わせに過ぎないことも明らかにしました。</p>
+
+          <h3 class="section-subtitle">ルールから統計へ、統計から深層学習へ</h3>
+          <p>1980年代のエキスパートシステムや、1990年代以降の統計的機械翻訳（SMT）は、言語を「確率の問題」として捉え直しました。大量の対訳コーパスから語順やフレーズの対応関係を学習する手法は、ルールを手作業で書き続ける限界を突破しました。2000年代に入ると word2vec（2013）などの単語埋め込み、LSTM や GRU などの再帰型ニューラルネットワークが、文脈を数値ベクトルとして表現する道を開きました。</p>
+          <p>2017年の Transformer アーキテクチャ（「Attention Is All You Need」）は、再帰構造に頼らず Attention メカニズムだけで系列を処理できることを示し、並列計算の効率と長距離依存の捕捉を両立しました。これが現在の大規模言語モデル（LLM）の直接的な技術的基盤です。2018年以降、事前学習＋ファインチューニングのパラダイムが一般化し、2022年以降は対話型インターフェースの普及、2024〜2025年には推論特化型モデル、2025〜2026年にはツール連携や多段階タスクを担うエージェント的な利用——と、実装の焦点が急速に移り変わってきました。</p>
+
+          <h3 class="section-subtitle">一直線の成功ではなかった</h3>
+          <p>1970年代の第一次 AI 冬、1980年代末の Lisp マシン市場の崩壊、統計手法への移行期の混乱——NLP の歴史には、期待と失望のサイクルが繰り返されてきました。各世代のアーキテクチャは前の限界を乗り越えるために生まれ、多くは次の世代に機能を引き継ぎながら姿を変え、一部は淘汰されました。現在の LLM も、この長い系譜の上に成り立っていますが、「最終形」ではありません。</p>
+          <p>いまだ存在する運用コスト、爆増する計算リソース、誤情報を生成してしまう可能性——安全面や著作権面で向き合わなければならない課題は、いまも数多く残されています。加えて、情報社会においてスマートフォンやパソコンが当たり前となり、AIへの依存も深まりつつあります。それらを「便利だから当然使う」ものとして扱うのではなく、人間の判断と創造を支える補助として捉え直す視点が、いま求められています。</p>
+        </div>
+        <div class="timeline" aria-label="自然言語処理の主要な時代">
+          <article class="timeline-item">
+            <p class="timeline-era">1950–1970</p>
+            <div class="timeline-content">
+              <h3>記号処理とルールベース</h3>
+              <p>チューリングテスト、機械翻訳の初期実験、ELIZA など。言語を形式文法と辞書で記述し、パターンマッチングで処理する。柔軟性に欠け、スケールしないことが限界として明らかに。</p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <p class="timeline-era">1980–2000</p>
+            <div class="timeline-content">
+              <h3>エキスパートシステムと統計的 NLP</h3>
+              <p>知識ベースと推論ルールの組み合わせから、対訳コーパスに基づく n-gram モデル、条件付き確率による翻訳へ。データ駆動型のアプローチが主流となり、手作業の文法記述から脱却。</p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <p class="timeline-era">2010–2017</p>
+            <div class="timeline-content">
+              <h3>深層学習と埋め込み</h3>
+              <p>word2vec、seq2seq、LSTM/GRU による系列モデリング。単語や文を高次元ベクトル空間に写像し、意味的類似性を数値的に扱えるように。GPU による並列学習が実用化を加速。</p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <p class="timeline-era">2017–2026</p>
+            <div class="timeline-content">
+              <h3>Transformer と大規模言語モデル</h3>
+              <p>Self-Attention による並列処理、大規模事前学習、指示チューニング、RLHF など。2022年以降の対話型 LLM 普及、2025〜2026年のエージェント的利用へと拡張。コスト・幻覚・権利問題も同時に拡大。</p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <p class="timeline-era">2022–2026</p>
+            <div class="timeline-content">
+              <h3>実装の急速な変化</h3>
+              <p>チャット UI の一般化から、推論チェーン、Web 検索連携（RAG）、ツール呼び出し、マルチエージェント構成へ。2026年時点では「応答する AI」から「手順を実行する AI」への移行が進行中。</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="info-grid info-grid--wide">
+          <article class="info-card">
+            <p class="info-tag">1950s–70s</p>
+            <h3>ルールベース時代</h3>
+            <p>言語学者とエンジニアが文法規則を記述し、例外を追加し続けるアプローチ。限定的なドメインでは機能したが、日常会話の曖昧さや新語の出現に対応できず、保守コストが指数関数的に増加した。</p>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">1990s–2000s</p>
+            <h3>統計的 NLP</h3>
+            <p>「正解のルールを書く」のではなく「大量のデータから確率分布を推定する」転換。IBM モデルによる語順対応、CRF による品詞タグ付けなど。データの質と量が性能を左右するという現代の前提がここで確立された。</p>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">2010s</p>
+            <h3>ニューラル言語モデル</h3>
+            <p>分散表現（埋め込み）により、意味的に近い語がベクトル空間で近くに配置される。RNN の勾配消失問題への対処、Attention の導入など、Transformer へ至る技術的蓄積がこの時期に集中した。</p>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">2020s</p>
+            <h3>大規模言語モデル（LLM）</h3>
+            <p>2022年以降、対話型 LLM が一般利用者に広がり、2024〜2025年に推論能力の強化、2025〜2026年にはエージェント的なツール連携が実装の中心に。学習データの出所、推論コスト、事実性の担保は2026年現在も未解決のまま、実装が先行している。</p>
+          </article>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="landscape">
+        <p class="section-label">Landscape</p>
+        <h2 class="section-title">技術の現在地</h2>
+        <div class="section-body-wide">
+          <p>2026年現在、NLP は性能面では過去のどの時代とも比較にならない能力を持ちます。しかしそれは「問題が解決した」ことを意味しません。むしろ、スケールの拡大と実装の急速な変化とともに、以前は研究室の中だけで済まされていた課題が、社会全体の問題として表面化しています。</p>
+
+          <h3 class="section-subtitle">2026年時点の潮流</h3>
+          <p>2026年時点で最も大きな変化は、単発のテキスト生成から「ツールを使い、複数ステップのタスクを遂行する」エージェント的な利用への移行です。Web 検索、コード実行、ファイル操作——外部機能との連携が標準的な構成要素になりつつあり、RAG（検索拡張生成）に加えてマルチエージェント構成や階層的なタスク分解が実装パターンとして定着し始めています。</p>
+          <p>モデル選定の基準も変わりつつあります。プロプライエタリ（商用クローズド）モデルとオープンウェイト（重み公開）モデルの性能差は縮小し、2026年の実務では「最高性能かどうか」よりも、推論コスト・レイテンシ・運用性・ライセンス条件での判断が比重を増しています。推論効率化（Attention カーネルの最適化、量子化、投機的デコードなど）の進展により、以前よりインタラクティブな利用が可能になった一方、長時間のエージェント実行はトークン消費をさらに押し上げています。</p>
+          <p>規制面では、EU AI 法（Artificial Intelligence Act）をはじめ、各国・地域で AI 規制の enforce が2025〜2026年に段階的に進んでいます。汎用 AI モデル提供者への義務、リスクレベルに応じた要求——技術開発と法整備が同時進行する局面にあります。日本でも AI 関連ガイドラインの整備が進み、安全性・透明性・権利保護が実装要件として問われる時代に入りました。</p>
+          <p>解釈可能性（モデル内部の挙動を理解する研究）も2025〜2026年に注目を集めています。出力だけでなく内部状態を言語化する試みなど、信頼性の向上に向けた研究が進んでいますが、実装への反映は依然として限定的です。</p>
+
+          <h3 class="section-subtitle">コストとリソースの爆増</h3>
+          <p>大規模モデルの事前学習には、数千〜数万の高性能 GPU を数週間〜数ヶ月稼働させる計算量が必要です。推論（実際にユーザーが使う段階）においても、長い会話履歴や複雑な推論チェーンほどトークン消費が増え、運用コストはユーザー数と利用頻度に比例して膨らみます。エネルギー消費やデータセンターの環境負荷も、持続可能性の観点から無視できません。</p>
+          <p>「より大きなモデルほど性能が上がる」というスケーリング則（Scaling Laws）は実証されていますが、限界コストの問題は同時に存在します。小型モデルでの効率化、量子化、キャッシュ、ルーティング（用途に応じたモデル選択）など、性能とコストのバランスを取る技術が、実用化の鍵の一つです。</p>
+
+          <h3 class="section-subtitle">幻覚（ハルシネーション）と誤情報</h3>
+          <p>LLM は本質的に「次に来るトークンの確率を予測する」モデルです。事実の正確性を保証する機構は、学習データに含まれるとは限りません。そのため、もっともらしい文体で事実と異なる内容を生成する——いわゆる幻覚（ハルシネーション）——は構造的なリスクとして存在します。</p>
+          <p>Web 検索との連携（RAG: Retrieval-Augmented Generation）、引用の明示、複数ソースの照合、人間による確認フローなど、外部情報で「根拠」を補強する手法が広く試みられています。しかし検索結果自体の品質、情報の鮮度、ソースの信頼性——これらの問題は NLP 単体では解決できず、情報リテラシー全体の問題に接続します。</p>
+
+          <h3 class="section-subtitle">安全面と著作権</h3>
+          <p>学習データに含まれる個人情報、有害コンテンツ、偏った表現——これらがモデルの出力に反映されるリスクがあります。プロンプトインジェクション、ジェイルブレイク、悪意ある利用——攻撃手法も進化し続けています。出力フィルタ、利用ポリシー、監査ログなど、多層的な防御が必要です。</p>
+          <p>著作権の問題は、2026年現在も世界各国で法整備と訴訟が進行中です。書籍、ニュース記事、コード、画像——許可なく収集されたデータで学習されたモデルが、元の創作者の権利とどう両立するかは、技術的な問題であると同時に、社会合意が必要な問題です。生成物自体の著作権帰属、学習の適法性、オプトアウトの仕組み——いずれも未確定の領域です。</p>
+
+          <h3 class="section-subtitle">補助としての AI</h3>
+          <p>これらの課題を踏まえた上で、私たちは AI を「人間の判断を代替するもの」ではなく「人間らしく生きるための補助機」として位置づけます。推論の結果を盲信せず、根拠を確認し、最終判断は人間が下す——そのための UI、ワークフロー、ガイドライン設計が、NEXGATE AI の開発思想の中心にあります。</p>
+        </div>
+        <div class="info-grid info-grid--triple">
+          <article class="info-card">
+            <p class="info-tag">Compute</p>
+            <h3>計算資源と持続性</h3>
+            <p>学習・推論・ストレージそれぞれにコストが発生。用途に応じたモデル選択、効率的な推論、キャッシュ戦略により、性能を維持しながらリソース消費を抑える設計が求められる。</p>
+            <ul class="info-list">
+              <li>トークン単位の利用量管理</li>
+              <li>用途別モデルルーティング</li>
+              <li>エネルギー効率への配慮</li>
+            </ul>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">Truthfulness</p>
+            <h3>事実性と検証</h3>
+            <p>生成テキストの正確性を担保するため、Web 検索による根拠付け、引用の提示、不確実性の明示などを組み合わせる。ユーザーが出力を検証しやすい UI が重要。</p>
+            <ul class="info-list">
+              <li>検索連携による根拠補強</li>
+              <li>幻覚検出・警告表示</li>
+              <li>出典の明示と照合</li>
+            </ul>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">Rights</p>
+            <h3>権利と安全</h3>
+            <p>学習データ、生成物、利用者データ——それぞれの権利関係を尊重する。有害出力の抑制、プライバシー保護、利用規約と技術的制御の両立。</p>
+            <ul class="info-list">
+              <li>データ取り扱いの透明性</li>
+              <li>出力ポリシーと監査</li>
+              <li>著作権・プライバシーへの配慮</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="development">
+        <p class="section-label">Development</p>
+        <h2 class="section-title">開発</h2>
+        <div class="section-body-wide">
+          <p>AIや電子機器は、人間が人間らしく生きるための補助機にすぎません。調査、執筆、整理、学習——必要な場面で頼れる存在として設計し、依存ではなく選択として使える体験を目指します。</p>
+          <p>その実現にあたって、安全性と持続性を最優先に据えます。セキュアな基盤の上で、推論を通じて正しい情報にたどり着ける体験を、プロダクト設計の中核としています。panel.nexgate.space として、2026年現在、サービス開始に向けた開発を進めています。</p>
+
+          <h3 class="section-subtitle">プラットフォームの設計</h3>
+          <p>NEXGATE AI は、複数の AI モデルを用途に応じて選択できる統合ワークスペースとして構築しています。チャット、Web 検索、ファイル解析——それぞれ独立した機能ではなく、一つの会話の流れの中で組み合わせられる設計です。速度重視の応答と、深い推論が必要な場面ではより能力の高いモデルへ切り替える、といった使い分けをユーザー自身が選べるようにします。</p>
+          <p>モデル呼び出し、利用量管理、ユーザー認証を分離した API 中心のアーキテクチャを採用しています。これにより、新しいモデルの追加、機能拡張、セキュリティパッチの適用を、サービス全体を止めることなく段階的に行えます。公開前の段階では、機能設計・インフラ整備・品質検証を優先しています。</p>
+
+          <h3 class="section-subtitle">推論と情報の正確性</h3>
+          <p>LLM 単体では事実性を保証できないため、Web 検索連携によって外部情報で回答を補強する仕組みを中核に据えています。検索結果を参照しながら回答を生成することで、学習データの cutoff 以降の情報や、特定分野の最新動向にも対応できる設計です。PDF や画像からのテキスト抽出（OCR）により、手元の資料を根拠として会話に組み込むことも可能にします。</p>
+          <p>ただし、検索連携も万能ではありません。ソースの信頼性、情報の鮮度、検索クエリの質——これらが出力品質を左右します。だからこそ、回答の根拠をユーザーが確認できる UI、不確実な情報への明示的な警告、最終判断を人間に委ねるワークフロー設計が不可欠です。</p>
+        </div>
+        <div class="info-grid info-grid--wide">
+          <article class="info-card">
+            <p class="info-tag">Philosophy</p>
+            <h3>人間らしさを支える補助</h3>
+            <p>高度な技術を、日常の言葉と操作で届ける。人の主体性を奪わず、判断と創造のプロセスを手伝う——そのための補助機として位置づけます。利用時間の可視化や、過度な依存を促さない UI も検討しています。</p>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">Safety</p>
+            <h3>安全性と持続性</h3>
+            <p>セキュアな環境で、根拠のある推論を通じて正しい情報を導き出す。短期的な便利さだけでなく、長く使い続けられる持続性を重視した設計を行います。</p>
+            <ul class="info-list">
+              <li>データ保護とアクセス管理</li>
+              <li>推論の透明性・検証可能性</li>
+              <li>持続可能な運用設計</li>
+              <li>アカウント単位のデータ分離</li>
+            </ul>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">Architecture</p>
+            <h3>技術構成</h3>
+            <p>フロントエンドはモダンな Web 標準に準拠したブラウザベース UI。バックエンドは REST / ストリーミング応答による API 設計。利用量・課金・認証を独立したモジュールとして管理。</p>
+            <ul class="info-list">
+              <li>マルチモデル API レイヤー</li>
+              <li>ストリーミング応答による低遅延</li>
+              <li>段階的な機能追加の設計</li>
+            </ul>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">Platform</p>
+            <h3>創造と表現の場</h3>
+            <p>AI は創造の代替ではなく、表現の幅を広げる補助です。執筆、構成、調査——そこから生まれるコンテンツや発信の場、プラットフォームの可能性は大きい。人間の創造性が起点であることを前提に設計します。</p>
+          </article>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="research">
+        <p class="section-label">Research</p>
+        <h2 class="section-title">研究情報</h2>
+        <div class="section-body">
+          <p>AIは、2026年現在も全体として未確定な情報技術です。だからこそ、知識と経験を持つ者が率先して正しい使い方と基準を確立し、過度な依存なく社会に根づく健全な普及を促進することが求められます。</p>
+          <p>NEXGATE AI はその役割を担う団体として、人間らしい創造と表現——そこから生まれるコンテンツの場やプラットフォームの可能性も含め——を支える研究と検証を続けています。</p>
+        </div>
+        <div class="info-grid">
+          <article class="info-card">
+            <p class="info-tag">Mission</p>
+            <h3>確立と普及</h3>
+            <p>未確定の技術を、知識ある者が率先して形にする。正しい情報の扱い方、安全な利用の基準を確立し、AIや電子機器への過度な依存なく、人間らしく生きるための補助として社会に根づく普及を促進します。</p>
+          </article>
+          <article class="info-card">
+            <p class="info-tag">Research</p>
+            <h3>研究の重点</h3>
+            <p>セキュアな推論による情報の正確性、誤情報生成への対策、検索連携の信頼性など、NLP が歴史的に抱えてきた課題と向き合いながら検証。成果は本ページで順次公開します。</p>
+            <ul class="info-list">
+              <li>推論の正確性と根拠の検証</li>
+              <li>誤情報・幻覚への抑制と検出</li>
+              <li>著作権・安全面のガイドライン確立</li>
+              <li>Responsible AI の実践</li>
+            </ul>
+          </article>
+        </div>
+        <a href="index.html" class="back-link">← トップへ戻る</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo">NEXGATE AI TECHNOLOGY</a>
+          <p class="footer-tagline">AIや電子機器は人間らしく生きるための補助機。正しい情報を推論で導く。</p>
+          <span class="footer-cta" role="status">アプリ（準備中）</span>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul class="footer-links">
+            <li><a href="index.html#use-cases">用途</a></li>
+            <li><a href="index.html#features">機能</a></li>
+            <li><a href="index.html#models">モデル</a></li>
+            <li><a href="index.html#plans">プラン</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="index.html#workflow">使い方</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+            <li><span class="is-soon">ログイン（準備中）</span></li>
+            <li><span class="is-soon">アカウント作成（準備中）</span></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul class="footer-links">
+            <li><a href="terms.html">利用規約</a></li>
+            <li><a href="privacy.html">プライバシーポリシー</a></li>
+            <li><a href="tokushoho.html">特定商取引法</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Technical</h4>
+          <ul class="footer-links">
+            <li><a href="tech.html" class="is-current">開発・研究情報</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 NEXGATE AI. All rights reserved.</p>
+        <div class="footer-meta">
+          <span>nexgate.space</span>
+          <span>panel.nexgate.space（準備中）</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.body.classList.remove("is-loading");
+        document.body.classList.add("is-loaded");
+        var loader = document.getElementById("pageLoader");
+        if (loader) loader.remove();
+        return;
+      }
+
+      var LOADER_MIN_MS = 2200;
+      var FADE_OUT_MS = 1200;
+      var start = Date.now();
+      var loader = document.getElementById("pageLoader");
+
+      function finishLoader() {
+        loader.classList.add("is-exiting");
+        document.body.classList.remove("is-loading");
+        document.body.classList.add("is-loaded");
+
+        setTimeout(function () {
+          loader.remove();
+        }, FADE_OUT_MS + 50);
+      }
+
+      function onReady() {
+        var elapsed = Date.now() - start;
+        var wait = Math.max(0, LOADER_MIN_MS - elapsed);
+        setTimeout(finishLoader, wait);
+      }
+
+      if (document.readyState === "complete") {
+        onReady();
+      } else {
+        window.addEventListener("load", onReady);
+      }
+    })();
+  </script>
+</body>
+</html>

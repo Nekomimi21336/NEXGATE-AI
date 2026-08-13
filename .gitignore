@@ -1,0 +1,14 @@
+.env
+.deploy.env
+deploy.config.json
+data/
+data_backup*/
+scanner/output/
+__pycache__/
+*.pyc
+node_modules/
+static/dist/
+*.log
+.venv/
+venv/
+.DS_Store

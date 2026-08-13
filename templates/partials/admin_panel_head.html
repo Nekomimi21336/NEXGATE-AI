@@ -1,0 +1,49 @@
+<script>
+(function () {
+  var id = (location.hash || "#overview").slice(1);
+  if (id.indexOf("user/") === 0 || id.indexOf("plan/") === 0) {
+    id = id.indexOf("user/") === 0 ? "users" : "plans";
+  } else if ([
+    "overview", "resources", "reports", "users", "sessions", "plans", "plan-features",
+    "models", "extended-models", "image-generation", "features",
+    "system-prompts", "search-engines", "coupons", "subscription",
+    "paypal", "google-oauth", "discord-oauth", "mail-server"
+  ].indexOf(id) === -1) {
+    id = "overview";
+  }
+  document.documentElement.setAttribute("data-admin-panel", id);
+
+  // Init nav group accordions
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".admin-nav-group-title").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var group = btn.closest(".admin-nav-group");
+        if (group) group.classList.toggle("is-collapsed");
+      });
+    });
+  });
+})();
+</script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v={{ asset_version }}">
+<style>
+  .admin-panel { display: none !important; }
+  html[data-admin-panel="overview"] #admin-panel-overview,
+  html[data-admin-panel="resources"] #admin-panel-resources,
+  html[data-admin-panel="reports"] #admin-panel-reports,
+  html[data-admin-panel="users"] #admin-panel-users,
+  html[data-admin-panel="sessions"] #admin-panel-sessions,
+  html[data-admin-panel="plans"] #admin-panel-plans,
+  html[data-admin-panel="plan-features"] #admin-panel-plan-features,
+  html[data-admin-panel="models"] #admin-panel-models,
+  html[data-admin-panel="extended-models"] #admin-panel-extended-models,
+  html[data-admin-panel="image-generation"] #admin-panel-image-generation,
+  html[data-admin-panel="features"] #admin-panel-features,
+  html[data-admin-panel="search-engines"] #admin-panel-search-engines,
+  html[data-admin-panel="coupons"] #admin-panel-coupons,
+  html[data-admin-panel="subscription"] #admin-panel-subscription,
+  html[data-admin-panel="paypal"] #admin-panel-paypal,
+  html[data-admin-panel="google-oauth"] #admin-panel-google-oauth,
+  html[data-admin-panel="discord-oauth"] #admin-panel-discord-oauth,
+  html[data-admin-panel="mail-server"] #admin-panel-mail-server { display: block !important; }
+  html[data-admin-panel="system-prompts"] #admin-panel-system-prompts { display: block !important; }
+</style>

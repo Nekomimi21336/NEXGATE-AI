@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "outDir": "./static/dist",
+    "rootDir": "./frontend_src",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./frontend_src/*"]
+    }
+  },
+  "include": ["frontend_src/**/*.ts"],
+  "exclude": ["node_modules", "static/dist"]
+}

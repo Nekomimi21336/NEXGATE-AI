@@ -1,0 +1,1748 @@
+/* ============================================================
+   NexgateAI - Admin Panel Styles
+   管理機能 専用スタイルシート
+   ============================================================ */
+
+/* ============================================================
+   1. Navigation (grouped sidebar)
+   ============================================================ */
+
+.admin-nav-group {
+  margin-bottom: 2px;
+}
+
+.admin-nav-group-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 12px 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.admin-nav-group-title:hover {
+  color: var(--text-primary);
+}
+
+.admin-nav-group-title .bi {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.admin-nav-group-title::after {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: auto;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition: transform 0.2s ease;
+}
+
+.admin-nav-group.is-collapsed .admin-nav-group-title::after {
+  transform: rotate(-90deg);
+}
+
+.admin-nav-group-items {
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+  max-height: 600px;
+  opacity: 1;
+}
+
+.admin-nav-group.is-collapsed .admin-nav-group-items {
+  max-height: 0;
+  opacity: 0;
+}
+
+.admin-nav-item {
+  --nav-item-pad: 8px 12px 8px 20px;
+}
+
+/* Active nav indicator */
+.admin-nav-item.is-active,
+html[data-admin-panel="overview"] .admin-nav-item[data-panel="overview"],
+html[data-admin-panel="resources"] .admin-nav-item[data-panel="resources"],
+html[data-admin-panel="reports"] .admin-nav-item[data-panel="reports"],
+html[data-admin-panel="users"] .admin-nav-item[data-panel="users"],
+html[data-admin-panel="sessions"] .admin-nav-item[data-panel="sessions"],
+html[data-admin-panel="plans"] .admin-nav-item[data-panel="plans"],
+html[data-admin-panel="plan-features"] .admin-nav-item[data-panel="plan-features"],
+html[data-admin-panel="models"] .admin-nav-item[data-panel="models"],
+html[data-admin-panel="extended-models"] .admin-nav-item[data-panel="extended-models"],
+html[data-admin-panel="image-generation"] .admin-nav-item[data-panel="image-generation"],
+html[data-admin-panel="features"] .admin-nav-item[data-panel="features"],
+html[data-admin-panel="system-prompts"] .admin-nav-item[data-panel="system-prompts"],
+html[data-admin-panel="search-engines"] .admin-nav-item[data-panel="search-engines"],
+html[data-admin-panel="coupons"] .admin-nav-item[data-panel="coupons"],
+html[data-admin-panel="subscription"] .admin-nav-item[data-panel="subscription"],
+html[data-admin-panel="paypal"] .admin-nav-item[data-panel="paypal"],
+html[data-admin-panel="google-oauth"] .admin-nav-item[data-panel="google-oauth"],
+html[data-admin-panel="discord-oauth"] .admin-nav-item[data-panel="discord-oauth"],
+html[data-admin-panel="mail-server"] .admin-nav-item[data-panel="mail-server"] {
+  position: relative;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.admin-nav-item.is-active::before,
+html[data-admin-panel="overview"] .admin-nav-item[data-panel="overview"]::before,
+html[data-admin-panel="resources"] .admin-nav-item[data-panel="resources"]::before,
+html[data-admin-panel="reports"] .admin-nav-item[data-panel="reports"]::before,
+html[data-admin-panel="users"] .admin-nav-item[data-panel="users"]::before,
+html[data-admin-panel="sessions"] .admin-nav-item[data-panel="sessions"]::before,
+html[data-admin-panel="plans"] .admin-nav-item[data-panel="plans"]::before,
+html[data-admin-panel="plan-features"] .admin-nav-item[data-panel="plan-features"]::before,
+html[data-admin-panel="models"] .admin-nav-item[data-panel="models"]::before,
+html[data-admin-panel="extended-models"] .admin-nav-item[data-panel="extended-models"]::before,
+html[data-admin-panel="image-generation"] .admin-nav-item[data-panel="image-generation"]::before,
+html[data-admin-panel="features"] .admin-nav-item[data-panel="features"]::before,
+html[data-admin-panel="system-prompts"] .admin-nav-item[data-panel="system-prompts"]::before,
+html[data-admin-panel="search-engines"] .admin-nav-item[data-panel="search-engines"]::before,
+html[data-admin-panel="coupons"] .admin-nav-item[data-panel="coupons"]::before,
+html[data-admin-panel="subscription"] .admin-nav-item[data-panel="subscription"]::before,
+html[data-admin-panel="paypal"] .admin-nav-item[data-panel="paypal"]::before,
+html[data-admin-panel="google-oauth"] .admin-nav-item[data-panel="google-oauth"]::before,
+html[data-admin-panel="discord-oauth"] .admin-nav-item[data-panel="discord-oauth"]::before,
+html[data-admin-panel="mail-server"] .admin-nav-item[data-panel="mail-server"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+
+/* ============================================================
+   2. Overview - Dashboard Cards
+   ============================================================ */
+
+.admin-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .admin-overview-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-overview-card--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.admin-overview-card {
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+  border-radius: 12px;
+  background: var(--bg-input);
+  overflow: hidden;
+}
+
+.admin-overview-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 10px;
+}
+
+.admin-overview-card-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admin-overview-card-body {
+  padding: 0 16px 14px;
+}
+
+.admin-overview-card-footer {
+  padding: 0 16px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Deployment card */
+.admin-deployment-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.admin-deployment-mode-field {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.admin-deployment-runtime {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.admin-deployment-hint {
+  margin: 6px 0;
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.admin-deployment-meta {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Service health cards */
+.admin-service-health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.admin-service-health-card {
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.06));
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  padding: 14px;
+}
+
+.admin-service-health-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-service-health-head h3 {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-service-status-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+}
+
+.admin-service-status-tag.is-online {
+  background: rgba(129, 199, 132, 0.15);
+  color: #81c784;
+}
+
+.admin-service-status-tag.is-offline {
+  background: rgba(229, 115, 115, 0.15);
+  color: #e57373;
+}
+
+.admin-service-health-url {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.admin-service-health-uptime {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.admin-service-health-issues {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78rem;
+}
+
+.admin-service-health-issues li {
+  padding: 2px 0;
+  color: #ffb74d;
+}
+
+.admin-service-health-chart-wrap {
+  margin-bottom: 10px;
+}
+
+.admin-service-health-chart-wrap canvas {
+  width: 100% !important;
+  height: 80px !important;
+}
+
+.admin-service-health-footer {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-service-restart-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.admin-service-restart-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+/* ============================================================
+   3. Tables (consistent across all panels)
+   ============================================================ */
+
+.admin-table-wrap {
+  overflow: auto;
+  max-height: 420px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.06));
+}
+
+.admin-table-wrap--wide {
+  max-height: none;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.admin-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.admin-table th {
+  padding: 10px 12px;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.78rem;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.04));
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 24px 12px;
+  font-size: 0.84rem;
+}
+
+.admin-table-num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   4. Sessions panel
+   ============================================================ */
+
+.admin-sessions-ws-status {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.admin-sessions-ws-status.is-error {
+  color: #e57373;
+}
+
+.admin-sessions-user {
+  display: block;
+  font-weight: 500;
+}
+
+.admin-sessions-user-sub {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.admin-sessions-settling {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+
+.admin-sessions-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.admin-session-stop-btn {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+}
+
+.admin-session-logs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.admin-session-logs-header .admin-subheading {
+  margin: 0;
+}
+
+.admin-session-logs-meta {
+  margin: 10px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.admin-session-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: var(--bg-input);
+}
+
+.admin-session-status--completed { color: var(--accent); }
+.admin-session-status--running   { color: #81c784; }
+.admin-session-status--cancelled { color: #ffb74d; }
+.admin-session-status--failed    { color: #e57373; }
+
+/* Session detail dialog */
+.admin-session-detail-dialog {
+  width: min(920px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.admin-session-detail-dialog::backdrop {
+  background: rgba(0,0,0,0.55);
+}
+
+.admin-session-detail-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 48px);
+}
+
+.admin-session-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 8px;
+}
+
+.admin-session-detail-header .admin-subheading { margin: 0; }
+
+.admin-session-detail-close {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.admin-session-detail-meta {
+  margin: 0;
+  padding: 0 18px 12px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  line-height: 1.45;
+}
+
+.admin-session-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 18px 12px;
+}
+
+.admin-session-brief-copy-btn {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.admin-session-brief-copy-btn.is-copied {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.admin-session-brief {
+  margin: 0 18px 14px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border-subtle));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--accent) 6%, var(--bg-input)),
+    var(--bg-input)
+  );
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.admin-session-brief-eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.admin-session-brief-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-session-brief-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.admin-session-brief-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.admin-session-brief-hint {
+  margin: 6px 0 10px;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.admin-session-brief-pre {
+  margin: 0;
+  padding: 12px 14px;
+  max-height: 320px;
+  overflow: auto;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg-primary) 70%, transparent);
+  border: 1px solid var(--border-subtle);
+  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  white-space: pre;
+  word-break: normal;
+  cursor: text;
+  user-select: all;
+}
+
+.admin-session-brief-pre:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 2px;
+}
+
+.admin-session-detail-body {
+  overflow: auto;
+  padding: 0 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-session-detail-block-title {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-session-detail-pre {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.admin-session-request-id-open {
+  cursor: pointer;
+}
+
+/* ============================================================
+   5. Users panel
+   ============================================================ */
+
+.admin-users-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.admin-users-toolbar-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  flex: 1 1 auto;
+}
+
+.admin-users-search input {
+  width: 200px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.84rem;
+}
+
+.admin-users-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.admin-users-filter select {
+  padding: 5px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
+.admin-users-stats {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   6. Detail panels (users, plans, etc.)
+   ============================================================ */
+
+.admin-detail-card {
+  /* Parent card wrapper */
+}
+
+.admin-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+  margin-bottom: 12px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.admin-back-link:hover {
+  text-decoration: underline;
+}
+
+.admin-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 700px) {
+  .admin-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-detail-grid .settings-field {
+  min-width: 0;
+}
+
+.admin-detail-field--wide {
+  grid-column: 1 / -1;
+}
+
+.admin-detail-readonly {
+  margin: 0;
+  padding: 8px 0;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.admin-detail-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Billing summary card inside user detail */
+.admin-billing-summary-card {
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 8%, var(--bg-input)),
+    var(--bg-input)
+  );
+  border: 1px solid var(--border-subtle);
+}
+
+.admin-balance-adjust-row,
+.admin-entitlement-add-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-balance-adjust-row input[type="number"],
+.admin-balance-adjust-row input[type="text"],
+.admin-entitlement-add-row select,
+.admin-entitlement-add-row input[type="number"] {
+  min-width: 0;
+}
+
+.admin-balance-adjust-row input[type="number"] { width: 120px; }
+.admin-entitlement-add-row select { flex: 1 1 120px; }
+.admin-entitlement-add-row input[type="number"] { width: 72px; }
+
+.admin-detail-usage-actions {
+  margin-top: 4px;
+}
+
+.admin-payments-toolbar,
+.admin-billing-events-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.admin-billing-events-count {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   7. Row action buttons
+   ============================================================ */
+
+.admin-row-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.admin-row-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+.admin-row-btn--danger {
+  color: #e57373;
+  border-color: rgba(229, 115, 115, 0.25);
+}
+
+.admin-row-btn--danger:hover {
+  background: rgba(229, 115, 115, 0.08);
+  border-color: #e57373;
+}
+
+/* ============================================================
+   8. Toggle rows
+   ============================================================ */
+
+.admin-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.04));
+}
+
+.admin-toggle-row:last-child {
+  border-bottom: none;
+}
+
+.admin-toggle-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-toggle-label strong {
+  font-size: 0.88rem;
+}
+
+.admin-toggle-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.admin-toggle-input {
+  flex-shrink: 0;
+  width: 40px;
+  height: 22px;
+  appearance: none;
+  border-radius: 11px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.admin-toggle-input::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  transition: transform 0.15s, background 0.15s;
+}
+
+.admin-toggle-input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.admin-toggle-input:checked::after {
+  transform: translateX(18px);
+  background: var(--accent-fg, #0c2a34);
+}
+
+/* ============================================================
+   9. Settings checkboxes (plan features matrix, search engines)
+   ============================================================ */
+
+.settings-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.settings-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+/* ============================================================
+   10. Plan features matrix
+   ============================================================ */
+
+.admin-plan-features-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-plan-features-group-title {
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.admin-plan-features-legend {
+  margin: 0 0 14px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.admin-plan-features-matrix {
+  /* Shared with search engines plan table */
+}
+
+.admin-plan-features-matrix th {
+  text-align: center;
+  min-width: 80px;
+}
+
+.admin-plan-features-matrix th:first-child {
+  text-align: left;
+  min-width: 160px;
+}
+
+.admin-plan-features-matrix td {
+  text-align: center;
+}
+
+.admin-plan-features-matrix td:first-child {
+  text-align: left;
+}
+
+/* ============================================================
+   11. Models panel
+   ============================================================ */
+
+.admin-models-chart-card {
+  margin-bottom: 16px;
+}
+
+.admin-models-chart-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.admin-models-chart-header .admin-subheading { margin: 0; }
+
+.admin-models-chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-models-chart-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.admin-models-chart-control select {
+  padding: 4px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+}
+
+.admin-models-chart-meta {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.admin-models-chart-wrap {
+  margin-bottom: 10px;
+}
+
+.admin-models-chart-wrap canvas {
+  width: 100% !important;
+  max-height: 320px;
+}
+
+.admin-models-chart-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.82rem;
+}
+
+.admin-models-chart-total {
+  flex: 1 1 150px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--bg-input);
+}
+
+.admin-models-chart-total span {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.admin-models-chart-total strong {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- APIダッシュボード: リアルタイムリクエスト --- */
+.admin-api-live-card {
+  margin-bottom: 16px;
+}
+
+.admin-api-live-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.admin-api-live-header .admin-subheading { margin: 0; }
+
+.admin-api-live-status {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-api-live-status.is-error {
+  color: #ef4444;
+}
+
+.admin-api-live-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .admin-api-live-grid { grid-template-columns: 1fr; }
+}
+
+.admin-api-live-col-title {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.admin-api-live-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.admin-api-live-item {
+  padding: 8px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-input);
+}
+
+.admin-api-live-item--active {
+  border-color: rgba(96, 165, 250, 0.5);
+  background: rgba(96, 165, 250, 0.06);
+}
+
+.admin-api-live-item-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.admin-api-live-item-user {
+  font-size: 0.82rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-api-live-item-model {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono, monospace);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-api-live-item-sub {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.admin-api-live-item-elapsed {
+  color: #60a5fa;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-api-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.admin-api-badge--running {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.admin-api-badge--done {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.admin-api-badge--failed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.admin-models-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 12px;
+  font-size: 0.84rem;
+}
+
+.admin-models-summary-sep {
+  color: var(--text-secondary);
+}
+
+.admin-models-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 0.82rem;
+  margin-bottom: 16px;
+}
+
+.admin-models-default-field {
+  margin-bottom: 14px;
+}
+
+.admin-models-list-hint {
+  margin: 8px 0 12px;
+}
+
+.admin-models-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-models-table th,
+.admin-models-table td {
+  font-size: 0.82rem;
+}
+
+/* ============================================================
+   12. Providers grid
+   ============================================================ */
+
+.admin-providers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.admin-provider-card {
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+}
+
+.admin-provider-card h4 {
+  margin: 0 0 6px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.admin-provider-card label {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.admin-provider-card input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   13. OCR / Extended Models / Image Generation shared
+   ============================================================ */
+
+.admin-ocr-plan-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* ============================================================
+   14. Subscription URLs
+   ============================================================ */
+
+.admin-subscription-url-field {
+  margin-bottom: 14px;
+}
+
+.admin-subscription-url-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-subscription-url-row input[type="url"] {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+/* ============================================================
+   15. Google / Discord OAuth shared
+   ============================================================ */
+
+.admin-google-oauth-help {
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+}
+
+.admin-google-oauth-help ol {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.admin-google-oauth-help ol a {
+  color: var(--accent);
+}
+
+.admin-google-redirect-field {
+  margin-bottom: 14px;
+}
+
+.admin-google-redirect-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-google-redirect-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
+/* ============================================================
+   16. System Prompts
+   ============================================================ */
+
+.admin-system-prompts-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.admin-system-prompts-filter select,
+.admin-system-prompts-filter input {
+  padding: 6px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.84rem;
+}
+
+.admin-system-prompts-meta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+.admin-system-prompts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-system-prompt-card {
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+}
+
+.admin-system-prompt-card h4 {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-system-prompt-card .admin-system-prompt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.admin-system-prompt-card pre {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg-primary);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow: auto;
+}
+
+/* ============================================================
+   17. PayPal status indicator
+   ============================================================ */
+
+.admin-paypal-status {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   18. Model add forms (shared)
+   ============================================================ */
+
+.admin-model-add-form {
+  /* Form already uses settings-form */
+}
+
+/* ============================================================
+   19. Loading / error states
+   ============================================================ */
+
+.admin-loading {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 20px;
+  font-size: 0.84rem;
+}
+
+/* ============================================================
+   20. Section labels
+   ============================================================ */
+
+.settings-section-label {
+  display: block;
+  margin: 20px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   21. Server Resources dashboard
+   ============================================================ */
+
+.admin-resources-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.admin-resource-card {
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.06));
+  border-radius: 12px;
+  background: var(--bg-input);
+  padding: 16px;
+}
+
+.admin-resource-card--full {
+  grid-column: 1 / -1;
+}
+
+.admin-resource-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.admin-resource-card-head .admin-subheading {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-resource-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.admin-resource-progress {
+  height: 6px;
+  margin-bottom: 6px;
+  border-radius: 3px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.admin-resource-progress-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 0.5s ease;
+}
+
+.admin-resource-progress-bar.is-warning {
+  background: #ffb74d;
+}
+
+.admin-resource-progress-bar.is-danger {
+  background: #e57373;
+}
+
+.admin-resource-meta {
+  margin: 0 0 8px;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.admin-resource-chart-wrap {
+  margin-top: 6px;
+}
+
+.admin-resource-chart-wrap canvas {
+  width: 100% !important;
+  height: 60px !important;
+}
+
+.admin-resource-card--nexgate {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-subtle));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--accent) 5%, var(--bg-input)),
+    var(--bg-input)
+  );
+}
+
+/* ============================================================
+   22. Responsive / mobile fixes
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .admin-resources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-service-health-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-models-chart-controls {
+    flex-direction: column;
+  }
+
+  .admin-users-toolbar-main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-users-search input {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   22. Billing log (admin-only)
+   ============================================================ */
+
+.billing-request-logs-wrap {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.billing-request-logs-table code {
+  font-size: 0.78rem;
+}
+
+.billing-request-logs-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 16px;
+}
+
+.billing-log-id {
+  max-width: 160px;
+}
+
+.billing-request-id-copy {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.billing-request-id-copy code {
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+
+.billing-request-id-copy:hover code {
+  text-decoration: underline;
+}
+
+.billing-request-id-copy.is-copied code {
+  color: var(--nexgate-brand-500);
+}
+
+/* ============================================================
+   Admin Reports
+   ============================================================ */
+
+.admin-report-card {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.admin-report-card + .admin-report-card {
+  margin-top: 10px;
+}
+
+.admin-report-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.admin-report-user {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.admin-report-head-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-report-head-sub {
+  margin-bottom: 8px;
+}
+
+.admin-report-time {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+}
+
+/* Status select */
+
+.admin-report-status-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 3px 20px 3px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--bg-primary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23888'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 5px center;
+  color: #fff;
+}
+
+.admin-report-status-select.is-unconfirmed { background-color: #6366f1; border-color: #6366f1; }
+.admin-report-status-select.is-confirmed   { background-color: #0ea5e9; border-color: #0ea5e9; }
+.admin-report-status-select.is-unresolved  { background-color: #f59e0b; border-color: #f59e0b; }
+.admin-report-status-select.is-cancelled   { background-color: #6b7280; border-color: #6b7280; }
+.admin-report-status-select.is-resolved    { background-color: #10b981; border-color: #10b981; }
+
+/* Delete button */
+
+.admin-report-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg-primary);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.admin-report-delete-btn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+  background: #ef444410;
+}
+
+.admin-report-desc {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.admin-report-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+
+.admin-report-meta code {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.admin-report-detail {
+  margin-top: 4px;
+}
+
+.admin-report-detail summary {
+  font-size: 0.82rem;
+  color: var(--accent);
+  cursor: pointer;
+  user-select: none;
+}
+
+.admin-report-detail summary:hover {
+  text-decoration: underline;
+}
+
+.admin-report-chat {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  max-height: 400px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

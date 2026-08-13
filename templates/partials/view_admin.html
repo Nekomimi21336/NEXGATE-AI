@@ -1,0 +1,1693 @@
+<main class="main settings-main" id="adminMain">
+  <header class="settings-header">
+    <div class="settings-header-inner">
+      <a href="/chat" class="settings-back">チャットに戻る</a>
+      <h1 class="settings-header-title">管理機能</h1>
+    </div>
+  </header>
+  <div class="settings-body">
+    <aside class="settings-nav" aria-label="管理メニュー">
+      <nav class="settings-nav-list">
+        <div class="admin-nav-group">
+          <button type="button" class="admin-nav-group-title" aria-expanded="true"><i class="bi bi-speedometer2"></i> ダッシュボード</button>
+          <div class="admin-nav-group-items">
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="overview">システム概要</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="resources">サーバーリソース</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="sessions">全セッション</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="reports">報告管理</button>
+          </div>
+        </div>
+        <div class="admin-nav-group">
+          <button type="button" class="admin-nav-group-title" aria-expanded="true"><i class="bi bi-people"></i> ユーザー・課金</button>
+          <div class="admin-nav-group-items">
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="users">ユーザー管理</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="plans">プラン詳細</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="plan-features">プラン機能</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="coupons">クーポンコード</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="subscription">サブスクリプション管理</button>
+          </div>
+        </div>
+        <div class="admin-nav-group">
+          <button type="button" class="admin-nav-group-title" aria-expanded="true"><i class="bi bi-robot"></i> AIモデル</button>
+          <div class="admin-nav-group-items">
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="models">チャットモデル</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="extended-models">OCR・拡張モデル</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="image-generation">画像生成モデル</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="system-prompts">システムプロンプト</button>
+          </div>
+        </div>
+        <div class="admin-nav-group">
+          <button type="button" class="admin-nav-group-title" aria-expanded="true"><i class="bi bi-key"></i> APIキー管理</button>
+          <div class="admin-nav-group-items">
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="system-keys">NEXGATE APIキー</button>
+          </div>
+        </div>
+        <div class="admin-nav-group">
+          <button type="button" class="admin-nav-group-title" aria-expanded="true"><i class="bi bi-sliders"></i> サービス設定</button>
+          <div class="admin-nav-group-items">
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="features">機能制御</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="search-engines">検索エンジン</button>
+          </div>
+        </div>
+        <div class="admin-nav-group">
+          <button type="button" class="admin-nav-group-title" aria-expanded="true"><i class="bi bi-link-45deg"></i> 外部連携</button>
+          <div class="admin-nav-group-items">
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="paypal">PayPal設定</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="google-oauth">Google OAuth</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="discord-oauth">Discord OAuth</button>
+            <button type="button" class="settings-nav-item admin-nav-item" data-panel="mail-server">メールサーバー</button>
+          </div>
+        </div>
+      </nav>
+    </aside>
+    <div class="settings-panels">
+      <section id="admin-panel-overview" class="admin-panel" aria-labelledby="admin-overview-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-overview-heading">システム概要</h2>
+          <p>稼働タイプの切り替え、各サーバーの稼働状況、公開 URL を管理します。</p>
+        </header>
+        <div class="settings-card admin-deployment-card">
+          <div class="admin-deployment-toolbar">
+            <div class="settings-field admin-deployment-mode-field">
+              <label for="adminDeploymentMode">稼働タイプ</label>
+              <select id="adminDeploymentMode" aria-label="稼働タイプ">
+                <option value="run-servers">run-servers</option>
+                <option value="combined">単一運用</option>
+              </select>
+              <span class="settings-hint">設定変更後は表示のとおり再起動が必要です（<code>deployment</code> → <code>data/system_config.json</code>）。</span>
+            </div>
+            <p class="admin-deployment-runtime" id="adminDeploymentRuntime">—</p>
+          </div>
+          <p class="admin-deployment-hint hidden" id="adminDeploymentHint"></p>
+          <p class="admin-deployment-meta" id="adminDeploymentMeta">—</p>
+          <div class="admin-service-health-grid" id="adminServiceHealthGrid">
+            <article class="admin-service-health-card" data-service="frontend">
+              <div class="admin-service-health-head">
+                <h3 class="admin-subheading">フロントサーバー</h3>
+                <span class="admin-service-status-tag" id="adminServiceStatus-frontend">—</span>
+              </div>
+              <p class="admin-service-health-url" id="adminServiceUrl-frontend">—</p>
+              <p class="admin-service-health-uptime">稼働時間: <strong id="adminServiceUptime-frontend">—</strong></p>
+              <ul class="admin-service-health-issues hidden" id="adminServiceIssues-frontend"></ul>
+              <div class="admin-service-health-chart-wrap">
+                <canvas id="adminServiceChart-frontend" role="img" aria-label="フロントサーバー稼働グラフ"></canvas>
+              </div>
+              <div class="admin-service-health-footer">
+                <button type="button" class="admin-service-restart-btn" data-service="frontend">システムの再起動</button>
+              </div>
+            </article>
+            <article class="admin-service-health-card" data-service="api_portal">
+              <div class="admin-service-health-head">
+                <h3 class="admin-subheading">APIフロントサーバー</h3>
+                <span class="admin-service-status-tag" id="adminServiceStatus-api_portal">—</span>
+              </div>
+              <p class="admin-service-health-url" id="adminServiceUrl-api_portal">—</p>
+              <p class="admin-service-health-uptime">稼働時間: <strong id="adminServiceUptime-api_portal">—</strong></p>
+              <ul class="admin-service-health-issues hidden" id="adminServiceIssues-api_portal"></ul>
+              <div class="admin-service-health-chart-wrap">
+                <canvas id="adminServiceChart-api_portal" role="img" aria-label="APIフロントサーバー稼働グラフ"></canvas>
+              </div>
+              <div class="admin-service-health-footer">
+                <button type="button" class="admin-service-restart-btn" data-service="api_portal">システムの再起動</button>
+              </div>
+            </article>
+            <article class="admin-service-health-card" data-service="api">
+              <div class="admin-service-health-head">
+                <h3 class="admin-subheading">APIサーバー</h3>
+                <span class="admin-service-status-tag" id="adminServiceStatus-api">—</span>
+              </div>
+              <p class="admin-service-health-url" id="adminServiceUrl-api">—</p>
+              <p class="admin-service-health-uptime">稼働時間: <strong id="adminServiceUptime-api">—</strong></p>
+              <ul class="admin-service-health-issues hidden" id="adminServiceIssues-api"></ul>
+              <div class="admin-service-health-chart-wrap">
+                <canvas id="adminServiceChart-api" role="img" aria-label="APIサーバー稼働グラフ"></canvas>
+              </div>
+              <div class="admin-service-health-footer">
+                <button type="button" class="admin-service-restart-btn" data-service="api">システムの再起動</button>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">公開 URL</h3>
+          <p class="admin-paypal-status hidden" id="adminServiceUrlsStatus"></p>
+          <form id="adminServiceUrlsForm" class="settings-form">
+            <div class="settings-field">
+              <label for="adminFrontendBaseUrl">フロントアドレス</label>
+              <input type="url" id="adminFrontendBaseUrl" autocomplete="off" placeholder="http://127.0.0.1:5000">
+              <span class="settings-hint">メインアプリ（チャット・設定など）の公開 URL。環境変数: <code>FRONTEND_BASE_URL</code> / <code>PUBLIC_BASE_URL</code></span>
+              <p class="settings-hint admin-service-url-effective hidden" id="adminFrontendBaseUrlEffective"></p>
+            </div>
+            <div class="settings-field">
+              <label for="adminApiPortalBaseUrl">APIフロントアドレス</label>
+              <input type="url" id="adminApiPortalBaseUrl" autocomplete="off" placeholder="http://127.0.0.1:5001">
+              <span class="settings-hint">API 管理ポータル（トークン・利用状況・ドキュメント）の公開 URL。環境変数: <code>API_PORTAL_BASE_URL</code></span>
+              <p class="settings-hint admin-service-url-effective hidden" id="adminApiPortalBaseUrlEffective"></p>
+            </div>
+            <div class="settings-field">
+              <label for="adminApiBaseUrl">APIアドレス</label>
+              <input type="url" id="adminApiBaseUrl" autocomplete="off" placeholder="http://127.0.0.1:5002">
+              <span class="settings-hint">外部向け API エンドポイント（<code>/v1/*</code>）の公開 URL。環境変数: <code>PUBLIC_API_BASE_URL</code></span>
+              <p class="settings-hint admin-service-url-effective hidden" id="adminApiBaseUrlEffective"></p>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminServiceUrlsMsg"></p>
+              <button type="submit" class="settings-btn">URL設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-resources" class="admin-panel" aria-labelledby="admin-resources-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-resources-heading">サーバーリソース</h2>
+          <p>CPU・メモリ・ストレージ・ネットワークのリアルタイム使用状況です。数秒ごとに自動更新されます。</p>
+        </header>
+        <div class="admin-resources-grid">
+          <div class="admin-resource-card" id="adminResourceCpu">
+            <div class="admin-resource-card-head">
+              <h3 class="admin-subheading">CPU</h3>
+              <span class="admin-resource-value" id="adminResourceCpuPercent">—</span>
+            </div>
+            <div class="admin-resource-progress">
+              <div class="admin-resource-progress-bar" id="adminResourceCpuBar"></div>
+            </div>
+            <p class="admin-resource-meta" id="adminResourceCpuMeta">—</p>
+            <div class="admin-resource-chart-wrap">
+              <canvas id="adminChartCpu" role="img" aria-label="CPU使用率グラフ"></canvas>
+            </div>
+          </div>
+          <div class="admin-resource-card" id="adminResourceMem">
+            <div class="admin-resource-card-head">
+              <h3 class="admin-subheading">メモリ</h3>
+              <span class="admin-resource-value" id="adminResourceMemPercent">—</span>
+            </div>
+            <div class="admin-resource-progress">
+              <div class="admin-resource-progress-bar" id="adminResourceMemBar"></div>
+            </div>
+            <p class="admin-resource-meta" id="adminResourceMemMeta">—</p>
+            <div class="admin-resource-chart-wrap">
+              <canvas id="adminChartMem" role="img" aria-label="メモリ使用率グラフ"></canvas>
+            </div>
+          </div>
+          <div class="admin-resource-card" id="adminResourceDisk">
+            <div class="admin-resource-card-head">
+              <h3 class="admin-subheading">ストレージ</h3>
+              <span class="admin-resource-value" id="adminResourceDiskPercent">—</span>
+            </div>
+            <div class="admin-resource-progress">
+              <div class="admin-resource-progress-bar" id="adminResourceDiskBar"></div>
+            </div>
+            <p class="admin-resource-meta" id="adminResourceDiskMeta">—</p>
+          </div>
+          <div class="admin-resource-card" id="adminResourceNet">
+            <div class="admin-resource-card-head">
+              <h3 class="admin-subheading">ネットワーク</h3>
+              <span class="admin-resource-value" id="adminResourceNetRate">—</span>
+            </div>
+            <p class="admin-resource-meta" id="adminResourceNetMeta">—</p>
+            <div class="admin-resource-chart-wrap">
+              <canvas id="adminChartNet" role="img" aria-label="ネットワーク通信量グラフ"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="admin-resources-grid">
+          <div class="admin-resource-card admin-resource-card--nexgate">
+            <div class="admin-resource-card-head">
+              <h3 class="admin-subheading">NEXGATE プロセス</h3>
+              <span class="admin-resource-value" id="adminResourceNexgateCpu">—</span>
+            </div>
+            <div class="admin-resource-progress">
+              <div class="admin-resource-progress-bar" id="adminResourceNexgateCpuBar"></div>
+            </div>
+            <p class="admin-resource-meta" id="adminResourceNexgateCpuMeta">—</p>
+          </div>
+          <div class="admin-resource-card admin-resource-card--nexgate">
+            <div class="admin-resource-card-head">
+              <h3 class="admin-subheading">NEXGATE メモリ</h3>
+              <span class="admin-resource-value" id="adminResourceNexgateMem">—</span>
+            </div>
+            <div class="admin-resource-progress">
+              <div class="admin-resource-progress-bar" id="adminResourceNexgateMemBar"></div>
+            </div>
+            <p class="admin-resource-meta" id="adminResourceNexgateMemMeta">—</p>
+          </div>
+        </div>
+        <div class="admin-resource-card admin-resource-card--full">
+          <div class="admin-resource-card-head">
+            <h3 class="admin-subheading">システム稼働時間</h3>
+            <span class="admin-resource-value" id="adminResourceUptime">—</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-panel-reports" class="admin-panel" aria-labelledby="admin-reports-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-reports-heading">報告管理</h2>
+          <p>ユーザーから送信された問題報告の一覧です。報告内容とチャット履歴が確認できます。</p>
+        </header>
+        <div class="settings-card" id="admin-reports-list">
+          <p class="admin-loading">読み込み中…</p>
+        </div>
+      </section>
+
+      <section id="admin-panel-sessions" class="admin-panel" aria-labelledby="admin-sessions-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-sessions-heading">全セッション</h2>
+          <p>進行中のチャットリクエストを WebSocket でリアルタイム表示します。停止ボタンで生成を中断できます。</p>
+          <p class="admin-sessions-ws-status" id="adminSessionsWsStatus" aria-live="polite">接続準備中…</p>
+        </header>
+        <div class="settings-card admin-sessions-live-card">
+          <h3 class="admin-subheading">進行中</h3>
+          <div class="admin-sessions-table-wrap">
+            <table class="admin-sessions-table" aria-label="進行中のセッション">
+              <thead>
+                <tr>
+                  <th>利用者</th>
+                  <th>モデル</th>
+                  <th>入力トークン</th>
+                  <th>出力トークン</th>
+                  <th>平均TPS</th>
+                  <th>合計</th>
+                  <th>コスト</th>
+                  <th>ツール</th>
+                  <th>開始</th>
+                  <th>所要時間</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="adminActiveSessionsBody">
+                <tr><td colspan="11" class="admin-sessions-empty">進行中のセッションはありません</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="settings-card admin-session-logs-card">
+          <header class="admin-session-logs-header">
+            <h3 class="admin-subheading">リクエストセッションログ</h3>
+            <button type="button" class="settings-btn settings-btn--secondary" id="adminSessionLogsRefreshBtn">再読み込み</button>
+          </header>
+          <div class="admin-sessions-table-wrap">
+            <table class="admin-sessions-table admin-session-logs-table" aria-label="リクエストセッションログ">
+              <thead>
+                <tr>
+                  <th>リクエストID</th>
+                  <th>利用者</th>
+                  <th>モデル</th>
+                  <th>入力</th>
+                  <th>出力</th>
+                  <th>平均TPS</th>
+                  <th>コスト</th>
+                  <th>状態</th>
+                  <th>開始</th>
+                  <th>終了</th>
+                  <th>所要時間</th>
+                </tr>
+              </thead>
+              <tbody id="adminSessionLogsBody">
+                <tr><td colspan="11" class="admin-sessions-empty">読み込み中…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="admin-session-logs-meta hidden" id="adminSessionLogsMeta"></p>
+        </div>
+        <dialog class="admin-session-detail-dialog" id="adminSessionDetailDialog">
+          <div class="admin-session-detail-inner">
+            <header class="admin-session-detail-header">
+              <h3 class="admin-subheading" id="adminSessionDetailTitle">リクエスト詳細</h3>
+              <button type="button" class="admin-session-detail-close" id="adminSessionDetailCloseBtn" aria-label="閉じる"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+            </header>
+            <p class="admin-session-detail-meta hidden" id="adminSessionDetailMeta" hidden></p>
+            <div class="admin-session-detail-actions">
+              <button type="button" class="settings-btn admin-session-brief-copy-btn" id="adminSessionDetailCopyBriefBtn">Copy Session Brief</button>
+              <button type="button" class="settings-btn settings-btn--secondary" id="adminSessionDetailCopyIdBtn">Copy Request ID</button>
+            </div>
+            <section class="admin-session-brief" id="adminSessionBriefSection" aria-labelledby="adminSessionBriefHeading">
+              <header class="admin-session-brief-header">
+                <p class="admin-session-brief-eyebrow">NEXGATE ADMIN · OPS</p>
+                <div class="admin-session-brief-title-row">
+                  <h4 id="adminSessionBriefHeading">SESSION BRIEF</h4>
+                  <span class="admin-session-brief-badge">Full digest</span>
+                </div>
+                <p class="admin-session-brief-hint">Unified request record — scroll to inspect, or copy the entire brief.</p>
+              </header>
+              <pre class="admin-session-brief-pre" id="adminSessionDetailBrief" tabindex="0" aria-label="Session brief text"></pre>
+            </section>
+            <div class="admin-session-detail-body" id="adminSessionDetailBody">
+              <p class="admin-sessions-empty">読み込み中…</p>
+            </div>
+          </div>
+        </dialog>
+      </section>
+
+      <section id="admin-panel-users" class="admin-panel" aria-labelledby="admin-users-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-users-heading">ユーザー管理</h2>
+          <p>ユーザーを追加するか、一覧からクリックして詳細を表示・編集できます。課金区分（PayPalサブスク / 残高プラン / 管理者付与）で絞り込み可能です。</p>
+        </header>
+        <div class="settings-card">
+          <h3 class="admin-subheading">ユーザーを追加</h3>
+          <form id="adminUserCreateForm" class="settings-form admin-user-create-form">
+            <div class="admin-detail-grid">
+              <div class="settings-field">
+                <label for="createUsername">ユーザー名</label>
+                <input type="text" id="createUsername" required pattern="[a-zA-Z0-9_-]{3,32}" autocomplete="off" placeholder="例: tanaka_taro">
+                <span class="settings-hint">英字・数字・_ - のみ（保存時に小文字化）</span>
+              </div>
+              <div class="settings-field">
+                <label for="createPassword">パスワード</label>
+                <input type="password" id="createPassword" required minlength="4" autocomplete="new-password">
+              </div>
+              <div class="settings-field">
+                <label for="createDisplayName">表示名</label>
+                <input type="text" id="createDisplayName" autocomplete="name" placeholder="未入力時はユーザー名">
+              </div>
+              <div class="settings-field">
+                <label for="createEmail">メールアドレス</label>
+                <input type="email" id="createEmail" autocomplete="email">
+              </div>
+              <div class="settings-field">
+                <label for="createPlan">プラン</label>
+                <select id="createPlan"></select>
+              </div>
+              <div class="settings-field">
+                <label for="createRole">ロール</label>
+                <select id="createRole">
+                  <option value="user">一般ユーザー</option>
+                  <option value="admin">管理者</option>
+                </select>
+              </div>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminUserCreateMsg"></p>
+              <button type="submit" class="settings-btn">ユーザーを追加</button>
+            </div>
+          </form>
+        </div>
+        <div id="adminUsersListView">
+          <div class="settings-card">
+            <div class="admin-users-toolbar">
+              <div class="admin-users-toolbar-main">
+                <label class="admin-users-search">
+                  <span class="visually-hidden">検索</span>
+                  <input type="search" id="adminUsersSearch" placeholder="ユーザー名・表示名・メール" autocomplete="off">
+                </label>
+                <label class="admin-users-filter">
+                  <span>プラン</span>
+                  <select id="adminUsersFilterPlan">
+                    <option value="">すべて</option>
+                  </select>
+                </label>
+                <label class="admin-users-filter">
+                  <span>課金</span>
+                  <select id="adminUsersFilterBilling">
+                    <option value="">すべて</option>
+                    <option value="paypal_subscription">PayPalサブスク</option>
+                    <option value="balance">残高プラン</option>
+                    <option value="admin_grant">管理者付与</option>
+                    <option value="entitlement">プラン枠</option>
+                    <option value="legacy_plan">レガシー</option>
+                    <option value="free">無料</option>
+                  </select>
+                </label>
+                <label class="admin-users-filter">
+                  <span>状態</span>
+                  <select id="adminUsersFilterStatus">
+                    <option value="">すべて</option>
+                    <option value="active">有効</option>
+                    <option value="blocked">利用停止</option>
+                  </select>
+                </label>
+              </div>
+              <p class="admin-users-stats" id="adminUsersStats">—</p>
+            </div>
+            <p class="admin-loading" id="adminUsersLoading">読み込み中...</p>
+            <p class="settings-msg hidden error" id="adminUsersError"></p>
+            <div class="admin-table-wrap hidden" id="adminUsersTableWrap">
+              <table class="admin-table admin-users-table" id="adminUsersTable">
+                <thead>
+                  <tr>
+                    <th>ユーザー名</th>
+                    <th>表示名</th>
+                    <th>メール</th>
+                    <th>プラン</th>
+                    <th>課金</th>
+                    <th>残高</th>
+                    <th>利用量</th>
+                    <th>枠期限</th>
+                    <th>登録日</th>
+                    <th>状態</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersBody"></tbody>
+              </table>
+            </div>
+            <p class="admin-table-empty hidden" id="adminUsersEmpty">条件に一致するユーザーがありません</p>
+          </div>
+        </div>
+        <div id="adminUserDetailView" class="hidden">
+          <div class="settings-card admin-detail-card">
+            <button type="button" class="admin-back-link" id="adminUserDetailBack">← ユーザー一覧に戻る</button>
+            <p class="admin-loading hidden" id="adminUserDetailLoading">読み込み中...</p>
+            <p class="settings-msg hidden error" id="adminUserDetailError"></p>
+            <form id="adminUserDetailForm" class="settings-form admin-detail-form hidden">
+              <div class="admin-billing-summary-card" id="detailBillingSummary"></div>
+
+              <p class="settings-section-label">アカウント</p>
+              <div class="admin-detail-grid">
+                <div class="settings-field">
+                  <label>ユーザー名</label>
+                  <p class="admin-detail-readonly" id="detailUsername"></p>
+                </div>
+                <div class="settings-field">
+                  <label for="detailDisplayName">表示名</label>
+                  <input type="text" id="detailDisplayName" required>
+                </div>
+                <div class="settings-field">
+                  <label for="detailLastName">姓</label>
+                  <input type="text" id="detailLastName" autocomplete="family-name">
+                </div>
+                <div class="settings-field">
+                  <label for="detailFirstName">名</label>
+                  <input type="text" id="detailFirstName" autocomplete="given-name">
+                </div>
+                <div class="settings-field">
+                  <label for="detailEmail">メールアドレス</label>
+                  <input type="email" id="detailEmail" autocomplete="email">
+                </div>
+                <div class="settings-field">
+                  <label for="detailPhone">電話番号</label>
+                  <input type="tel" id="detailPhone" autocomplete="tel">
+                </div>
+                <div class="settings-field">
+                  <label>登録日</label>
+                  <p class="admin-detail-readonly" id="detailCreatedAt">—</p>
+                </div>
+              </div>
+
+              <p class="settings-section-label">課金・プラン</p>
+              <div class="admin-detail-grid">
+                <div class="settings-field">
+                  <label for="detailPlan">有効プラン</label>
+                  <select id="detailPlan"></select>
+                  <span class="settings-hint" id="detailStoredPlanHint"></span>
+                </div>
+                <div class="settings-field">
+                  <label for="detailBalance">残高（JPY）</label>
+                  <input type="number" step="1" min="0" id="detailBalance">
+                </div>
+                <div class="settings-field">
+                  <label for="detailPlanExpires">プランの期限</label>
+                  <input type="datetime-local" id="detailPlanExpires">
+                </div>
+                <div class="settings-field admin-detail-field--wide">
+                  <label>残高の調整（履歴に記録）</label>
+                  <div class="admin-balance-adjust-row">
+                    <input type="number" step="1" id="detailBalanceAdjustAmount" placeholder="±金額（JPY）">
+                    <input type="text" id="detailBalanceAdjustNote" placeholder="メモ（任意）" maxlength="240">
+                    <button type="button" class="admin-row-btn" id="detailBalanceAdjustBtn">反映</button>
+                  </div>
+                  <span class="settings-hint">PayPalチャージ以外の付与・減算に使用します</span>
+                </div>
+                <div class="settings-field admin-detail-field--wide" id="detailPaypalFields">
+                  <label>PayPal サブスクリプション</label>
+                  <dl class="admin-billing-meta" id="detailPaypalMeta"></dl>
+                </div>
+              </div>
+
+              <p class="settings-section-label">利用枠</p>
+              <div class="admin-detail-grid">
+                <div class="settings-field admin-detail-field--wide">
+                  <label>利用量（現在の枠）</label>
+                  <p class="admin-detail-readonly" id="detailUsage">—</p>
+                  <p class="settings-hint" id="detailUsagePoolHint"></p>
+                </div>
+                <div class="settings-field">
+                  <label for="detailUsageQuotaOverride">利用枠の上書き（USD）</label>
+                  <input type="number" step="0.0001" min="0" id="detailUsageQuotaOverride" placeholder="未設定でプラン合算">
+                </div>
+                <div class="settings-field">
+                  <label for="detailUsageCostEdit">現在の利用量（USD）</label>
+                  <input type="number" step="0.0001" min="0" id="detailUsageCostEdit">
+                </div>
+                <div class="settings-field admin-detail-field--wide">
+                  <label>プラン枠の追加</label>
+                  <div class="admin-entitlement-add-row">
+                    <select id="detailAddEntitlementPlan"></select>
+                    <input type="number" id="detailAddEntitlementQty" min="1" value="1" title="枚数（倍率）">
+                    <input type="number" id="detailAddEntitlementMonths" min="1" value="1" title="有効月数">
+                    <button type="button" class="admin-row-btn" id="detailAddEntitlementBtn">枠を追加</button>
+                  </div>
+                  <span class="settings-hint">残高購読と同様、有効期間中の AI 利用枠が加算されます</span>
+                </div>
+                <div class="settings-field admin-detail-field--wide">
+                  <label>有効なプラン枠</label>
+                  <div class="admin-table-wrap">
+                    <table class="admin-table admin-entitlements-table">
+                      <thead>
+                        <tr>
+                          <th>プラン</th>
+                          <th>倍率</th>
+                          <th>枠 USD</th>
+                          <th>期限</th>
+                          <th>ソース</th>
+                        </tr>
+                      </thead>
+                      <tbody id="detailEntitlementsBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="admin-detail-usage-actions">
+                  <button type="button" class="admin-row-btn" id="detailUsageResetBtn">利用量をリセット</button>
+                </div>
+              </div>
+
+              <p class="settings-section-label">支払い履歴</p>
+              <div class="admin-payments-toolbar">
+                <button type="button" class="admin-row-btn" id="detailPaymentAdd">支払いを追加</button>
+              </div>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-payments-table">
+                  <thead>
+                    <tr>
+                      <th>日付</th>
+                      <th>金額（JPY）</th>
+                      <th>方法</th>
+                      <th>状態</th>
+                      <th>メモ</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="detailPaymentsBody"></tbody>
+                </table>
+              </div>
+
+              <p class="settings-section-label">API 利用ログ</p>
+              <div class="admin-billing-events-toolbar">
+                <button type="button" class="admin-row-btn" id="detailBillingEventsLoad">ログを読み込む</button>
+                <span class="admin-billing-events-count" id="detailBillingEventsCount"></span>
+              </div>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-billing-events-table">
+                  <thead>
+                    <tr>
+                      <th>日時</th>
+                      <th>リクエストID</th>
+                      <th>モデル</th>
+                      <th>課金区分</th>
+                      <th>処理プラン</th>
+                      <th>コスト USD</th>
+                      <th>状態</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detailBillingEventsBody"></tbody>
+                </table>
+              </div>
+
+              <p class="settings-section-label">権限</p>
+              <label class="admin-toggle-row">
+                <span class="admin-toggle-label">
+                  <strong>API アクセス（個別許可）</strong>
+                  <span class="admin-toggle-desc" id="detailApiAccessHint">プラン設定に加え、開発者 API を明示的に許可します</span>
+                </span>
+                <input type="checkbox" class="admin-toggle-input" id="detailApiEnabled">
+              </label>
+              <label class="admin-toggle-row admin-block-row">
+                <span class="admin-toggle-label">
+                  <strong>利用停止（ブロック）</strong>
+                  <span class="admin-toggle-desc">チャット利用を停止し、アカウント削除を拒否します</span>
+                </span>
+                <input type="checkbox" class="admin-toggle-input" id="detailBlocked">
+              </label>
+              <div class="settings-form-footer admin-detail-footer">
+                <p class="settings-msg hidden" id="adminUserDetailMsg"></p>
+                <button type="submit" class="settings-btn">変更を保存</button>
+                <button type="button" class="admin-row-btn admin-row-btn--danger hidden" id="detailDeleteUser">ユーザーを削除</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-panel-plans" class="admin-panel" aria-labelledby="admin-plans-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-plans-heading">プラン詳細</h2>
+          <p>プラン一覧から選択し、価格と詳細機能を設定できます。</p>
+        </header>
+        <div id="adminPlansListView">
+          <div class="settings-card">
+            <p class="admin-loading hidden" id="adminPlansLoading">読み込み中...</p>
+            <div class="admin-table-wrap" id="adminPlansTableWrap">
+              <table class="admin-table" id="adminPlansTable">
+                <thead>
+                  <tr>
+                    <th>プラン</th>
+                    <th>表示ラベル</th>
+                    <th>月額（USD）</th>
+                    <th>月間AI枠（USD）</th>
+                  </tr>
+                </thead>
+                <tbody id="adminPlansBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="adminPlanDetailView" class="hidden">
+          <div class="settings-card admin-detail-card">
+            <button type="button" class="admin-back-link" id="adminPlanDetailBack">← プラン一覧に戻る</button>
+            <p class="admin-loading hidden" id="adminPlanDetailLoading">読み込み中...</p>
+            <p class="settings-msg hidden error" id="adminPlanDetailError"></p>
+            <form id="adminPlanDetailForm" class="settings-form admin-detail-form hidden">
+              <div class="admin-detail-grid">
+                <div class="settings-field">
+                  <label>プランID</label>
+                  <p class="admin-detail-readonly" id="planDetailId"></p>
+                </div>
+                <div class="settings-field">
+                  <label>プラン名</label>
+                  <p class="admin-detail-readonly" id="planDetailName"></p>
+                </div>
+                <div class="settings-field">
+                  <label for="planDetailPriceUsd">月額（USD）</label>
+                  <input type="number" step="0.01" min="0" id="planDetailPriceUsd" placeholder="Enterpriseは空欄">
+                </div>
+                <div class="settings-field">
+                  <label for="planDetailPriceLabel">表示ラベル</label>
+                  <input type="text" id="planDetailPriceLabel">
+                </div>
+              </div>
+              <div class="settings-field">
+                <label for="planDetailDescription">プラン説明</label>
+                <textarea id="planDetailDescription" rows="4" placeholder="ユーザー向けのプラン説明（複数行可）"></textarea>
+              </div>
+              <p class="settings-section-label">詳細機能</p>
+              <div class="settings-field">
+                <label for="planDetailMonthlyAiBudget">月間AI利用枠（USD）</label>
+                <input type="number" step="0.01" min="0" id="planDetailMonthlyAiBudget" placeholder="空欄=無制限">
+                <span class="settings-hint">モデル提供料金の合計がこの金額を超えると利用制限。0 でチャット不可。空欄は無制限（Enterprise など）</span>
+              </div>
+              <p class="settings-hint">チャット・Web検索などの機能ON/OFFは「プラン機能」タブで設定します。</p>
+              <div class="settings-form-footer admin-detail-footer">
+                <p class="settings-msg hidden" id="adminPlanDetailMsg"></p>
+                <button type="submit" class="settings-btn">プラン詳細を保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-panel-plan-features" class="admin-panel" aria-labelledby="admin-plan-features-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-plan-features-heading">プラン機能</h2>
+          <p>カテゴリ別にプランごとの利用可否を設定します。価格・月間上限は「プラン詳細」、検索エンジン個別設定は「検索エンジン」で編集します。</p>
+        </header>
+        <div class="settings-card">
+          <p class="admin-loading hidden" id="adminPlanFeaturesLoading">読み込み中...</p>
+          <p class="settings-msg hidden error" id="adminPlanFeaturesError"></p>
+          <form id="adminPlanFeaturesForm" class="settings-form hidden">
+            <p class="admin-plan-features-legend">行が機能、列がプランです。チェックを外すとそのプランでは利用できません。</p>
+            <div id="adminPlanFeaturesGroups" class="admin-plan-features-groups"></div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminPlanFeaturesMsg"></p>
+              <button type="submit" class="settings-btn">プラン機能を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-models" class="admin-panel" aria-labelledby="admin-models-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-models-heading">モデル / APIダッシュボード</h2>
+          <p>直近の利用トレンドとリアルタイムのリクエスト状況を確認できます。テーブルは当月の集計です。</p>
+        </header>
+        <div class="settings-card admin-api-live-card">
+          <div class="admin-api-live-header">
+            <h3 class="admin-subheading">リアルタイムリクエスト</h3>
+            <span class="admin-api-live-status" id="adminApiLiveStatus">—</span>
+          </div>
+          <div class="admin-api-live-grid">
+            <div class="admin-api-live-col">
+              <h4 class="admin-api-live-col-title">進行中</h4>
+              <div id="adminApiActiveBody" class="admin-api-live-list">
+                <p class="admin-loading">読み込み中...</p>
+              </div>
+            </div>
+            <div class="admin-api-live-col">
+              <h4 class="admin-api-live-col-title">最新リクエスト</h4>
+              <div id="adminApiLogBody" class="admin-api-live-list">
+                <p class="admin-loading">読み込み中...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-card admin-models-chart-card">
+          <div class="admin-models-chart-header">
+            <h3 class="admin-subheading">利用トレンド</h3>
+            <div class="admin-models-chart-controls">
+              <label class="admin-models-chart-control">
+                <span>範囲</span>
+                <select id="adminModelsChartRange" aria-label="グラフの表示範囲">
+                  <option value="24h">24時間（時）</option>
+                  <option value="3d">3日（時）</option>
+                  <option value="7d" selected>7日（日）</option>
+                  <option value="30d">30日（日）</option>
+                  <option value="12w">12週（週）</option>
+                </select>
+              </label>
+              <label class="admin-models-chart-control">
+                <span>モデル</span>
+                <select id="adminModelsChartModel" aria-label="グラフの対象モデル">
+                  <option value="all">すべて</option>
+                </select>
+              </label>
+              <label class="admin-models-chart-control">
+                <span>更新</span>
+                <select id="adminModelsChartRefresh" aria-label="グラフの自動更新間隔">
+                  <option value="0">オフ</option>
+                  <option value="5">5秒</option>
+                  <option value="10" selected>10秒</option>
+                  <option value="30">30秒</option>
+                  <option value="60">60秒</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <p class="admin-models-chart-meta" id="adminModelsChartMeta">—</p>
+          <div class="admin-models-chart-wrap">
+            <canvas id="adminModelsChart" role="img" aria-label="モデル利用トレンド"></canvas>
+          </div>
+          <div class="admin-models-chart-totals" id="adminModelsChartTotals"></div>
+        </div>
+        <div class="settings-card">
+          <p class="admin-models-summary">
+            集計期間: <strong id="adminModelsPeriod">—</strong>
+            <span class="admin-models-summary-sep">·</span>
+            稼働モデル: <strong id="adminModelsActive">—</strong>
+          </p>
+          <div class="admin-models-totals" id="adminModelsTotals"></div>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">プロバイダー</h3>
+          <p class="settings-hint">APIキーは環境変数でも指定できます。ここで保存した値が優先されます。</p>
+          <div id="adminProvidersFields" class="admin-providers-grid"></div>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">モデルを追加</h3>
+          <form id="adminModelAddForm" class="settings-form admin-model-add-form">
+            <div class="admin-detail-grid">
+              <div class="settings-field">
+                <label for="addModelId">内部ID</label>
+                <input type="text" id="addModelId" required pattern="[a-zA-Z0-9][a-zA-Z0-9._\-]{1,63}" placeholder="例: deepseek-v4-flash">
+                <span class="settings-hint">課金集計・管理用の識別子（変更不可）</span>
+              </div>
+              <div class="settings-field">
+                <label for="addModelApiId">APIモデルID</label>
+                <input type="text" id="addModelApiId" pattern="[a-zA-Z0-9][a-zA-Z0-9._\-]{1,63}" placeholder="例: nexgate-base">
+                <span class="settings-hint"><code>/v1/chat/completions</code> の <code>model</code> に指定するID。未入力時は内部IDと同じ</span>
+              </div>
+              <div class="settings-field">
+                <label for="addModelDisplayName">表示名</label>
+                <input type="text" id="addModelDisplayName" required placeholder="例: NEXGATE FAST">
+              </div>
+              <div class="settings-field">
+                <label for="addModelTier">チャット表示ラベル</label>
+                <input type="text" id="addModelTier" placeholder="例: frontier model（未入力時はプロバイダー名）">
+              </div>
+              <div class="settings-field">
+                <label for="addModelProvider">プロバイダー</label>
+                <select id="addModelProvider"></select>
+              </div>
+              <div class="settings-field">
+                <label for="addModelApiModel">APIモデル名</label>
+                <input type="text" id="addModelApiModel" placeholder="未入力時はモデルIDと同じ">
+              </div>
+              <div class="settings-field">
+                <label for="addModelAgentProfile">エージェント</label>
+                <select id="addModelAgentProfile">
+                  <option value="deepseek">deepseek（詳細）</option>
+                  <option value="standard" selected>standard（読みやすさ優先）</option>
+                </select>
+              </div>
+              <div class="settings-field">
+                <label for="addModelCostIn">原価 Input ($/1M)</label>
+                <input type="number" step="0.0001" min="0" id="addModelCostIn" value="0.1">
+              </div>
+              <div class="settings-field">
+                <label for="addModelCostOut">原価 Output ($/1M)</label>
+                <input type="number" step="0.0001" min="0" id="addModelCostOut" value="0.1">
+              </div>
+              <div class="settings-field">
+                <label for="addModelPriceIn">提供 Input ($/1M)</label>
+                <input type="number" step="0.0001" min="0" id="addModelPriceIn" value="0.14">
+              </div>
+              <div class="settings-field">
+                <label for="addModelPriceOut">提供 Output ($/1M)</label>
+                <input type="number" step="0.0001" min="0" id="addModelPriceOut" value="0.28">
+              </div>
+              <div class="settings-field">
+                <label for="addModelCostCacheIn">原価 Input Cache Hit ($/1M)</label>
+                <input type="number" step="0.0001" min="0" id="addModelCostCacheIn" value="0.02" title="キャッシュヒット時の原価（未設定は原価Inputと同じ）">
+              </div>
+              <div class="settings-field">
+                <label for="addModelPriceCacheIn">提供 Input Cache Hit ($/1M)</label>
+                <input type="number" step="0.0001" min="0" id="addModelPriceCacheIn" value="0.028" title="キャッシュヒット時の提供単価（未設定は提供Inputと同じ）">
+              </div>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminModelAddMsg"></p>
+              <button type="submit" class="settings-btn">モデルを追加</button>
+            </div>
+          </form>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">モデル一覧・単価</h3>
+          <form id="adminModelsForm" class="settings-form">
+            <div class="settings-field admin-models-default-field">
+              <label for="adminDefaultModel">既定モデル（チャット初期選択）</label>
+              <select id="adminDefaultModel"></select>
+            </div>
+            <p class="settings-hint admin-models-list-hint">
+              APIモデルID は <code>GET /v1/models</code> および <code>POST /v1/chat/completions</code> の <code>model</code> で使用します。原価は内部コスト、提供はユーザー向け単価です。
+            </p>
+            <div id="adminModelsList" class="admin-models-list"></div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminModelsMsg"></p>
+              <button type="submit" class="settings-btn">設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-extended-models" class="admin-panel" aria-labelledby="admin-extended-models-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-extended-models-heading">拡張モデル</h2>
+          <p>チャット添付画像から表示文字のみを抽出します（シーン説明は行いません）。管理者が AI OCR とローカル OCR を切り替えられます。PDF は pypdf でローカル抽出します。</p>
+        </header>
+        <div class="settings-card" id="adminOcrAnthropicCard">
+          <h3 class="admin-subheading">Anthropic API</h3>
+          <p class="settings-hint">環境変数 <code>ANTHROPIC_API_KEY</code> または下記の保存値が使われます（保存値が優先）。</p>
+          <div class="admin-detail-grid">
+            <div class="settings-field">
+              <label for="adminAnthropicApiKey">API キー</label>
+              <input type="password" id="adminAnthropicApiKey" autocomplete="new-password" placeholder="変更する場合のみ入力">
+              <span class="settings-hint" id="adminAnthropicKeyHint">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="settings-card">
+          <form id="adminOcrGeneralForm" class="settings-form">
+            <div class="settings-field admin-models-default-field">
+              <label for="adminOcrEngine">文字抽出エンジン</label>
+              <select id="adminOcrEngine"></select>
+              <span class="settings-hint" id="adminOcrEngineHint">
+                AI OCR は Anthropic Vision を使用します。OCR（ローカル）はサーバー上の非AIエンジンを使用します（ユーザーは選択できません）。
+              </span>
+            </div>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>画像OCRを有効にする</strong>
+                <span class="admin-toggle-desc">オフにすると画像添付時の文字OCR前処理を行いません</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminOcrEnabled">
+            </label>
+            <div class="settings-field admin-models-default-field" id="adminOcrAiModelField">
+              <label for="adminOcrDefaultModel">既定 AI OCR モデル</label>
+              <select id="adminOcrDefaultModel"></select>
+            </div>
+            <div class="settings-field admin-models-default-field hidden" id="adminOcrStructureModelField">
+              <label for="adminOcrStructureModel">構造化専用モデル</label>
+              <select id="adminOcrStructureModel"></select>
+              <span class="settings-hint">ローカル OCR 後に文書の意図・設問構造を復元する LLM（チャット AI とは別処理）</span>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminOcrGeneralMsg"></p>
+              <button type="submit" class="settings-btn">設定を保存</button>
+            </div>
+          </form>
+        </div>
+        <div class="settings-card" id="adminOcrAiSettingsCard">
+          <h3 class="admin-subheading">AI OCR モデルを追加</h3>
+          <form id="adminOcrModelAddForm" class="settings-form admin-model-add-form">
+            <div class="admin-detail-grid">
+              <div class="settings-field">
+                <label for="addOcrModelId">モデルID</label>
+                <input type="text" id="addOcrModelId" required pattern="[a-zA-Z0-9][a-zA-Z0-9._\-]{1,63}" placeholder="例: claude-haiku-4-5">
+              </div>
+              <div class="settings-field">
+                <label for="addOcrDisplayName">表示名</label>
+                <input type="text" id="addOcrDisplayName" required placeholder="例: Haiku 4.5 OCR">
+              </div>
+              <div class="settings-field">
+                <label for="addOcrApiModel">APIモデル名</label>
+                <input type="text" id="addOcrApiModel" required placeholder="例: claude-haiku-4-5-20251001">
+              </div>
+            </div>
+            <p class="settings-section-label">利用可能プラン</p>
+            <div class="admin-ocr-plan-checks" id="addOcrPlanChecks"></div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminOcrModelAddMsg"></p>
+              <button type="submit" class="settings-btn">OCRモデルを追加</button>
+            </div>
+          </form>
+        </div>
+        <div class="settings-card" id="adminOcrAiModelsListCard">
+          <h3 class="admin-subheading">AI OCR モデル一覧</h3>
+          <form id="adminExtendedModelsForm" class="settings-form">
+            <div class="admin-table-wrap admin-table-wrap--wide">
+              <table class="admin-table admin-models-table" id="adminOcrModelsTable">
+                <thead>
+                  <tr>
+                    <th>モデルID</th>
+                    <th>表示名</th>
+                    <th>API名</th>
+                    <th>有効</th>
+                    <th>プラン</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="adminOcrModelsBody"></tbody>
+              </table>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminExtendedModelsMsg"></p>
+              <button type="submit" class="settings-btn">拡張モデル設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-image-generation" class="admin-panel" aria-labelledby="admin-image-generation-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-image-generation-heading">画像生成モデル</h2>
+          <p>FLUX 2.0（Black Forest Labs）の API トークン・モデル・枚単価・プラン別の提供可否を設定します。</p>
+        </header>
+        <div class="settings-card">
+          <h3 class="admin-subheading">FLUX 2.0 API（Black Forest Labs）</h3>
+          <p class="settings-hint">環境変数 <code>BFL_API_KEY</code> または下記の保存値が使われます（保存値が優先）。API モデル名は <code>flux-2-pro</code> などのエンドポイント slug です。</p>
+          <div class="admin-detail-grid">
+            <div class="settings-field">
+              <label for="adminFluxApiKey">API トークン（x-key）</label>
+              <input type="password" id="adminFluxApiKey" autocomplete="new-password" placeholder="変更する場合のみ入力">
+              <span class="settings-hint" id="adminFluxKeyHint">—</span>
+            </div>
+            <div class="settings-field">
+              <label for="adminFluxBaseUrl">API ベース URL</label>
+              <input type="url" id="adminFluxBaseUrl" placeholder="https://api.bfl.ai">
+              <span class="settings-hint">未入力時は https://api.bfl.ai（EU: api.eu.bfl.ai / US: api.us.bfl.ai）</span>
+            </div>
+          </div>
+        </div>
+        <div class="settings-card">
+          <label class="admin-toggle-row">
+            <span class="admin-toggle-label">
+              <strong>画像生成を有効にする</strong>
+              <span class="admin-toggle-desc">オフにすると画像生成機能を利用できません</span>
+            </span>
+            <input type="checkbox" class="admin-toggle-input" id="adminImageGenEnabled">
+          </label>
+          <div class="settings-field admin-models-default-field">
+            <label for="adminImageGenDefaultModel">既定モデル</label>
+            <select id="adminImageGenDefaultModel"></select>
+          </div>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">画像生成モデルを追加</h3>
+          <form id="adminImageModelAddForm" class="settings-form admin-model-add-form">
+            <div class="admin-detail-grid">
+              <div class="settings-field">
+                <label for="addImageModelId">モデルID</label>
+                <input type="text" id="addImageModelId" required pattern="[a-zA-Z0-9][a-zA-Z0-9._\-]{1,63}" placeholder="例: flux-2-pro">
+              </div>
+              <div class="settings-field">
+                <label for="addImageDisplayName">表示名</label>
+                <input type="text" id="addImageDisplayName" required placeholder="例: FLUX.2 Pro">
+              </div>
+              <div class="settings-field">
+                <label for="addImageApiModel">APIモデル（エンドポイント slug）</label>
+                <input type="text" id="addImageApiModel" required placeholder="例: flux-2-pro" list="addImageApiModelHints">
+                <datalist id="addImageApiModelHints"></datalist>
+              </div>
+              <div class="settings-field">
+                <label for="addImageCostUsd">原価 ($/枚)</label>
+                <input type="number" step="0.0001" min="0" id="addImageCostUsd" value="0.04">
+              </div>
+              <div class="settings-field">
+                <label for="addImagePriceUsd">提供価格 ($/枚)</label>
+                <input type="number" step="0.0001" min="0" id="addImagePriceUsd" value="0.08">
+              </div>
+            </div>
+            <p class="settings-section-label">利用可能プラン</p>
+            <div class="admin-ocr-plan-checks" id="addImagePlanChecks"></div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminImageModelAddMsg"></p>
+              <button type="submit" class="settings-btn">画像生成モデルを追加</button>
+            </div>
+          </form>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">画像生成モデル一覧</h3>
+          <form id="adminImageGenerationForm" class="settings-form">
+            <div class="admin-table-wrap admin-table-wrap--wide">
+              <table class="admin-table admin-models-table" id="adminImageModelsTable">
+                <thead>
+                  <tr>
+                    <th>モデルID</th>
+                    <th>表示名</th>
+                    <th>APIモデル</th>
+                    <th>原価 ($/枚)</th>
+                    <th>提供 ($/枚)</th>
+                    <th>有効</th>
+                    <th>提供プラン</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="adminImageModelsBody"></tbody>
+              </table>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminImageGenerationMsg"></p>
+              <button type="submit" class="settings-btn">画像生成設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-features" class="admin-panel" aria-labelledby="admin-features-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-features-heading">機能制御</h2>
+          <p>サービス全体の機能を一時的に制限できます。オンにすると該当機能が利用できなくなります。</p>
+        </header>
+        <div class="settings-card">
+          <form id="adminFeaturesForm" class="settings-form admin-features-form">
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>チャットを制限する</strong>
+                <span class="admin-toggle-desc">メッセージの送信を停止します</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="chat_disabled" data-feature="chat_disabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>検索を制限する</strong>
+                <span class="admin-toggle-desc">Web検索付きチャットを停止します</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="search_disabled" data-feature="search_disabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>新規登録を禁止する</strong>
+                <span class="admin-toggle-desc">アカウント作成を停止します</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="registration_disabled" data-feature="registration_disabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>Google ログインを禁止する</strong>
+                <span class="admin-toggle-desc">ログイン画面の「Googleでログイン」を非表示にします</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="google_login_disabled" data-feature="google_login_disabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>Discord ログインを禁止する</strong>
+                <span class="admin-toggle-desc">ログイン画面の「Discordでログイン」を非表示にします</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="discord_login_disabled" data-feature="discord_login_disabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>ファイルのアップロードを禁止する</strong>
+                <span class="admin-toggle-desc">添付ファイルの選択を停止します</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="upload_disabled" data-feature="upload_disabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>課金を制限する</strong>
+                <span class="admin-toggle-desc">残高チャージ（PayPal）を停止します</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="billing_disabled" data-feature="billing_disabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>クーポンコードの利用を禁止する</strong>
+                <span class="admin-toggle-desc">ユーザーによるクーポン入力を停止します</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" name="coupon_disabled" data-feature="coupon_disabled">
+            </label>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminFeaturesMsg"></p>
+              <button type="submit" class="settings-btn">機能設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-coupons" class="admin-panel" aria-labelledby="admin-coupons-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-coupons-heading">クーポンコード</h2>
+          <p>残高追加・プラン付与・購入時割引のクーポンを発行・無効化できます。1ユーザー1回まで利用可能です。</p>
+        </header>
+        <div class="settings-card">
+          <h3 class="admin-subheading">新規クーポン</h3>
+          <form id="adminCouponCreateForm" class="settings-form admin-coupon-create-form">
+            <div class="admin-detail-grid">
+              <div class="settings-field">
+                <label for="couponCode">クーポンコード</label>
+                <input type="text" id="couponCode" required pattern="[A-Za-z0-9_-]{3,32}" autocomplete="off" placeholder="例: WELCOME2026">
+              </div>
+              <div class="settings-field">
+                <label for="couponType">特典タイプ</label>
+                <select id="couponType">
+                  <option value="balance">残高を追加</option>
+                  <option value="plan">プランを付与</option>
+                  <option value="purchase">購入時割引</option>
+                </select>
+              </div>
+              <div class="settings-field" id="couponBalanceField">
+                <label for="couponBalanceAmount">追加残高</label>
+                <input type="number" step="0.01" min="0.01" id="couponBalanceAmount" value="10">
+              </div>
+              <div class="settings-field hidden" id="couponPurchaseField">
+                <label for="couponPurchaseDiscount">割引額（円）</label>
+                <input type="number" min="1" step="1" id="couponPurchaseDiscount" value="500">
+              </div>
+              <div class="settings-field hidden" id="couponPurchasePlanField">
+                <label for="couponPurchasePlanId">対象プラン（空欄=全プラン）</label>
+                <select id="couponPurchasePlanId">
+                  <option value="">全プラン</option>
+                  <option value="plus">plus</option>
+                  <option value="pro">pro</option>
+                  <option value="pro_plus">pro_plus</option>
+                  <option value="max">max</option>
+                </select>
+              </div>
+              <div class="settings-field hidden" id="couponPlanField">
+                <label for="couponPlanId">付与プラン</label>
+                <select id="couponPlanId">
+                  <option value="free">free</option>
+                  <option value="plus">plus</option>
+                  <option value="pro">pro</option>
+                  <option value="pro_plus">pro_plus</option>
+                  <option value="max">max</option>
+                  <option value="enterprise">enterprise</option>
+                </select>
+              </div>
+              <div class="settings-field hidden" id="couponPlanHoursField">
+                <label for="couponPlanHours">利用時間（時間）</label>
+                <input type="number" min="1" step="1" id="couponPlanHours" value="24">
+              </div>
+              <div class="settings-field">
+                <label for="couponMaxUses">利用人数上限（空欄=無制限）</label>
+                <input type="number" min="1" step="1" id="couponMaxUses" placeholder="例: 100">
+              </div>
+              <div class="settings-field">
+                <label for="couponExpiresAt">有効期限</label>
+                <input type="datetime-local" id="couponExpiresAt" required>
+              </div>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminCouponCreateMsg"></p>
+              <button type="submit" class="settings-btn">クーポンを追加</button>
+            </div>
+          </form>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">発行済みクーポン</h3>
+          <p class="admin-loading" id="adminCouponsLoading">読み込み中...</p>
+          <p class="settings-msg hidden error" id="adminCouponsError"></p>
+          <div class="admin-table-wrap hidden" id="adminCouponsTableWrap">
+            <table class="admin-table" id="adminCouponsTable">
+              <thead>
+                <tr>
+                  <th>コード</th>
+                  <th>特典</th>
+                  <th>利用数</th>
+                  <th>有効期限</th>
+                  <th>状態</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="adminCouponsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-panel-subscription" class="admin-panel" aria-labelledby="admin-subscription-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-subscription-heading">サブスクリプション管理</h2>
+          <p>プラン別の PayPal 申込ページ URL とプラン概要を管理します（<code>paypal.plan_urls</code> に保存）。</p>
+        </header>
+        <div class="settings-card">
+          <h3 class="admin-subheading">PayPal モード</h3>
+          <p class="admin-paypal-status" id="adminSubscriptionMode"></p>
+          <p class="settings-hint">
+            残高チャージ用 API 認証は「PayPal設定」タブで編集できます（Client ID / Secret・sandbox / live）。
+            サブスクリプションは Catalog Products → Billing Plans API で商品・月額プランを作成し、申込 URL（<code>plan_id</code> 付き）を <code>paypal.plan_urls</code> に保存します。アプリに Subscriptions 機能を有効にした REST アプリが必要です。
+            <a href="https://developer.paypal.com/dashboard/" target="_blank" rel="noopener noreferrer">PayPal Developer Dashboard</a>
+          </p>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">プラン概要</h3>
+          <p class="admin-loading" id="adminSubscriptionLoading">読み込み中...</p>
+          <p class="settings-msg hidden error" id="adminSubscriptionError"></p>
+          <div class="admin-table-wrap hidden" id="adminSubscriptionOverviewWrap">
+            <table class="admin-table" id="adminSubscriptionOverviewTable">
+              <thead>
+                <tr>
+                  <th>プラン</th>
+                  <th>料金（USD）</th>
+                  <th>PayPal URL</th>
+                </tr>
+              </thead>
+              <tbody id="adminSubscriptionOverviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="settings-card">
+          <h3 class="admin-subheading">PayPal プラン申込 URL</h3>
+          <p class="settings-hint">環境変数 <code>PAYPAL_PLAN_*_URL</code> よりここで保存した値が優先されます。手動入力のほか、下のボタンで PayPal API から作成・同期できます（再実行のたびに新しい Product / Plan が作成されます）。削除すると PayPal 上の請求プランを無効化し、保存済み URL / API ID をクリアします（手動登録のみの場合は URL のみクリア）。</p>
+          <form id="adminSubscriptionForm" class="settings-form">
+            <div class="settings-field admin-subscription-url-field">
+              <label for="adminPlanUrlPlus">PASS+（plus）</label>
+              <div class="admin-subscription-url-row">
+                <input type="url" id="adminPlanUrlPlus" name="plus" autocomplete="off" placeholder="https://www.paypal.com/...">
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-sync-btn" data-plan-id="plus">PayPalで作成/同期</button>
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-delete-btn" data-plan-id="plus">削除</button>
+              </div>
+            </div>
+            <div class="settings-field admin-subscription-url-field">
+              <label for="adminPlanUrlPro">PASS Pro（pro）</label>
+              <div class="admin-subscription-url-row">
+                <input type="url" id="adminPlanUrlPro" name="pro" autocomplete="off" placeholder="https://www.paypal.com/...">
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-sync-btn" data-plan-id="pro">PayPalで作成/同期</button>
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-delete-btn" data-plan-id="pro">削除</button>
+              </div>
+            </div>
+            <div class="settings-field admin-subscription-url-field">
+              <label for="adminPlanUrlProPlus">PASS Pro+（pro_plus）</label>
+              <div class="admin-subscription-url-row">
+                <input type="url" id="adminPlanUrlProPlus" name="pro_plus" autocomplete="off" placeholder="https://www.paypal.com/...">
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-sync-btn" data-plan-id="pro_plus">PayPalで作成/同期</button>
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-delete-btn" data-plan-id="pro_plus">削除</button>
+              </div>
+            </div>
+            <div class="settings-field admin-subscription-url-field">
+              <label for="adminPlanUrlMax">PASS MAX（max）</label>
+              <div class="admin-subscription-url-row">
+                <input type="url" id="adminPlanUrlMax" name="max" autocomplete="off" placeholder="https://www.paypal.com/...">
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-sync-btn" data-plan-id="max">PayPalで作成/同期</button>
+                <button type="button" class="settings-btn settings-btn--secondary admin-paypal-delete-btn" data-plan-id="max">削除</button>
+              </div>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminSubscriptionMsg"></p>
+              <button type="button" class="settings-btn settings-btn--secondary" id="adminPaypalSyncAllBtn">全プランを PayPal で作成/同期</button>
+              <button type="button" class="settings-btn settings-btn--secondary admin-paypal-delete-all-btn" id="adminPaypalDeleteAllBtn">全プランを削除</button>
+              <button type="submit" class="settings-btn">サブスクリプション URL を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-search-engines" class="admin-panel" aria-labelledby="admin-search-engines-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-search-engines-heading">検索エンジン</h2>
+          <p>Web検索 API のトークンと、プランごとの利用可否を設定します（<code>search_engines</code> / プラン <code>features</code> → <code>data/system_config.json</code>）。未設定時は <code>.env</code> の <code>TAVILY_API_KEY</code> / <code>SERPER_API_KEY</code> を参照します。</p>
+        </header>
+        <div class="settings-card">
+          <p class="admin-paypal-status hidden" id="adminSearchEnginesStatus"></p>
+          <form id="adminSearchEnginesForm" class="settings-form">
+            <h3 class="admin-subheading">API トークン</h3>
+            <div class="settings-field">
+              <label for="adminTavilyApiKey">Tavily API Key</label>
+              <input type="password" id="adminTavilyApiKey" autocomplete="new-password" placeholder="tvly-...（変更する場合のみ入力）">
+              <span class="settings-hint" id="adminTavilyKeyHint"></span>
+            </div>
+            <div class="settings-field">
+              <label for="adminSerperApiKey">Serper API Key</label>
+              <input type="password" id="adminSerperApiKey" autocomplete="new-password" placeholder="（変更する場合のみ入力）">
+              <span class="settings-hint" id="adminSerperKeyHint"></span>
+            </div>
+            <h3 class="admin-subheading">グローバル有効化</h3>
+            <p class="settings-hint">オフにすると全プランで該当エンジンを使いません（キーがあっても無効）。</p>
+            <div class="admin-detail-grid">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="adminSearchTavilyEnabled" checked>
+                Tavily を利用
+              </label>
+              <label class="settings-checkbox">
+                <input type="checkbox" id="adminSearchSerperEnabled" checked>
+                Google (Serper) を利用
+              </label>
+              <label class="settings-checkbox">
+                <input type="checkbox" id="adminSearchDdgEnabled" checked>
+                search-dg（DDG フォールバック）を利用
+              </label>
+            </div>
+            <h3 class="admin-subheading">プラン別の検索設定</h3>
+            <p class="settings-hint">「Web検索（全体）」がオフのプランでは IntelligentSearch も無効になります。有料 API はプランごとに個別に制限できます。</p>
+            <p class="admin-loading hidden" id="adminSearchPlanLoading">読み込み中...</p>
+            <p class="settings-msg hidden error" id="adminSearchPlanError"></p>
+            <div class="admin-table-wrap admin-table-wrap--wide hidden" id="adminSearchPlanTableWrap">
+              <table class="admin-table admin-plan-features-matrix" id="adminSearchPlanTable">
+                <thead id="adminSearchPlanHead"></thead>
+                <tbody id="adminSearchPlanBody"></tbody>
+              </table>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminSearchEnginesMsg"></p>
+              <button type="submit" class="settings-btn">検索エンジン設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-system-keys" class="admin-panel" aria-labelledby="admin-system-keys-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-system-keys-heading">NEXGATE APIキー管理</h2>
+          <p>システム側のキーを2系統に分離して管理します。<strong>NEXGATE AI 用（上流）</strong>は本サービスが外部APIを呼ぶためのキー、<strong>NEXGATE AI API 用（下流）</strong>はクライアントが <code>/v1/</code> を呼ぶためのキーです。</p>
+        </header>
+
+        <div class="settings-card">
+          <h3 class="admin-subheading">NEXGATE AI API 用（下流）システムAPIキー</h3>
+          <p class="settings-hint">管理者がシステムレベルで発行・管理するキーです（プレフィックス <code>ngxa_</code>）。ユーザーの開発者トークン（<code>ngx_</code>）とは別ストア・別系統です。課金・レートリミットは「所有者ユーザー」に帰属します。</p>
+          <form id="adminSystemApiKeyForm" class="settings-form">
+            <div class="settings-field">
+              <label for="adminSystemApiKeyName">名前</label>
+              <input type="text" id="adminSystemApiKeyName" placeholder="例: サービス連携 / CI パイプライン">
+            </div>
+            <div class="settings-field">
+              <label for="adminSystemApiKeyOwner">所有者ユーザー（課金帰属先）</label>
+              <input type="text" id="adminSystemApiKeyOwner" placeholder="ユーザー名（APIアクセスが有効なアカウント）" autocomplete="off">
+            </div>
+            <div class="settings-field">
+              <label>スコープ</label>
+              <div class="admin-detail-grid">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="adminSystemApiKeyScopeModels" checked>
+                  <code>models</code>（モデル一覧）
+                </label>
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="adminSystemApiKeyScopeChat" checked>
+                  <code>chat_completions</code>（チャット補完）
+                </label>
+              </div>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminSystemApiKeyMsg"></p>
+              <button type="submit" class="settings-btn">システムAPIキーを発行</button>
+            </div>
+          </form>
+          <pre class="settings-msg hidden error" id="adminSystemApiKeySecret"></pre>
+          <div class="admin-table-wrap admin-table-wrap--wide">
+            <table class="admin-table" id="adminSystemApiKeyTable">
+              <thead>
+                <tr>
+                  <th>名前</th>
+                  <th>所有者</th>
+                  <th>スコープ</th>
+                  <th>プレフィックス</th>
+                  <th>作成日</th>
+                  <th>最終利用</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="adminSystemApiKeyBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3 class="admin-subheading">NEXGATE AI 用（上流）キー状態</h3>
+          <p class="settings-hint">本サービスが外部APIを呼ぶためのキー（設定済みか否かのみ表示。平文は表示しません）。個別の編集は各設定画面で行います。</p>
+          <div id="adminUpstreamKeysStatus" class="admin-detail-grid">
+            <p class="admin-loading">読み込み中...</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-panel-system-prompts" class="admin-panel" aria-labelledby="admin-system-prompts-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-system-prompts-heading">システムプロンプト</h2>
+          <p>組み込みのシステムプロンプトと条件付き追記を一覧できます（読み取り専用）。</p>
+        </header>
+        <div class="settings-card">
+          <div class="admin-system-prompts-toolbar">
+            <div class="settings-field admin-system-prompts-filter">
+              <label for="adminSystemPromptsCategory">カテゴリ</label>
+              <select id="adminSystemPromptsCategory" aria-label="カテゴリで絞り込み">
+                <option value="">すべて</option>
+              </select>
+            </div>
+            <div class="settings-field admin-system-prompts-filter">
+              <label for="adminSystemPromptsSearch">検索</label>
+              <input type="search" id="adminSystemPromptsSearch" placeholder="名前・ソース・条件…" autocomplete="off">
+            </div>
+            <p class="admin-system-prompts-meta" id="adminSystemPromptsMeta">—</p>
+          </div>
+          <p class="admin-table-empty hidden" id="adminSystemPromptsLoading">読み込み中…</p>
+          <p class="admin-table-empty hidden" id="adminSystemPromptsError"></p>
+          <div id="adminSystemPromptsList" class="admin-system-prompts-list"></div>
+          <p class="admin-table-empty hidden" id="adminSystemPromptsEmpty">該当するプロンプトがありません</p>
+        </div>
+      </section>
+
+      <section id="admin-panel-paypal" class="admin-panel" aria-labelledby="admin-paypal-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-paypal-heading">PayPal設定</h2>
+          <p>残高チャージ用の PayPal API 認証情報を設定します（<code>data/system_config.json</code> に保存）。</p>
+        </header>
+        <div class="settings-card">
+          <p class="admin-paypal-status hidden" id="adminPaypalStatus"></p>
+          <form id="adminPaypalForm" class="settings-form">
+            <div class="settings-field">
+              <label for="adminPaypalClientId">Client ID</label>
+              <input type="text" id="adminPaypalClientId" autocomplete="off" placeholder="PayPal REST API Client ID">
+            </div>
+            <div class="settings-field">
+              <label for="adminPaypalSecret">Secret</label>
+              <input type="password" id="adminPaypalSecret" autocomplete="new-password" placeholder="変更する場合のみ入力">
+              <span class="settings-hint" id="adminPaypalSecretHint">未入力の場合は保存済みの Secret を維持します</span>
+            </div>
+            <div class="settings-field">
+              <label for="adminPaypalMode">モード</label>
+              <select id="adminPaypalMode">
+                <option value="sandbox">sandbox（テスト）</option>
+                <option value="live">live（本番）</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="adminPaypalWebhookId">Webhook ID</label>
+              <input type="text" id="adminPaypalWebhookId" autocomplete="off" placeholder="WH-...（サブスク有効化用）">
+              <span class="settings-hint">Developer Dashboard で Webhook を作成し、URL に <code>/api/webhooks/paypal</code> を登録。イベント: <code>BILLING.SUBSCRIPTION.ACTIVATED</code> ほか。</span>
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminPaypalMsg"></p>
+              <button type="submit" class="settings-btn">PayPal設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-google-oauth" class="admin-panel" aria-labelledby="admin-google-oauth-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-google-oauth-heading">Google OAuth設定</h2>
+          <p>Google カレンダー・Gmail 連携および Google ログイン用の OAuth クライアントを設定します（<code>google_oauth</code> → <code>data/system_config.json</code>）。ログインも同じ Redirect URI（<code>/api/auth/callback</code>）を使用します。未設定時は <code>.env</code> の <code>GOOGLE_*</code> を参照します。</p>
+        </header>
+        <div class="settings-card">
+          <div class="admin-google-oauth-help">
+            <h3 class="admin-subheading">Google Cloud Console の手順</h3>
+            <ol>
+              <li><a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">API とサービス → 認証情報</a> で OAuth 2.0 クライアント ID（ウェブアプリ）を作成</li>
+              <li>承認済みの JavaScript 生成元に下記「JavaScript 生成元（参考）」を登録</li>
+              <li>承認済みのリダイレクト URI に下記 Redirect URI を<strong>完全一致</strong>で登録</li>
+              <li>Calendar API・Gmail API を有効化し、OAuth 同意画面でスコープを追加</li>
+            </ol>
+          </div>
+          <p class="admin-paypal-status hidden" id="adminGoogleOauthStatus"></p>
+          <div class="settings-field admin-google-redirect-field">
+            <label for="adminGoogleRedirectUriDisplay">Redirect URI（Google Cloud に登録）</label>
+            <div class="admin-google-redirect-row">
+              <input type="text" id="adminGoogleRedirectUriDisplay" class="admin-google-redirect-input" readonly>
+              <button type="button" class="settings-btn settings-btn--secondary" id="adminGoogleRedirectCopyBtn">コピー</button>
+            </div>
+            <span class="settings-hint">環境ごとに変更する場合は下のフォームで保存後、この URI を Console に反映してください。</span>
+          </div>
+          <form id="adminGoogleOauthForm" class="settings-form">
+            <div class="settings-field">
+              <label for="adminGoogleClientId">Client ID</label>
+              <input type="text" id="adminGoogleClientId" autocomplete="off" placeholder="xxxx.apps.googleusercontent.com">
+            </div>
+            <div class="settings-field">
+              <label for="adminGoogleSecret">Client Secret</label>
+              <input type="password" id="adminGoogleSecret" autocomplete="new-password" placeholder="変更する場合のみ入力">
+              <span class="settings-hint" id="adminGoogleSecretHint">未入力の場合は保存済みの Secret を維持します</span>
+            </div>
+            <div class="settings-field">
+              <label for="adminGoogleRedirectUri">Redirect URI</label>
+              <input type="url" id="adminGoogleRedirectUri" autocomplete="off" placeholder="https://example.com/api/auth/callback">
+            </div>
+            <div class="settings-field">
+              <label for="adminGoogleOriginsHint">JavaScript 生成元（参考）</label>
+              <input type="text" id="adminGoogleOriginsHint" readonly>
+              <span class="settings-hint">Redirect URI のオリジン（スキーム + ホスト）です。Console の「承認済みの JavaScript 生成元」に登録してください。</span>
+            </div>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>カレンダー連携スコープ</strong>
+                <span class="admin-toggle-desc">calendar.events — 新規接続時に要求</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminGoogleCalendarScopes" checked>
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>Gmail 連携スコープ</strong>
+                <span class="admin-toggle-desc">gmail.modify — 新規接続時に要求</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminGoogleGmailScopes" checked>
+            </label>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminGoogleOauthMsg"></p>
+              <button type="submit" class="settings-btn">Google OAuth設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-discord-oauth" class="admin-panel" aria-labelledby="admin-discord-oauth-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-discord-oauth-heading">Discord OAuth設定</h2>
+          <p>Discord ログイン用の OAuth クライアントを設定します（<code>discord_oauth</code> → <code>data/system_config.json</code>）。Redirect URI は <code>/api/auth/discord/callback</code> です。未設定時は <code>.env</code> の <code>DISCORD_*</code> を参照します。</p>
+        </header>
+        <div class="settings-card">
+          <div class="admin-google-oauth-help">
+            <h3 class="admin-subheading">Discord Developer Portal の手順</h3>
+            <ol>
+              <li><a href="https://discord.com/developers/applications" target="_blank" rel="noopener noreferrer">Discord Developer Portal</a> でアプリケーションを作成</li>
+              <li>OAuth2 → Redirects に下記 Redirect URI を<strong>完全一致</strong>で登録</li>
+              <li>Client ID と Client Secret を下記フォームに保存</li>
+              <li>スコープ: <code>identify</code>・<code>email</code></li>
+            </ol>
+          </div>
+          <p class="admin-paypal-status hidden" id="adminDiscordOauthStatus"></p>
+          <div class="settings-field admin-google-redirect-field">
+            <label for="adminDiscordRedirectUriDisplay">Redirect URI（Discord に登録）</label>
+            <div class="admin-google-redirect-row">
+              <input type="text" id="adminDiscordRedirectUriDisplay" class="admin-google-redirect-input" readonly>
+              <button type="button" class="settings-btn settings-btn--secondary" id="adminDiscordRedirectCopyBtn">コピー</button>
+            </div>
+          </div>
+          <form id="adminDiscordOauthForm" class="settings-form">
+            <div class="settings-field">
+              <label for="adminDiscordClientId">Client ID</label>
+              <input type="text" id="adminDiscordClientId" autocomplete="off" placeholder="Application Client ID">
+            </div>
+            <div class="settings-field">
+              <label for="adminDiscordSecret">Client Secret</label>
+              <input type="password" id="adminDiscordSecret" autocomplete="new-password" placeholder="変更する場合のみ入力">
+              <span class="settings-hint" id="adminDiscordSecretHint">未入力の場合は保存済みの Secret を維持します</span>
+            </div>
+            <div class="settings-field">
+              <label for="adminDiscordRedirectUri">Redirect URI</label>
+              <input type="url" id="adminDiscordRedirectUri" autocomplete="off" placeholder="https://example.com/api/auth/discord/callback">
+              <span class="settings-hint">環境ごとに変更する場合は保存後、上の「Redirect URI（Discord に登録）」を Developer Portal に反映してください。</span>
+            </div>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>Discordログインを禁止する</strong>
+                <span class="admin-toggle-desc">ログイン画面の「Discordでログイン」を非表示にします（機能制御と同期）</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminDiscordLoginDisabled">
+            </label>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminDiscordOauthMsg"></p>
+              <button type="submit" class="settings-btn">Discord OAuth設定を保存</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="admin-panel-mail-server" class="admin-panel" aria-labelledby="admin-mail-server-heading">
+        <header class="settings-panel-header">
+          <h2 id="admin-mail-server-heading">メールサーバー設定</h2>
+          <p>アカウント作成時のメールアドレス認証に使用する SMTP サーバーを設定します（<code>mail_server</code> → <code>data/system_config.json</code>）。未設定時は <code>.env</code> の <code>SMTP_*</code> を参照できます。</p>
+        </header>
+        <div class="settings-card">
+          <p class="admin-paypal-status hidden" id="adminMailServerStatus"></p>
+          <form id="adminMailServerForm" class="settings-form">
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>メールサーバーを有効化</strong>
+                <span class="admin-toggle-desc">オフの場合、登録時は従来どおり即時アカウント作成されます</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminMailServerEnabled">
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>登録時にメール認証を必須にする</strong>
+                <span class="admin-toggle-desc">有効時、確認メールのリンク完了までアカウントは作成されません</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminMailVerificationRequired" checked>
+            </label>
+            <div class="settings-field">
+              <label for="adminMailHost">SMTPホスト</label>
+              <input type="text" id="adminMailHost" autocomplete="off" placeholder="smtp.example.com">
+            </div>
+            <div class="settings-field">
+              <label for="adminMailPort">ポート</label>
+              <input type="number" id="adminMailPort" min="1" max="65535" value="587">
+            </div>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>STARTTLS を使用</strong>
+                <span class="admin-toggle-desc">ポート 587 などで一般的です</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminMailUseTls" checked>
+            </label>
+            <label class="admin-toggle-row">
+              <span class="admin-toggle-label">
+                <strong>SSL/TLS（SMTPS）を使用</strong>
+                <span class="admin-toggle-desc">ポート 465 など。有効時は STARTTLS は無効になります</span>
+              </span>
+              <input type="checkbox" class="admin-toggle-input" id="adminMailUseSsl">
+            </label>
+            <div class="settings-field">
+              <label for="adminMailUsername">ユーザー名</label>
+              <input type="text" id="adminMailUsername" autocomplete="off" placeholder="SMTPログイン名（任意）">
+            </div>
+            <div class="settings-field">
+              <label for="adminMailPassword">パスワード</label>
+              <input type="password" id="adminMailPassword" autocomplete="new-password" placeholder="変更する場合のみ入力">
+              <span class="settings-hint" id="adminMailPasswordHint">未入力の場合は保存済みのパスワードを維持します</span>
+            </div>
+            <div class="settings-field">
+              <label for="adminMailFromEmail">送信元メールアドレス</label>
+              <input type="email" id="adminMailFromEmail" autocomplete="off" placeholder="noreply@example.com">
+            </div>
+            <div class="settings-field">
+              <label for="adminMailFromName">送信者名</label>
+              <input type="text" id="adminMailFromName" autocomplete="off" placeholder="NEXGATE AI">
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminMailServerMsg"></p>
+              <button type="submit" class="settings-btn">メールサーバー設定を保存</button>
+            </div>
+          </form>
+          <form id="adminMailServerTestForm" class="settings-form admin-mail-test-form">
+            <h3 class="admin-subheading">テスト送信</h3>
+            <div class="settings-field">
+              <label for="adminMailTestTo">送信先メールアドレス</label>
+              <input type="email" id="adminMailTestTo" autocomplete="off" placeholder="admin@example.com">
+            </div>
+            <div class="settings-form-footer">
+              <p class="settings-msg hidden" id="adminMailServerTestMsg"></p>
+              <button type="submit" class="settings-btn settings-btn--secondary">テストメールを送信</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>

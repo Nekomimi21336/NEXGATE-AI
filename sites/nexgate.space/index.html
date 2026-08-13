@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="NEXGATE AI — 2026年、マルチモデル対応のAI補助ツール（準備中）。必要なときだけ、チャット・Web検索・ファイル解析で仕事も学びも支えます。">
+  <title>NEXGATE AI</title>
+  <link rel="canonical" href="https://nexgate.space/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NEXGATE AI">
+  <meta property="og:title" content="NEXGATE AI">
+  <meta property="og:description" content="2026年、マルチモデル対応のAI補助ツール（準備中）。必要なときだけ、チャット・Web検索・ファイル解析で仕事も学びも支えます。">
+  <meta property="og:url" content="https://nexgate.space/">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://nexgate.space/og.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NEXGATE AI">
+  <meta name="twitter:description" content="2026年、マルチモデル対応のAI補助ツール（準備中）。必要なときだけ、チャット・Web検索・ファイル解析で仕事も学びも支えます。">
+  <meta name="twitter:image" content="https://nexgate.space/og.svg">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000000;
+      --surface: #0a0a0a;
+      --elevated: #111111;
+      --line: rgba(255, 255, 255, 0.07);
+      --line-strong: rgba(255, 255, 255, 0.12);
+      --text: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.45);
+      --text-subtle: rgba(255, 255, 255, 0.28);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    html:has(body.is-loading) { background: var(--black); }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    body.is-loading { overflow: hidden; background: var(--black); }
+
+    .ambient-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: var(--black);
+      contain: strict;
+    }
+
+    .ambient-backdrop span {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      will-change: transform;
+      filter: blur(64px);
+    }
+
+    .ambient-layer--a {
+      width: min(92vmax, 740px);
+      height: min(72vmax, 540px);
+      left: 6%;
+      top: 14%;
+      background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 72%);
+      animation: ambientFloatA 34s ease-in-out infinite;
+    }
+
+    .ambient-layer--b {
+      width: min(88vmax, 700px);
+      height: min(68vmax, 500px);
+      right: 4%;
+      top: 38%;
+      left: auto;
+      background:
+        radial-gradient(ellipse 100% 100% at 50% 50%, rgba(255, 255, 255, 0.038) 0%, transparent 70%),
+        radial-gradient(ellipse 85% 65% at 42% 58%, rgba(130, 195, 148, 0.025) 0%, transparent 68%);
+      animation: ambientFloatB 41s ease-in-out infinite;
+    }
+
+    .ambient-layer--c {
+      width: min(96vmax, 820px);
+      height: min(58vmax, 440px);
+      left: 24%;
+      bottom: 6%;
+      top: auto;
+      background: radial-gradient(ellipse 100% 78% at 50% 50%, rgba(255, 255, 255, 0.032) 0%, transparent 74%);
+      animation: ambientFloatC 47s ease-in-out infinite;
+    }
+
+    .ambient-wave {
+      inset: -12% -8%;
+      border-radius: 0;
+      filter: none;
+      opacity: 0.55;
+      background:
+        linear-gradient(108deg, transparent 40%, rgba(255, 255, 255, 0.011) 50%, transparent 60%),
+        linear-gradient(72deg, transparent 36%, rgba(255, 255, 255, 0.007) 47%, transparent 55%);
+      background-size: 220% 220%;
+      animation: ambientWave 54s linear infinite;
+    }
+
+    @keyframes ambientFloatA {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(3.5%, -2.5%) scale(1.05); }
+    }
+
+    @keyframes ambientFloatB {
+      0%, 100% { transform: translate(0, 0) scale(1.02); }
+      50% { transform: translate(-4.5%, 2%) scale(0.97); }
+    }
+
+    @keyframes ambientFloatC {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(2.5%, 3.5%); }
+      66% { transform: translate(-3.5%, -2%); }
+    }
+
+    @keyframes ambientWave {
+      0% { background-position: 0% 42%, 100% 58%; transform: translate3d(0, 0, 0); }
+      50% { background-position: 100% 56%, 0% 44%; transform: translate3d(0, -1.2%, 0); }
+      100% { background-position: 0% 42%, 100% 58%; transform: translate3d(0, 0, 0); }
+    }
+
+    .site-shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    body.is-loading .site-shell {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    body.is-loaded .site-shell {
+      animation: shellReveal 0.8s ease forwards;
+    }
+
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--black);
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .page-loader.is-exiting {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-mark {
+      font-size: clamp(0.9rem, 2.8vw, 1.05rem);
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: loaderMarkIn 1s ease 0.2s forwards;
+    }
+
+    @keyframes loaderMarkIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes shellReveal {
+      from { opacity: 0; visibility: hidden; }
+      to { opacity: 1; visibility: visible; }
+    }
+
+    body:not(.is-loaded) .hero-eyebrow,
+    body:not(.is-loaded) .hero-title,
+    body:not(.is-loaded) .hero-desc,
+    body:not(.is-loaded) .hero-actions {
+      animation: none;
+      opacity: 0;
+    }
+
+    body.is-loaded .hero-eyebrow { animation: fadeUp 0.7s ease 0.25s both; }
+    body.is-loaded .hero-title { animation: fadeUp 0.7s ease 0.35s both; }
+    body.is-loaded .hero-desc { animation: fadeUp 0.7s ease 0.45s both; }
+    body.is-loaded .hero-actions { animation: fadeUp 0.7s ease 0.55s both; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 48px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 64px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-logo {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .header-nav a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover { color: var(--text); }
+
+    .header-cta {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      padding: 10px 22px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .header-cta:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 120px 24px 80px;
+      justify-content: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 28px;
+      max-width: 720px;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 400;
+      max-width: 440px;
+      line-height: 1.75;
+      margin-bottom: 48px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .btn-fill {
+      padding: 14px 32px;
+      background: var(--text);
+      color: var(--black);
+      border: 1px solid var(--text);
+    }
+
+    .btn-fill:hover {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .btn-line {
+      padding: 14px 32px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--line);
+    }
+
+    .btn-line:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    .btn-soon {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .btn-fill.btn-soon {
+      background: transparent;
+      color: var(--text-muted);
+      border-color: var(--line-strong);
+    }
+
+    .header-cta-soon {
+      cursor: default;
+      pointer-events: none;
+      color: var(--text-muted);
+      border-color: var(--line);
+    }
+
+    .header-cta-soon:hover {
+      background: transparent;
+      border-color: var(--line);
+    }
+
+    .hero-eyebrow.is-prelaunch {
+      color: var(--text-muted);
+    }
+
+    .footer-links .is-soon {
+      font-size: 0.78rem;
+      color: var(--text-subtle);
+      cursor: default;
+    }
+
+    .section {
+      padding: 100px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .section-intro {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.75;
+      max-width: 560px;
+      margin: 0 auto 56px;
+    }
+
+    .hero-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1px;
+      margin-top: 64px;
+      max-width: 640px;
+      width: 100%;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .hero-highlight {
+      flex: 1 1 160px;
+      background: var(--black);
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .hero-highlight strong {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .hero-highlight span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .use-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .use-card {
+      background: var(--black);
+      padding: 40px 36px;
+      transition: background 0.25s;
+    }
+
+    .use-card:hover { background: var(--surface); }
+
+    .use-tag {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 16px;
+    }
+
+    .use-card h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .use-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .use-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .use-list li {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .use-list li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--text-subtle);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .step-card {
+      background: var(--black);
+      padding: 40px 32px;
+    }
+
+    .step-num {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      color: var(--text-subtle);
+      margin-bottom: 20px;
+    }
+
+    .step-card h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .step-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .model-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .model-item {
+      flex: 1 1 140px;
+      background: var(--black);
+      padding: 24px 20px;
+      text-align: center;
+      transition: background 0.25s;
+    }
+
+    .model-item:hover { background: var(--surface); }
+
+    .model-item strong {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .model-item span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .plan-features {
+      list-style: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .plan-features li {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .plan-features li::before {
+      content: "·";
+      position: absolute;
+      left: 2px;
+      color: var(--text-subtle);
+    }
+
+    .faq-list {
+      border: 1px solid var(--line);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .faq-item:last-child { border-bottom: none; }
+
+    .faq-item summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 24px 28px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background 0.2s;
+    }
+
+    .faq-item summary::-webkit-details-marker { display: none; }
+
+    .faq-item summary:hover { background: var(--surface); }
+
+    .faq-item summary::after {
+      content: "+";
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-subtle);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .faq-item[open] summary::after {
+      transform: rotate(45deg);
+    }
+
+    .faq-item[open] summary {
+      background: var(--surface);
+    }
+
+    .faq-answer {
+      padding: 0 28px 24px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .section-divider {
+      max-width: 1080px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .feature-card {
+      background: var(--black);
+      padding: 36px 32px;
+      transition: background 0.25s;
+    }
+
+    .feature-card:hover { background: var(--surface); }
+
+    .feature-num {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--text-subtle);
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .plan-card {
+      background: var(--black);
+      padding: 32px 24px;
+      transition: background 0.25s;
+    }
+
+    .plan-card:hover { background: var(--surface); }
+
+    .plan-card.featured {
+      background: var(--surface);
+    }
+
+    .plan-name {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 20px;
+    }
+
+    .plan-price {
+      font-size: 1.6rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .plan-price span {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0;
+    }
+
+    .plan-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .cta-section {
+      text-align: center;
+      padding: 100px 24px 120px;
+      border-top: 1px solid var(--line);
+    }
+
+    .cta-section h2 {
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .cta-section p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 40px;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 80px 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: 48px 32px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .footer-logo {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      max-width: 280px;
+      margin-bottom: 28px;
+    }
+
+    .footer-cta {
+      padding: 12px 24px;
+      font-size: 0.68rem;
+    }
+
+    .footer-col h4 {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-bottom {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+
+    .footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .footer-meta span {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+
+    .footer-meta a {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      transition: color 0.2s;
+    }
+
+    .footer-meta a:hover { color: var(--text-muted); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page-loader { display: none !important; }
+      body.is-loading { overflow: auto; }
+      body.is-loading .site-shell {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+      .loader-mark { animation: none; opacity: 1; }
+      .hero-eyebrow, .hero-title, .hero-desc, .hero-actions { animation: none; opacity: 1; }
+      .ambient-backdrop span { animation: none !important; }
+    }
+
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .plans-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 640px) {
+      .site-header { padding: 0 20px; }
+      .header-nav { display: none; }
+      .header-inner { height: 56px; }
+      .hero { padding: 100px 20px 64px; }
+      .section { padding: 72px 20px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .plans-grid { grid-template-columns: 1fr; }
+      .use-grid { grid-template-columns: 1fr; }
+      .hero-highlights { margin-top: 48px; }
+      .site-footer { padding: 64px 20px 28px; }
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding-bottom: 40px;
+      }
+    }
+  </style>
+</head>
+<body class="is-loading">
+  <div class="ambient-backdrop" aria-hidden="true">
+    <span class="ambient-layer--a"></span>
+    <span class="ambient-layer--b"></span>
+    <span class="ambient-layer--c"></span>
+    <span class="ambient-wave"></span>
+  </div>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <span class="loader-mark">NEXGATE AI</span>
+  </div>
+
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="header-logo">NEXGATE AI</a>
+        <nav class="header-nav" aria-label="メインナビゲーション">
+          <a href="#use-cases">用途</a>
+          <a href="#features">機能</a>
+          <a href="#plans">プラン</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <span class="header-cta header-cta-soon" role="status">準備中</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="hero-eyebrow is-prelaunch">2026 · 近日公開 · サービス準備中</p>
+        <h1 class="hero-title">仕事も、学びも。<br><em>自分のペースで。</em></h1>
+        <p class="hero-desc">複数のAIモデルに対応した補助ツール。チャット、Web検索、ファイル解析を、必要なときだけひとつのワークスペースで。公開まで今しばらくお待ちください。</p>
+        <div class="hero-actions">
+          <span class="btn btn-fill btn-soon" role="status">近日公開</span>
+          <a href="#use-cases" class="btn btn-line">詳しく見る</a>
+        </div>
+        <div class="hero-highlights">
+          <div class="hero-highlight">
+            <strong>Multi-Model</strong>
+            <span>用途別に最適なAIを選択</span>
+          </div>
+          <div class="hero-highlight">
+            <strong>Web Search</strong>
+            <span>最新情報を取り込んで回答</span>
+          </div>
+          <div class="hero-highlight">
+            <strong>Integrations</strong>
+            <span>ファイル添付・解析</span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="use-cases">
+        <p class="section-label">Use Cases</p>
+        <h2 class="section-title">こんな場面で活躍します</h2>
+        <p class="section-intro">個人の学習からビジネス現場まで。NEXGATE AI は、判断と創造のプロセスを支える補助として、調査・執筆・開発・事務処理に対応します。</p>
+        <div class="use-grid">
+          <article class="use-card">
+            <p class="use-tag">Business</p>
+            <h3>ビジネス・事務効率化</h3>
+            <p>メール下書き、議事録要約、報告書作成、競合調査など、日常業務の時間を大幅に削減します。</p>
+            <ul class="use-list">
+              <li>Web検索で最新情報を即座に収集</li>
+              <li>議事録・報告書の要約と下書き作成</li>
+              <li>PDFや画像からテキストを抽出（OCR）</li>
+            </ul>
+          </article>
+          <article class="use-card">
+            <p class="use-tag">Development</p>
+            <h3>開発・技術支援</h3>
+            <p>コードレビュー、バグ調査、API設計、ドキュメント生成まで。Pro以上でエージェント機能も利用可能です。</p>
+            <ul class="use-list">
+              <li>複数言語のコード生成・解説</li>
+              <li>エラー内容の分析と修正案提示</li>
+              <li>技術調査の効率化</li>
+            </ul>
+          </article>
+          <article class="use-card">
+            <p class="use-tag">Learning</p>
+            <h3>学習・リサーチ</h3>
+            <p>論文調査、概念の整理、語学学習、資格試験対策など。対話形式で理解を深められます。</p>
+            <ul class="use-list">
+              <li>複雑なトピックを段階的に解説</li>
+              <li>資料のアップロードと要約</li>
+              <li>調べ物の出発点として最適</li>
+            </ul>
+          </article>
+          <article class="use-card">
+            <p class="use-tag">Creative</p>
+            <h3>コンテンツ制作</h3>
+            <p>ブログ記事、SNS投稿、プレゼン資料の構成案、キャッチコピーなど。表現や発信の場を豊かにする、創作の壁打ち相手として機能します。</p>
+            <ul class="use-list">
+              <li>トーンや文体の調整</li>
+              <li>アイデアのブレインストーミング</li>
+              <li>長文の推敲・リライト</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="workflow">
+        <p class="section-label">How It Works</p>
+        <h2 class="section-title">3ステップで利用開始</h2>
+        <p class="section-intro">サービス開始後、アカウント作成から最初の会話まで数分で完了。必要なときに、ブラウザからアクセスして利用できます。</p>
+        <div class="steps-grid">
+          <article class="step-card">
+            <p class="step-num">Step 01</p>
+            <h3>アカウントを作成</h3>
+            <p>公開後、ユーザー名とメールアドレスを登録するだけ。プランは後からいつでも変更できます。</p>
+          </article>
+          <article class="step-card">
+            <p class="step-num">Step 02</p>
+            <h3>モデルと機能を選ぶ</h3>
+            <p>会話の目的に合わせてAIモデルを選択。Web検索やファイル添付もワンクリックで有効化。</p>
+          </article>
+          <article class="step-card">
+            <p class="step-num">Step 03</p>
+            <h3>会話を始める</h3>
+            <p>質問を入力するだけ。調査・執筆・分析・コーディングなど、あらゆるタスクに対応します。</p>
+          </article>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="models">
+        <p class="section-label">Models</p>
+        <h2 class="section-title">利用可能なモデル</h2>
+        <p class="section-intro">プランに応じて、速度・推論力・用途のバランスから最適なモデルを選べます。</p>
+        <div class="model-strip">
+          <div class="model-item">
+            <strong>推論・思考</strong>
+            <span>深い分析と推論に対応</span>
+          </div>
+          <div class="model-item">
+            <strong>高速応答</strong>
+            <span>素早い応答で日常利用に</span>
+          </div>
+          <div class="model-item">
+            <strong>長文コンテキスト</strong>
+            <span>大量テキストの処理に</span>
+          </div>
+          <div class="model-item">
+            <strong>拡張モデル</strong>
+            <span>Pro+以上で利用可能</span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+      <section class="section" id="features">
+        <p class="section-label">Capabilities</p>
+        <h2 class="section-title">主な機能</h2>
+        <p class="section-intro">チャットを中心に、検索・ファイル解析まで。必要な機能が最初から揃っています。</p>
+        <div class="features-grid">
+          <article class="feature-card">
+            <p class="feature-num">01</p>
+            <h3>マルチモデルチャット</h3>
+            <p>複数のAIモデルを用途に合わせて切り替え可能。速度重視・推論重視など、タスクに合わせて最適な選択ができます。</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-num">02</p>
+            <h3>Web検索連携</h3>
+            <p>AIがリアルタイムでWebを検索し、最新情報を取り込みながら回答。ニュース調査、競合分析、技術トレンドの把握に。</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-num">03</p>
+            <h3>ファイル添付・OCR</h3>
+            <p>PDF、画像、テキストファイルをアップロードして内容を解析。OCRでスキャン資料からもテキストを抽出し、要約や質問応答が可能。</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-num">04</p>
+            <h3>会話履歴・管理</h3>
+            <p>過去の会話を保存・検索・再開。長期プロジェクトでも文脈を途切れさせずに作業を継続できます。</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-num">05</p>
+            <h3>エージェント機能</h3>
+            <p>Pro以上のプランで、ツール呼び出しによる多段階タスク実行に対応。コーディング支援や調査の自動化を実現。</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-num">06</p>
+            <h3>利用管理・課金</h3>
+            <p>トークン使用量の確認、プラン変更、PayPalによるサブスクリプション管理。残高チャージにも対応。</p>
+          </article>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="plans">
+        <p class="section-label">Pricing</p>
+        <h2 class="section-title">プラン</h2>
+        <p class="section-intro">公開後、用途と規模に合わせて選べる4つのプラン。いつでもアップグレード・ダウングレードが可能です。</p>
+        <div class="plans-grid">
+          <article class="plan-card">
+            <p class="plan-name">PASS+</p>
+            <p class="plan-price">$10<span>/月</span></p>
+            <p class="plan-desc">日常業務の効率化に。主要AIモデルおよび基本連携機能。</p>
+            <ul class="plan-features">
+              <li>マルチモデルチャット</li>
+              <li>Web検索</li>
+              <li>ファイル添付・OCR</li>
+              <li>会話履歴の保存・検索</li>
+            </ul>
+          </article>
+          <article class="plan-card featured">
+            <p class="plan-name">PASS Pro</p>
+            <p class="plan-price">$20<span>/月</span></p>
+            <p class="plan-desc">ビジネスの加速を支援。コーディング・エージェント機能を搭載。</p>
+            <ul class="plan-features">
+              <li>PASS+ の全機能</li>
+              <li>エージェント・コーディング支援</li>
+              <li>マルチモーダル対応</li>
+              <li>上位モデルへのアクセス</li>
+            </ul>
+          </article>
+          <article class="plan-card">
+            <p class="plan-name">PASS Pro+</p>
+            <p class="plan-price">$60<span>/月</span></p>
+            <p class="plan-desc">高度な用途に。全モデル・全機能・拡張API連携。</p>
+            <ul class="plan-features">
+              <li>Pro の全機能</li>
+              <li>全モデル利用可能</li>
+              <li>拡張モデル群</li>
+              <li>大規模利用に最適</li>
+            </ul>
+          </article>
+          <article class="plan-card">
+            <p class="plan-name">PASS MAX</p>
+            <p class="plan-price">$100<span>/月</span></p>
+            <p class="plan-desc">すべての機能へのフルアクセス。制限なく真価を体験。</p>
+            <ul class="plan-features">
+              <li>Pro+ の全機能</li>
+              <li>最高クラスの利用枠</li>
+              <li>全機能・全連携</li>
+              <li>パワーユーザー向け</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section class="section" id="faq">
+        <p class="section-label">FAQ</p>
+        <h2 class="section-title">よくある質問</h2>
+        <p class="section-intro">公開前によくいただく質問をまとめました。</p>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>いつから使えますか？</summary>
+            <p class="faq-answer">NEXGATE AI は2026年現在、準備中です。公開時期が決まり次第、本ページでお知らせします。開始後は panel.nexgate.space からアカウント登録でご利用いただけます。</p>
+          </details>
+          <details class="faq-item">
+            <summary>無料で試せますか？</summary>
+            <p class="faq-answer">サービス開始後、Web検索機能など一部機能を無料プランでお試しいただけます。チャットやファイル添付など、より多くの機能は PASS+ 以上のプランでご利用いただけます。現在は登録を受け付けておりません。</p>
+          </details>
+          <details class="faq-item">
+            <summary>どのAIモデルが使えますか？</summary>
+            <p class="faq-answer">複数のAIモデルに対応しています。プランによって利用可能なモデルが異なります。Pro+ 以上では拡張モデルも含め、より幅広い選択肢にアクセスできます。</p>
+          </details>
+          <details class="faq-item">
+            <summary>支払い方法は？</summary>
+            <p class="faq-answer">サービス開始後、PayPal による月額サブスクリプション（USD）に対応予定です。管理画面からプランの変更や解約が可能になります。残高チャージ（JPY）にも対応予定です。</p>
+          </details>
+          <details class="faq-item">
+            <summary>アップロードしたファイルは安全ですか？</summary>
+            <p class="faq-answer">ファイルは会話の処理にのみ使用されます。アカウントごとにデータが分離され、セキュリティ設定は管理画面から確認・変更できます。</p>
+          </details>
+          <details class="faq-item">
+            <summary>ファイルはどの形式に対応していますか？</summary>
+            <p class="faq-answer">PDF、画像、テキストファイルなどに対応予定です。OCRによりスキャン資料からもテキストを抽出し、要約や質問応答が可能です。サービス開始後、PASS+ 以上のプランでご利用いただけます。</p>
+          </details>
+          <details class="faq-item">
+            <summary>プランは途中で変更できますか？</summary>
+            <p class="faq-answer">はい。サービス開始後、管理画面の「プラン/課金」からいつでもアップグレード・ダウングレードが可能です。変更は次の請求サイクルから反映されます。</p>
+          </details>
+        </div>
+      </section>
+
+
+      <hr class="section-divider">
+
+      <section class="cta-section">
+        <h2>AIワークスペース、近日公開。</h2>
+        <p>複数モデルと連携機能を、ひとつの画面に。公開準備を進めています。</p>
+        <span class="btn btn-fill btn-soon" role="status">サービス開始前</span>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo">NEXGATE AI</a>
+          <p class="footer-tagline">人間らしく生きるための AI 補助ツール。必要なときだけ、チャット・検索・ファイル解析を。</p>
+          <span class="btn btn-line footer-cta btn-soon" role="status">アプリ（準備中）</span>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul class="footer-links">
+            <li><a href="#use-cases">用途</a></li>
+            <li><a href="#features">機能</a></li>
+            <li><a href="#models">モデル</a></li>
+            <li><a href="#plans">プラン</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#workflow">使い方</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><span class="is-soon">ログイン（準備中）</span></li>
+            <li><span class="is-soon">アカウント作成（準備中）</span></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul class="footer-links">
+            <li><a href="terms.html">利用規約</a></li>
+            <li><a href="privacy.html">プライバシーポリシー</a></li>
+            <li><a href="tokushoho.html">特定商取引法</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Technical</h4>
+          <ul class="footer-links">
+            <li><a href="tech.html">開発・研究情報</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 NEXGATE AI. All rights reserved.</p>
+        <div class="footer-meta">
+          <span>nexgate.space</span>
+          <span>panel.nexgate.space（準備中）</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.body.classList.remove("is-loading");
+        document.body.classList.add("is-loaded");
+        var loader = document.getElementById("pageLoader");
+        if (loader) loader.remove();
+        return;
+      }
+
+      var LOADER_MIN_MS = 900;
+      var FADE_OUT_MS = 800;
+      var start = Date.now();
+      var loader = document.getElementById("pageLoader");
+
+      function finishLoader() {
+        loader.classList.add("is-exiting");
+        document.body.classList.remove("is-loading");
+        document.body.classList.add("is-loaded");
+
+        setTimeout(function () {
+          loader.remove();
+        }, FADE_OUT_MS + 50);
+      }
+
+      function onReady() {
+        var elapsed = Date.now() - start;
+        var wait = Math.max(0, LOADER_MIN_MS - elapsed);
+        setTimeout(finishLoader, wait);
+      }
+
+      if (document.readyState === "complete") {
+        onReady();
+      } else {
+        window.addEventListener("load", onReady);
+      }
+    })();
+  </script>
+</body>
+</html>
