@@ -659,10 +659,15 @@ _TOOL_URGENCY_RE = re.compile(
     r"|現在の(?:総理|大統領|首相|CEO|株価|為替|バージョン)"
     r"|最新の(?:ニュース|情報|バージョン|価格|リリース|アップデート)"
     r"|直近の(?:ニュース|情報|出来事|メール|投稿)"
+    # Product/model number (e.g., RTL8127, RX7800XT, iPhone15, NB-RT-8127F)
+    r"|[A-Z]{2,}[ -]?[A-Z]?[0-9]{2,}[A-Za-z]?"
     # Explicit search verbs
     r"|(?:調べて|検索して|探して|調査して|ググって)"
+    # Technical/spec terms that imply lookup
+    r"|(?:スペック|仕様|性能|ベンチマーク|RSS|マルチキュー|オフロード|データシート)"
+    r"|(?:対応状況|サポート状況|設定方法|インストール方法)"
     # English
-    r"|(?:what is|who is|how to|look up|search for)",
+    r"|(?:what is|who is|how to|tell me about|look up|search for|find out about)",
     re.IGNORECASE,
 )
 
@@ -3290,11 +3295,20 @@ def _stream_agent_chat_body(
     tool_calls = openai_tool_calls_list(
         round_data["tool_calls_map"], allowed_tool_names
     )
+    # ストリームで得たツール呼び出しが完結している場合のみ、
+    # モデルの再呼び出し（complete_model_round_fallback）をスキップする。
+    # 不完全（引数が途中で切れた等）な場合は品質維持のため従来どおり再実行する。
+    _streamed_tool_calls_complete = bool(tool_calls) and all(
+        (entry.get("name") or "").strip()
+        and str(entry.get("arguments") or "").strip().endswith("}")
+        for entry in (round_data.get("tool_calls_map") or {}).values()
+        if entry.get("name") in allowed_tool_names
+    )
     if (
-        _force_tools
-        and allow_web_search
+        allow_web_search
         and tool_calls
         and not (round_data.get("reasoning_content") or "").strip()
+        and (_force_tools or not _streamed_tool_calls_complete)
     ):
         streamed_content = round_data.get("content") or ""
         round_data = complete_model_round(
