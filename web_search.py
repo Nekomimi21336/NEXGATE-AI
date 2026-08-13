@@ -931,8 +931,8 @@ def user_needs_multi_search(user_text, computelab_active=False):
 
 def max_web_search_rounds(user_text, computelab_active=False):
     if user_needs_multi_search(user_text, computelab_active):
-        return max(2, int(os.getenv("WEB_SEARCH_MAX_ROUNDS", "3")))
-    return max(1, int(os.getenv("WEB_SEARCH_MAX_ROUNDS_SIMPLE", "2")))
+        return max(1, int(os.getenv("WEB_SEARCH_MAX_ROUNDS", "1")))
+    return max(1, int(os.getenv("WEB_SEARCH_MAX_ROUNDS_SIMPLE", "1")))
 
 
 def merge_search_result_lists(*lists):

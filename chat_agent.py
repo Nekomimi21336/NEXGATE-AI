@@ -659,15 +659,10 @@ _TOOL_URGENCY_RE = re.compile(
     r"|現在の(?:総理|大統領|首相|CEO|株価|為替|バージョン)"
     r"|最新の(?:ニュース|情報|バージョン|価格|リリース|アップデート)"
     r"|直近の(?:ニュース|情報|出来事|メール|投稿)"
-    # Product/model number (e.g., RTL8127, RX7800XT, iPhone15, NB-RT-8127F)
-    r"|[A-Z]{2,}[ -]?[A-Z]?[0-9]{2,}[A-Za-z]?"
     # Explicit search verbs
     r"|(?:調べて|検索して|探して|調査して|ググって)"
-    # Technical/spec terms that imply lookup
-    r"|(?:スペック|仕様|性能|ベンチマーク|RSS|マルチキュー|オフロード|データシート)"
-    r"|(?:対応状況|サポート状況|設定方法|インストール方法)"
     # English
-    r"|(?:what is|who is|how to|tell me about|look up|search for|find out about)",
+    r"|(?:what is|who is|how to|look up|search for)",
     re.IGNORECASE,
 )
 
@@ -3296,7 +3291,8 @@ def _stream_agent_chat_body(
         round_data["tool_calls_map"], allowed_tool_names
     )
     if (
-        allow_web_search
+        _force_tools
+        and allow_web_search
         and tool_calls
         and not (round_data.get("reasoning_content") or "").strip()
     ):
