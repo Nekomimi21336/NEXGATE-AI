@@ -62,12 +62,14 @@ function normalizeMultilineMarkdownLinks(text) {
   if (!text) return text;
   const { work, fences } = protectMarkdownFences(text);
   const out = work.replace(
-    /(!?)\[([\s\S]*?)\]\(([^)\n]+)\)/g,
-    (match, bang, label, url) => {
+    /(!?)\[([\s\S]*?)\]\(\s*([^)\n]+?)(?:\s+["']([^"']*)["'])?\s*\)/g,
+    (match, bang, label, url, title) => {
       const cleanLabel = String(label).replace(/\s+/g, " ").trim();
       const cleanUrl = String(url).replace(/\s+/g, "");
-      if (label === cleanLabel && url === cleanUrl) return match;
-      return `${bang}[${cleanLabel}](${cleanUrl})`;
+      const hasTitle = title !== undefined;
+      const titlePart = hasTitle ? ` "${String(title).trim()}"` : "";
+      if (label === cleanLabel && url === cleanUrl && !hasTitle) return match;
+      return `${bang}[${cleanLabel}](${cleanUrl}${titlePart})`;
     }
   );
   return restoreMarkdownFences(out, fences);
@@ -76,10 +78,16 @@ function normalizeMultilineMarkdownLinks(text) {
 function normalizeMarkdownImages(text) {
   if (!text) return text;
   let out = text.replace(/!\s+\[/g, "![").replace(/!\[([^\]]*)\]\s*\(/g, "![$1](");
-  out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, url) => {
-    const cleanUrl = String(url).replace(/\s+/g, "");
-    return `![${alt}](${cleanUrl})`;
-  });
+  out = out.replace(
+    /!\[([^\]]*)\]\(\s*([^)\n]+?)(?:\s+["']([^"']*)["'])?\s*\)/g,
+    (match, alt, url, title) => {
+      const cleanUrl = String(url).replace(/\s+/g, "");
+      const hasTitle = title !== undefined;
+      const titlePart = hasTitle ? ` "${String(title).trim()}"` : "";
+      if (url === cleanUrl && !hasTitle) return match;
+      return `![${alt}](${cleanUrl}${titlePart})`;
+    }
+  );
   return out;
 }
 
@@ -1115,9 +1123,29 @@ function enhanceMarkdownTablesInElement(root) {
   });
 }
 
+function enhanceMarkdownLinksInElement(root) {
+  if (!root) return;
+  root.querySelectorAll("a[href]").forEach((a) => {
+    const href = a.getAttribute("href") || "";
+    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) {
+      return;
+    }
+    if (a.target && a.target !== "_self") return;
+    try {
+      const url = new URL(href, location.origin);
+      if (url.origin === location.origin) return;
+    } catch (_) {
+      return;
+    }
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  });
+}
+
 async function enhanceMarkdownBodyElement(root, fullMarkdown = "", options = {}) {
   enhanceCodeBlocksInElement(root);
   enhanceMarkdownTablesInElement(root);
+  enhanceMarkdownLinksInElement(root);
   if (window.enhanceDiagramBlocksInElement) {
     await window.enhanceDiagramBlocksInElement(root, fullMarkdown, options);
   }
@@ -1136,6 +1164,7 @@ async function applyMarkdownContent(element, markdownText, options = {}) {
   element.innerHTML = buildMarkdownHtmlWithDiagramSlots(polished, renderOptions);
   enhanceCodeBlocksInElement(element);
   enhanceMarkdownTablesInElement(element);
+  enhanceMarkdownLinksInElement(element);
   await renderMarkdownDiagrams(element, polished, {
     ...renderOptions,
     generation,
