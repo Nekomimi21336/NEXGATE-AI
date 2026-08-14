@@ -1,0 +1,123 @@
+/* シンタックスハイライト（highlight.js）テーマ
+   アプリのテーマ（dark / light / midnight / system）に追従する。 */
+
+.markdown-body pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0;
+  background: transparent;
+  color: var(--code-text, #e6edf3);
+}
+
+/* ---- ダーク系（dark / midnight / system=dark） ---- */
+:root,
+[data-theme="dark"],
+[data-theme="midnight"] {
+  --code-text: #e6edf3;
+  --code-keyword: #ff7b72;
+  --code-string: #a5d6ff;
+  --code-comment: #8b949e;
+  --code-number: #79c0ff;
+  --code-title: #d2a8ff;
+  --code-attr: #ffa657;
+  --code-builtin: #ffa657;
+  --code-meta: #79c0ff;
+  --code-deletion: #ffa198;
+}
+
+/* ---- ライト ---- */
+[data-theme="light"] {
+  --code-text: #1f2328;
+  --code-keyword: #cf222e;
+  --code-string: #0a3069;
+  --code-comment: #6e7781;
+  --code-number: #0550ae;
+  --code-title: #8250df;
+  --code-attr: #953800;
+  --code-builtin: #953800;
+  --code-meta: #0550ae;
+  --code-deletion: #82071e;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] {
+    --code-text: #1f2328;
+    --code-keyword: #cf222e;
+    --code-string: #0a3069;
+    --code-comment: #6e7781;
+    --code-number: #0550ae;
+    --code-title: #8250df;
+    --code-attr: #953800;
+    --code-builtin: #953800;
+    --code-meta: #0550ae;
+    --code-deletion: #82071e;
+  }
+}
+
+/* ---- トークン配色 ---- */
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-selector-tag,
+.markdown-body .hljs-literal,
+.markdown-body .hljs-type,
+.markdown-body .hljs-doctag {
+  color: var(--code-keyword);
+}
+
+.markdown-body .hljs-string,
+.markdown-body .hljs-regexp,
+.markdown-body .hljs-addition,
+.markdown-body .hljs-attribute {
+  color: var(--code-string);
+}
+
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote,
+.markdown-body .hljs-meta .hljs-string {
+  color: var(--code-comment);
+  font-style: italic;
+}
+
+.markdown-body .hljs-number,
+.markdown-body .hljs-symbol,
+.markdown-body .hljs-bullet,
+.markdown-body .hljs-variable,
+.markdown-body .hljs-template-variable,
+.markdown-body .hljs-link {
+  color: var(--code-number);
+}
+
+.markdown-body .hljs-title,
+.markdown-body .hljs-title.function_,
+.markdown-body .hljs-title.class_,
+.markdown-body .hljs-section,
+.markdown-body .hljs-selector-id,
+.markdown-body .hljs-selector-class {
+  color: var(--code-title);
+}
+
+.markdown-body .hljs-attr,
+.markdown-body .hljs-built_in,
+.markdown-body .hljs-class,
+.markdown-body .hljs-params {
+  color: var(--code-attr);
+}
+
+.markdown-body .hljs-meta,
+.markdown-body .hljs-tag,
+.markdown-body .hljs-name,
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-selector-pseudo {
+  color: var(--code-meta);
+}
+
+.markdown-body .hljs-deletion {
+  color: var(--code-deletion);
+}
+
+.markdown-body .hljs-emphasis {
+  font-style: italic;
+}
+
+.markdown-body .hljs-strong {
+  font-weight: 700;
+}

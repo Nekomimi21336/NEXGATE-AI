@@ -3486,6 +3486,8 @@ def get_static_asset_version():
         "static/js/vendor/diagram/mermaid.min.js",
         "static/js/image-lightbox.js",
         "static/js/vendor/marked.min.js",
+        "static/js/vendor/highlight/highlight.min.js",
+        "static/css/highlight.css",
         "static/dist/js/app.js",
         "static/dist/js/auth.js",
         "static/dist/js/router.js",

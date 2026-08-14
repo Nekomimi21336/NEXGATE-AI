@@ -1100,6 +1100,18 @@ function wrapPreWithCopyButton(pre) {
 function enhanceCodeBlocksInElement(root) {
   if (!root) return;
   root.querySelectorAll("pre").forEach(wrapPreWithCopyButton);
+  if (typeof hljs !== "undefined") {
+    root.querySelectorAll("pre code").forEach((code) => {
+      const cls = code.className || "";
+      if (/\blanguage-(mermaid|sequence|flow)\b/i.test(cls)) return;
+      if (code.classList.contains("hljs") || code.dataset.highlighted) return;
+      try {
+        hljs.highlightElement(code);
+      } catch (_) {
+        /* ハイライト失敗時は通常表示のまま */
+      }
+    });
+  }
 }
 
 function enhanceMarkdownTablesInElement(root) {

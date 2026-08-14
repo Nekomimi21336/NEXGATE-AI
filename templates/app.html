@@ -15,6 +15,7 @@
   {% endif %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ asset_version }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}?v={{ asset_version }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}?v={{ asset_version }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 </head>
@@ -72,6 +73,7 @@
   <script defer src="{{ url_for('static', filename='js/welcome.js') }}"></script>
   <script defer src="{{ url_for('static', filename='js/vendor/marked.min.js') }}?v={{ asset_version }}"></script>
   <script defer src="{{ url_for('static', filename='js/vendor/dompurify.min.js') }}?v={{ asset_version }}"></script>
+  <script defer src="{{ url_for('static', filename='js/vendor/highlight/highlight.min.js') }}?v={{ asset_version }}"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
   <script defer src="{{ url_for('static', filename='js/math-render.js') }}?v={{ asset_version }}"></script>
   <script defer src="{{ url_for('static', filename='js/markdown.js') }}?v={{ asset_version }}"></script>
